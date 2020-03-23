@@ -1,4 +1,12 @@
-
+/**
+* @file 		MD_RTU_Queue.c
+* @brief		无
+* @details	无
+* @author		zspace
+* @date		2020/3/23
+* @version	A001
+* @par History:  无       
+*/
 #include "MD_RTU_Queue.h"
 
 /*初始化队列*/

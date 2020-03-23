@@ -617,11 +617,6 @@
               <FilePath>..\Modbus\MD_RTU_Serial.h</FilePath>
             </File>
             <File>
-              <FileName>MD_RTU_Seriall.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_Seriall.c</FilePath>
-            </File>
-            <File>
               <FileName>MD_RTU_Type.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Modbus\MD_RTU_Type.h</FilePath>
@@ -635,6 +630,11 @@
               <FileName>MD_RTU_User_Fun.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Modbus\MD_RTU_User_Fun.h</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_Serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\MD_RTU_Serial.c</FilePath>
             </File>
           </Files>
         </Group>

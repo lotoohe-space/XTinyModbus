@@ -1,3 +1,12 @@
+/**
+* @file 		MD_RTU_Fun.h
+* @brief		нч
+* @details	нч
+* @author		zspace
+* @date		2020/3/23
+* @version	A001
+* @par History:  нч       
+*/
 #ifndef _MD_RTU_FUN_H__
 #define _MD_RTU_FUN_H__
 

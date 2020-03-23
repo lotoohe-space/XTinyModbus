@@ -1,3 +1,12 @@
+/**
+* @file 		MD_RTU_Serial.c
+* @brief		нч
+* @details	нч
+* @author		zspace
+* @date		2020/3/23
+* @version	A001
+* @par History:  нч       
+*/
 #include "MD_RTU_Serial.h"
 
 #include "MD_RTU_Fun.h"

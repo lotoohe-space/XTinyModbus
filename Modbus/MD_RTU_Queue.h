@@ -1,4 +1,12 @@
-
+/**
+* @file 		MD_RTU_Queue.h
+* @brief		нч
+* @details	нч
+* @author		zspace
+* @date		2020/3/23
+* @version	A001
+* @par History:  нч       
+*/
 #ifndef _SQQUEUE_H__
 #define _SQQUEUE_H__
 #include "MD_RTU_Type.h"
