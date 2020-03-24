@@ -1,6 +1,9 @@
 
 XTinyModbus
 ===
+
+A small Modbus protocol applied to embedded aspects, written in C language, and provide a complete example, can be transplanted to different processors, simple to use, portable convenience.<br>
+
 1.Log
 ----
 
@@ -80,6 +83,9 @@ Modbus RTU host, Modbus ASCII host and slave.
 
 XTinyModbus
 ===
+
+一个应用于嵌入式方面的小型Modbus协议，采用C语言编写，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。
+
 1.日志
 ----
 
