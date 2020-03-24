@@ -2,7 +2,7 @@
 XTinyModbus
 ===
 
-A small Modbus protocol applied to embedded aspects, written in C language, and provide a complete example, can be transplanted to different processors, simple to use, portable convenience.<br>
+A small embedded Modbus protocol stack, written in C language, supporting multiple slaves, discrete mapping, and provide a complete example, can be transplanted to different processors, simple to use, portable.<br>
 
 1.Log
 ----
@@ -12,6 +12,7 @@ A small Modbus protocol applied to embedded aspects, written in C language, and 
 3)Implement function code 1,2,3,4,5,6,15,16.<br>
 4)Support modbus address and local address discrete mapping.<br>
 5)Provide user to read and write modbus address interface.<br>
+6) support multiple slaves.
 
 2.How to transplant
 ----
@@ -84,7 +85,7 @@ Modbus RTU host, Modbus ASCII host and slave.
 XTinyModbus
 ===
 
-一个应用于嵌入式方面的小型Modbus协议，采用C语言编写，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。
+一个应用于嵌入式方面的小型Modbus协议栈，采用C语言编写，支持多从机，离散映射，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。
 
 1.日志
 ----
@@ -93,7 +94,8 @@ XTinyModbus
 2)加入双队列机制。<br>
 3)实现功能码1,2,3,4,5,6,15,16。<br>
 4)支持modbus地址与本机地址离散映射。<br>
-5)提供用户读写modbus地址接口<br>
+5)提供用户读写modbus地址接口。<br>
+6)支持多个从机。
 
 2.如何移植
 ----
