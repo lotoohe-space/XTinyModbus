@@ -60,13 +60,13 @@ typedef struct{
 }*PModbusS_RTU,ModbusS_RTU;
 
 
-#define MDS_RTU_FUN_CODE(a)				(((PModbusS_RTU)(a))->serialReadCache[1])
+#define MDS_RTU_FUN_CODE(a)					(((PModbusS_RTU)(a))->serialReadCache[1])
 #define MDS_RTU_CRC16(a)						(((((PModbusS_RTU)(a))->serialReadCache[a->serialReadCount-1])<<8)|\
 (((PModbusS_RTU)(a))->serialReadCache[a->serialReadCount]))
 
 #define MDS_RTU_START_REG(a)				(((((PModbusS_RTU)(a))->serialReadCache[2])<<8)|\
 (((PModbusS_RTU)(a))->serialReadCache[3]))
-#define MDS_RTU_REGS_NUM(a)				(((((PModbusS_RTU)(a))->serialReadCache[4])<<8)|\
+#define MDS_RTU_REGS_NUM(a)					(((((PModbusS_RTU)(a))->serialReadCache[4])<<8)|\
 (((PModbusS_RTU)(a))->serialReadCache[5]))
 
 #define MDS_RTU_REG_COIL_LIST(a)						((a)->pRegCoilList)
