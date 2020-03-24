@@ -1,3 +1,83 @@
+
+XTinyModbus
+===
+1.Log
+----
+
+1)Implement ModBus RTU salve.<br>
+2)Join a dual queue mechanism.<br>
+3)Implement function code 1,2,3,4,5,6,15,16.<br>
+4)Support modbus address and local address discrete mapping.<br>
+5)Provide user to read and write modbus address interface.<br>
+
+2.How to transplant
+----
+The example gives an example of a port in the STM32F1 series of chips that need to be ported to other chips, need to modify md_rtu_serial.c, implement port port port function migration, and need to call serial port and timer functions in the interrupt function. < br >
+Serial port transplantation function:
+```c
+/*Send function*/
+void MDSSerialSendBytes(uint8 *bytes,uint16 num){
+	/*The BSP sending function is called below*/
+	uart_send_bytes(bytes,num);
+}
+```
+Call the following function in the timer interrupt function, the timer interval is 100US:
+```c
+/*This function is called in the timer*/
+void MDSTimeHandler100US(uint32 times){
+	if(_pModbus_RTU==NULL){return;}
+	_pModbus_RTU->mdRTUTimeHandlerFunction(_pModbus_RTU ,times);
+}
+```
+The following function is called in the serial port receive interrupt
+```c
+/*The BSP layer interrupts the receiving call to this function*/
+void MDSSerialRecvByte(uint8 byte){
+	if(_pModbus_RTU==NULL){return;}
+	_pModbus_RTU->mdsRTURecByteFunction(_pModbus_RTU , byte);
+}
+```
+3.How to use
+----
+You can see an example of using the md_rtu_app.c file.
+The following code adds two address mapping items, and the modbus address corresponds to the local address:
+```c
+uint16 regCoilData0[32]={1,2,3,4,5,6,7,8,9,10,11,12};
+RegCoilItem regCoilItem0={
+. ModbusAddr =0x0000, /* address in MODBUS */
+. ModbusData =regCoilData0, /* mapped memory unit */
+. ModbusDataSize =32, /* the size of the map */
+.addrtype =REG_TYPE /* the type of the map */
+};
+uint16 regCoilData1[4]={0};
+RegCoilItem regCoilItem1={
+. ModbusAddr =0x0000, /* address in MODBUS */
+. ModbusData =regCoilData1, /* mapped memory unit */
+. ModbusDataSize =64, /* the size of the map */
+.addrtype =BIT_TYPE /* type of mapping */
+};
+	/*Add an address map*/
+	if(RegCoilListAdd(&modbusS_RTU, &regCoilItem0)==FALSE){
+		return FALSE;
+	}
+	if(RegCoilListAdd(&modbusS_RTU, &regCoilItem1)==FALSE){
+		return FALSE;
+	}
+```
+The following code can be used to read and write modbus registers and coil values:
+```c
+Uint16 temp = 0 XFF;
+Uint16 temp1 [] = {1, 2, 3, 4, 5};
+MDS_RTU_WriteBits (& modbusS_RTU, 1, 5, & temp);
+MDS_RTU_WriteReg (& modbusS_RTU, 11, temp);
+MDS_RTU_WriteRegs (& modbusS_RTU, 5, 5, temp1, 0).
+```
+4.Future features
+----
+
+Modbus RTU host, Modbus ASCII host and slave.
+
+
 XTinyModbus
 ===
 1.日志
@@ -73,85 +153,6 @@ RegCoilItem regCoilItem1={
 ```
 4.未来功能
 实现Modbus RTU主机，Modbus ASCII主机与从机。
-
-
-
-XTinyModbus
-===
-1.Log
-----
-
-1)Implement ModBus RTU salve.<br>
-2)Join a dual queue mechanism.<br>
-3)Implement function code 1,2,3,4,5,6,15,16.<br>
-4)Support modbus address and local address discrete mapping.<br>
-5)Provide user to read and write modbus address interface.<br>
-
-2.How to transplant
-----
-The example gives an example of a port in the STM32F1 series of chips that need to be ported to other chips, need to modify md_rtu_serial.c, implement port port port function migration, and need to call serial port and timer functions in the interrupt function. < br >
-Serial port transplantation function:
-```c
-/*Send function*/
-void MDSSerialSendBytes(uint8 *bytes,uint16 num){
-	/*The BSP sending function is called below*/
-	uart_send_bytes(bytes,num);
-}
-```
-Call the following function in the timer interrupt function, the timer interval is 100US:
-```c
-/*This function is called in the timer*/
-void MDSTimeHandler100US(uint32 times){
-	if(_pModbus_RTU==NULL){return;}
-	_pModbus_RTU->mdRTUTimeHandlerFunction(_pModbus_RTU ,times);
-}
-```
-The following function is called in the serial port receive interrupt
-```c
-/*The BSP layer interrupts the receiving call to this function*/
-void MDSSerialRecvByte(uint8 byte){
-	if(_pModbus_RTU==NULL){return;}
-	_pModbus_RTU->mdsRTURecByteFunction(_pModbus_RTU , byte);
-}
-```
-3.How to use
-----
-You can see an example of using the md_rtu_app.c file.
-The following code adds two address mapping items, and the modbus address corresponds to the local address:
-```c
-uint16 regCoilData0[32]={1,2,3,4,5,6,7,8,9,10,11,12};
-RegCoilItem regCoilItem0={
-. ModbusAddr =0x0000, /* address in MODBUS */
-. ModbusData =regCoilData0, /* mapped memory unit */
-. ModbusDataSize =32, /* the size of the map */
-.addrtype =REG_TYPE /* the type of the map */
-};
-uint16 regCoilData1[4]={0};
-RegCoilItem regCoilItem1={
-. ModbusAddr =0x0000, /* address in MODBUS */
-. ModbusData =regCoilData1, /* mapped memory unit */
-. ModbusDataSize =64, /* the size of the map */
-.addrtype =BIT_TYPE /* type of mapping */
-};
-	/*Add an address map*/
-	if(RegCoilListAdd(&modbusS_RTU, &regCoilItem0)==FALSE){
-		return FALSE;
-	}
-	if(RegCoilListAdd(&modbusS_RTU, &regCoilItem1)==FALSE){
-		return FALSE;
-	}
-```
-The following code can be used to read and write modbus registers and coil values:
-```c
-Uint16 temp = 0 XFF;
-Uint16 temp1 [] = {1, 2, 3, 4, 5};
-MDS_RTU_WriteBits (& modbusS_RTU, 1, 5, & temp);
-MDS_RTU_WriteReg (& modbusS_RTU, 11, temp);
-MDS_RTU_WriteRegs (& modbusS_RTU, 5, 5, temp1, 0).
-```
-4. Future features
-----
-Modbus RTU host, Modbus ASCII host and slave.
 
 
 
