@@ -7,6 +7,7 @@
 #include "tim3.h"
 
 #include "MD_RTU_APP.h"
+#include "MDM_RTU_APP.h"
 #include "w25qxx.h"
 #include "touch.h"
 #include "GBK_LibDrive.h"	
@@ -49,10 +50,12 @@
 	
   LCD_Clear(WHITE);//清除屏幕
 
-	MDS_RTU_APPInit();
+	//MDS_RTU_APPInit();
+	MDM_RTU_APPInit();
 	TIM3_Int_Init(36-1,100-1);
 	while(1){
-		MDS_RTU_Poll();
+	//	MDS_RTU_Loop();
+		MDM_RTU_Loop();
 	}
 }
 ////放到主函数的初始化中初始化

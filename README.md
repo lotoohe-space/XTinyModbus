@@ -2,17 +2,25 @@
 XTinyModbus
 ===
 
-A small embedded Modbus protocol stack, written in C language, supporting multiple slaves, discrete mapping, and provide a complete example, can be transplanted to different processors, simple to use, portable.<br>
+A small embedded Modbus protocol stack, written in C language, support master and slave, support discrete mapping, support non-blocking and blocking read and write mode, and provide a complete example, can be transplanted to different processors, simple to use, portable.<br>
 
 1.Log
 ----
 
-1)Implement ModBus RTU salve.<br>
-2)Join a dual queue mechanism.<br>
-3)Implement function code 1,2,3,4,5,6,15,16.<br>
-4)Support modbus address and local address discrete mapping.<br>
-5)Provide user to read and write modbus address interface.<br>
+ModBus RTU salve feature: <br>
+1) realize Modbus RTU salve<br>
+2) join the double-queue mechanism.<br>
+3) implement function code 1,2,3,4,5,6,15,16.<br>
+4) support discrete mapping between modbus address and local address.<br>
+5) provide user to read and write modbus address interface.<br>
 6) support multiple slaves.
+ModBus RTU master feature: <br>
+1) realize Modbus RTU master<br>
+2) support non-blocking type read and write <br>
+3) support blocking type read and write <br>
+4) support regular retransmission <br>
+5) support timeout retransmission <br>
+6) support read data discrete mapping <br>
 
 2.How to transplant
 ----
@@ -85,17 +93,24 @@ Modbus RTU host, Modbus ASCII host and slave.
 XTinyModbus
 ===
 
-一个应用于嵌入式方面的小型Modbus协议栈，采用C语言编写，支持多从机，离散映射，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。
+一个应用于嵌入式方面的小型Modbus协议栈，采用C语言编写，支持master与slave，支持离散映射，支持非阻塞与阻塞读写模式，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。<br>
 
 1.日志
 ----
-
-1)实现ModBus RTU salve。<br>
+ModBus RTU salve 特性：<br>
+1)实现Modbus RTU salve<br>
 2)加入双队列机制。<br>
 3)实现功能码1,2,3,4,5,6,15,16。<br>
 4)支持modbus地址与本机地址离散映射。<br>
 5)提供用户读写modbus地址接口。<br>
 6)支持多个从机。
+ModBus RTU master 特性：<br>
+1)实现Modbus RTU master<br>
+2)支持非阻塞式读写<br>
+3)支持阻塞式读写<br>
+4)支持定时重发<br>
+5)支持超时重传<br>
+6)支持读数据离散映射<br>
 
 2.如何移植
 ----

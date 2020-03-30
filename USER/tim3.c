@@ -1,5 +1,6 @@
 #include "tim3.h"
-
+#include "MD_RTU_Serial.h"
+#include "MDM_RTU_Serial.h"
 
 vu32 sys_tick_100us=0;
 
@@ -30,7 +31,7 @@ void TIM3_Int_Init(u16 arr,u16 psc){
 
 	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设                           
 }
-#include	"MD_RTU_Serial.h"
+
 //定时器3中断服务程序
 void TIM3_IRQHandler(void)   //TIM3中断
 {
@@ -40,5 +41,6 @@ void TIM3_IRQHandler(void)   //TIM3中断
 		sys_tick_100us++;
 		
 		MDSTimeHandler100US(sys_tick_100us);
+		MDMTimeHandler100US(sys_tick_100us);
 	}
 }

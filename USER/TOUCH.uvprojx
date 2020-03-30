@@ -636,6 +636,61 @@
               <FileType>1</FileType>
               <FilePath>..\Modbus\MD_RTU_Serial.c</FilePath>
             </File>
+            <File>
+              <FileName>MD_RTU_Error.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MD_RTU_Error.h</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_Tool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MD_RTU_Tool.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Modbus_Master_RTU</GroupName>
+          <Files>
+            <File>
+              <FileName>MDM_RTU_Fun.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MDM_RTU_Fun.c</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_Fun.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MDM_RTU_Fun.h</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_Serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MDM_RTU_Serial.c</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_Serial.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MDM_RTU_Serial.h</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_APP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MDM_RTU_APP.c</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_APP.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MDM_RTU_APP.h</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_User_Fun.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\MDM_RTU_User_Fun.c</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_User_Fun.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\MDM_RTU_User_Fun.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

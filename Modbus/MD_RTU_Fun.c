@@ -19,7 +19,8 @@ void MDS_RTU_TimeHandler(void *obj,uint32 times);
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode);
 uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount);
 
-void MDS_RTU_Init(PModbusS_RTU pModbusRTU,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity){
+void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity){
+	uint8 i;
 	float T;
 	if(pModbusRTU==NULL){
 		return ;
@@ -28,13 +29,15 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,uint8 salveAddr,uint32 baud,uint8 data
 	MDInitQueue(&(pModbusRTU->mdMsgSqQueue));
 	pModbusRTU->salveAddr=salveAddr;
 	pModbusRTU->serialReadCount=0;
-	pModbusRTU->mdRTUReadDataProcessFunction=NULL;
-	pModbusRTU->mdRUTWriteDataProcessFunction=NULL;
-	pModbusRTU->mdRTUTimeHandlerFunction=MDS_RTU_TimeHandler;
 	
-	pModbusRTU->mdsRTURecByteFunction=MDS_RTU_RecvByte;
-	pModbusRTU->mdsRTUSendBytesFunction=NULL;
-	pModbusRTU->mdsRTURecSendConv=NULL;
+	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+		pModbusRTU->pRegCoilList[i] = NULL;
+	}
+	
+	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDS_RTU_TimeHandler;
+	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDS_RTU_RecvByte;
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
+	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
 	
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	pModbusRTU->timesTick=0;
@@ -52,9 +55,10 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,uint8 salveAddr,uint32 baud,uint8 data
 	pModbusRTU->frameIntervalTime=time;/*该参数需要根据波特率设置*/
 	
 	pModbusRTU->CRC16Update=0xFFFF;
-	/*初始化串行口相关*/
-	MDSInitSerial(pModbusRTU,baud, dataBits,stopBits,parity);
-
+	
+	if(mdRTUSerialInitFun!=NULL){
+		mdRTUSerialInitFun(pModbusRTU,baud, dataBits,stopBits,parity);
+	}
 	return ;
 }
 /*定时处理函数*/
@@ -91,7 +95,9 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 	PModbusS_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
 	/*在这里放入队列中*/
-	MDenQueue(&(pModbusRTU->mdSqQueue),byte);
+	if(MDenQueue(&(pModbusRTU->mdSqQueue),byte)==FALSE){
+		return ;
+	}
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){
 		pModbusRTU->CRC16Update=0xFFFF;
 	}
@@ -102,7 +108,7 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 /*发送一个字节*/
 static void MDS_RTU_SendByte(PModbusS_RTU pModbusRTU,uint8 byte){
 	if(!pModbusRTU){ return; }
-	pModbusRTU->mdsRTUSendBytesFunction(&byte,1);
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction(&byte,1);
 }
 /*内部调用的函数*/
 static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
@@ -166,7 +172,7 @@ static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 	
 	return FALSE;
 }
-void MDS_RTU_Loop(PModbusS_RTU pModbus_RTU){
+void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	BOOL res;
 	if(!pModbus_RTU){return ;}
 	res = MDS_RTU_SerialProcess(pModbus_RTU);/*从队列中读取一个指令*/
@@ -250,12 +256,12 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 						lastIndex=(j-offsetAddr)>>3;
 					}
 					if(
-						MDS_GET_BIT(
+						MD_GET_BIT(
 						MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pRegCoilList[i])[j>>4],j%16)
 					){
-							MDS_SET_BIT(tempByte,j%8);
+							MD_SET_BIT(tempByte,j%8);
 					}else{
-							MDS_CLR_BIT(tempByte,j%8);
+							MD_CLR_BIT(tempByte,j%8);
 					}
 				}
 				MSD_SEND_BYTE(pModbus_RTU,tempByte);

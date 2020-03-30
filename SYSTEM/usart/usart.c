@@ -112,6 +112,7 @@ void uart_init(u32 bound){
 
 }
 #include "MD_RTU_Serial.h"
+#include "MDM_RTU_Serial.h"
 void USART1_IRQHandler(void)                	//串口1中断服务程序
 	{
 	u8 Res;
@@ -122,6 +123,7 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 		{
 		Res =USART_ReceiveData(USART1);	//读取接收到的数据
 		MDSSerialRecvByte(Res);
+		MDMSerialRecvByte(Res);
 //		if((USART_RX_STA&0x8000)==0)//接收未完成
 //			{
 //			if(USART_RX_STA&0x4000)//接收到了0x0d

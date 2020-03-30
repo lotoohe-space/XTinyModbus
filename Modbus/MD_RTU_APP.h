@@ -13,6 +13,6 @@
 #include "MD_RTU_Type.h"
 
 BOOL MDS_RTU_APPInit(void);
-void MDS_RTU_Poll(void);
+void MDS_RTU_Loop(void);
 
 #endif

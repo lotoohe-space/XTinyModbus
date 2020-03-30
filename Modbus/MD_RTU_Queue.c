@@ -11,7 +11,7 @@
 
 /*初始化队列*/
 uint8 MDInitQueue(MDSqQueue *q){
-	MDQueueDateType* data;
+//	MDQueueDateType* data;
 	if (q == NULL) { return FALSE; }
 	q->maxVal = MD_RTU_QUEUE_SIZE+1;
 	q->front = q->rear = 0;
@@ -30,6 +30,7 @@ uint8 MDQueueEmpty(MDSqQueue* q) {
 	if (q == NULL) { return 1; }
 	return (q->front == q->rear);
 }
+/*尾插*/
 uint8 MDenQueue(MDSqQueue* q, MDQueueDateType e) {
 	if ((q->rear + 1) % q->maxVal == q->front) {
 		return FALSE;
@@ -38,12 +39,31 @@ uint8 MDenQueue(MDSqQueue* q, MDQueueDateType e) {
 	q->data[q->rear] = e;
 	return TRUE;
 }
+/*头插*/
+uint8 MDenQueueH(MDSqQueue* q, MDQueueDateType e){		
+	if((q->front - 1 + q->maxVal) % q->maxVal == q->rear)
+			return FALSE;
+	
+	q->data[q->front] = e;
+	q->front = (q->front - 1 + q->maxVal) % q->maxVal;
+	return TRUE;
+}
+/*头出*/
 uint8 MDdeQueue(MDSqQueue* q, MDQueueDateType *e) {
 	if (q->front == q->rear) { /*空了，则返回错误*/
 		return FALSE;
 	}
 	q->front = (q->front + 1) % q->maxVal;
 	*e = q->data[q->front];
+	return TRUE;
+}
+/*尾出*/
+uint8 MDdeQueueF(MDSqQueue* q, MDQueueDateType *e) {
+	if(q->front == q->rear){
+			 return FALSE;	
+	}
+	*e = q->data[q->rear];
+	q->rear = (q->rear - 1 + q->maxVal) % q->maxVal;
 	return TRUE;
 }
 /*获取队尾的元素*/
