@@ -13,7 +13,8 @@ ModBus RTU salve feature: <br>
 3) implement function code 1,2,3,4,5,6,15,16.<br>
 4) support discrete mapping between modbus address and local address.<br>
 5) provide user to read and write modbus address interface.<br>
-6) support multiple slaves.
+6) support multiple slaves.<br>
+
 ModBus RTU master feature: <br>
 1) realize Modbus RTU master<br>
 2) support non-blocking type read and write <br>
@@ -103,7 +104,8 @@ ModBus RTU salve 特性：<br>
 3)实现功能码1,2,3,4,5,6,15,16。<br>
 4)支持modbus地址与本机地址离散映射。<br>
 5)提供用户读写modbus地址接口。<br>
-6)支持多个从机。
+6)支持多个从机。<br>
+
 ModBus RTU master 特性：<br>
 1)实现Modbus RTU master<br>
 2)支持非阻塞式读写<br>
