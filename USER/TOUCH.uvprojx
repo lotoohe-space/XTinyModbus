@@ -661,6 +661,31 @@
               <FileType>1</FileType>
               <FilePath>..\Modbus\MDM_RTU_User_Fun.c</FilePath>
             </File>
+            <File>
+              <FileName>MD_RTU_Error.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\MD_RTU_Error.h</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_Tool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\MD_RTU_Tool.h</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_User_Fun.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\MD_RTU_User_Fun.h</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_Fun.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\MDM_RTU_Fun.h</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_APP.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\MDM_RTU_APP.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

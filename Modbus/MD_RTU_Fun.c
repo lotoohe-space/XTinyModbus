@@ -15,6 +15,7 @@
 void MDS_RTU_RecvByte(void *obj,uint8 byte);
 void MDS_RTU_TimeHandler(void *obj,uint32 times);
 
+static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode);
 /**/
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode);
 uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount);
@@ -39,7 +40,9 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
 	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
 	
+	pModbusRTU->mdsWriteFun=NULL;
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;
+	pModbusRTU->lastSendTimes=0;
 	pModbusRTU->timesTick=0;
 	
 	T=(1.0/(float)baud)*100000;// 100us
@@ -90,6 +93,11 @@ void MDS_RTU_TimeHandler(void *obj,uint32 times){
 		pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	}
 }
+/*写入回调函数*/
+void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun){
+	if(pModbus_RTU==NULL){return ;}
+	pModbus_RTU->mdsWriteFun=wFun;
+}
 /*该函数接收数据并且放入队列中*/
 void MDS_RTU_RecvByte(void *obj,uint8 byte){
 	PModbusS_RTU pModbusRTU=obj;
@@ -129,9 +137,6 @@ static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 			/*以上功能码具有一致性*/
 			if(pModbus_RTU->serialReadCount>5){
 				/*读取了REG与REG_NUM*/
-				//uint16 regNum;/*寄存器个数，可计算得到剩余需要读取个数=regNum*2+2*/
-				//regNum = MDS_RTU_REGS_NUM(pModbus_RTU);
-				//pModbus_RTU->needReadLen = (regNum<<1) + 2;
 				if(pModbus_RTU->serialReadCount>=7){
 					pModbus_RTU->serialReadCount++;
 					/*数据读取够了*/
@@ -163,27 +168,36 @@ static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 					return TRUE;
 				}
 			}
+		}else {/*不支持的功能码*/
+			
 		}
 	}
 	
-	pModbus_RTU->serialReadCount++;
-
-	/*还没有考虑单条指令超过缓存的情况*/
+	if(pModbus_RTU->serialReadCount<=MDS_RTU_CMD_SIZE){
+		pModbus_RTU->serialReadCount++;
+	}
 	
 	return FALSE;
 }
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	BOOL res;
 	if(!pModbus_RTU){return ;}
+	
+	if(pModbus_RTU->timesTick - pModbus_RTU->lastSendTimes < pModbus_RTU->frameIntervalTime){
+		/*帧间隔时间，3.5T处理一帧*/
+		return;
+	}
+	
 	res = MDS_RTU_SerialProcess(pModbus_RTU);/*从队列中读取一个指令*/
 	if(!res){
 		return ;
 	}
+	
 	if(pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr){
 		/*不属于本从机，丢弃*/
 		goto __exit;
 	}
-	
+
 	/*功能码01-04具有基本类似的传输结构*/
 	//01 读取线圈状态 	取得一组逻辑线圈的当前状态（ON/OFF)
 	//02 读取输入状态 	取得一组开关输入的当前状态(ON/OFF)
@@ -213,16 +227,41 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	//16 预置多寄存器 把具体的二进制值装入一串连续的保持寄存器
 		uint16 startReg=MDS_RTU_START_REG(pModbus_RTU);
 		uint16 regNum=MDS_RTU_REGS_NUM(pModbus_RTU);
+		uint8	 bytesNum=MDS_RTU_BYTES_NUM(pModbus_RTU);
+		if(MDS_RTU_FUN_CODE(pModbus_RTU)==15){
+			if(((regNum>>3)+((regNum%8)?1:0))!=bytesNum){
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_COILS,ILLEGAL_DAT_VAL);
+				/*出现了长度不匹配错误，丢弃*/
+				goto __exit0;
+			}
+		}else {//16
+			if((regNum<<1)!=bytesNum){
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_REGS,ILLEGAL_DAT_VAL);
+				/*出现了长度不匹配错误，丢弃*/
+				goto __exit0;
+			}
+		}
+		
 		MDS_RTU_WriteDataProcess(pModbus_RTU,startReg,regNum,MDS_RTU_FUN_CODE(pModbus_RTU),
 		(uint16*)(&(pModbus_RTU->serialReadCache[7])),pModbus_RTU->serialReadCache[6]
 		);
 	}
+
+__exit0:
+	pModbus_RTU->lastSendTimes=pModbus_RTU->timesTick;
 __exit:
 	pModbus_RTU->serialReadCount = 0;
 
 	return ;
 }
 
+static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode){
+		MSD_START_SEND(pModbus_RTU);
+		MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
+		MSD_SEND_BYTE(pModbus_RTU,anlCode);
+		MSD_SEND_BYTE(pModbus_RTU,errCode);
+		MSD_SEND_END(pModbus_RTU);	
+}
 /*读数据处理*/
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode){
 	uint16 i=0;
@@ -289,33 +328,43 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 			return TRUE;
 		}
 	}
-	
-	return TRUE;
+	/*地址异常*/
+	MDS_RTU_SendErrorCode(pModbus_RTU,(ANLCode)(0x80+funCode),ILLEGAL_DAT_ADDR);
+	return FALSE;
 }
 uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,
 uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 	uint8 res=FALSE;
 	switch(funCode){
-		case 5:
+		case 5:/*写单线圈*/
 		{
-			if(data[0]==0xFF00){
-				res=MDS_RTU_WriteBit(pModbus_RTU,reg,1);
-			}else if(data[0]==0x0000){
-				res=MDS_RTU_WriteBit(pModbus_RTU,reg,0);
-			}
-			if(res){
-				MSD_START_SEND(pModbus_RTU);
-				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
-				MSD_SEND_BYTE(pModbus_RTU,funCode);
-				MSD_SEND_BYTE(pModbus_RTU,(reg>>8)&0xff);
-				MSD_SEND_BYTE(pModbus_RTU,(reg)&0xff);
-				MSD_SEND_BYTE(pModbus_RTU,((*data)>>8)&0xff);
-				MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
-				MSD_SEND_END(pModbus_RTU);
+			if(data[0]==0xFF00 || data[0]==0x0000){
+				if(data[0]==0xFF00){
+					res=MDS_RTU_WriteBit(pModbus_RTU,reg,1);
+				}else {
+					res=MDS_RTU_WriteBit(pModbus_RTU,reg,0);
+				}
+				if(res){
+					MSD_START_SEND(pModbus_RTU);
+					MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
+					MSD_SEND_BYTE(pModbus_RTU,funCode);
+					MSD_SEND_BYTE(pModbus_RTU,(reg>>8)&0xff);
+					MSD_SEND_BYTE(pModbus_RTU,(reg)&0xff);
+					MSD_SEND_BYTE(pModbus_RTU,((*data)>>8)&0xff);
+					MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
+					MSD_SEND_END(pModbus_RTU);
+					if(pModbus_RTU->mdsWriteFun){
+						pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,BIT_TYPE);
+					}
+				}else{
+					MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_COIL,ILLEGAL_DAT_ADDR);
+				}
+			}else{
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_COIL,ILLEGAL_DAT_VAL);
 			}
 		}
 			break;
-		case 15:
+		case 15:/*写多线圈*/
 			res=MDS_RTU_WriteBits(pModbus_RTU, reg, regNum, data);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
@@ -326,9 +375,14 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((regNum)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				if(pModbus_RTU->mdsWriteFun){
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,BIT_TYPE);
+				}
+			}else{
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_COILS,ILLEGAL_DAT_ADDR);
 			}
 			break;
-		case 6:
+		case 6:/*写单寄存器*/
 			res=MDS_RTU_WriteReg(pModbus_RTU,reg,data[0]);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
@@ -339,9 +393,14 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((*data)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				if(pModbus_RTU->mdsWriteFun){
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,REG_TYPE);
+				}
+			}else{
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_REG,ILLEGAL_DAT_ADDR);
 			}
 			break;
-		case 16:
+		case 16:/*写多寄存器*/
 			res=MDS_RTU_WriteRegs(pModbus_RTU,reg,regNum,data,1);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
@@ -352,6 +411,11 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((regNum)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				if(pModbus_RTU->mdsWriteFun){
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,REG_TYPE);
+				}
+			}else{
+				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_REGS,ILLEGAL_DAT_ADDR);
 			}
 			break;
 	}

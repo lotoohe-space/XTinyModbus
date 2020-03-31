@@ -15,15 +15,14 @@
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Tool.h"
 
-//typedef uint8 (*MDS_RTU_ReadDataProcessFunction)(uint16 reg,uint16 regNum,uint8 funCode);
-//typedef uint8 (*MDS_RTU_WriteDataProcessFunction)(uint16 reg,uint16 regNum,uint8 funCode,void* data,uint8 byteCount);
-
+typedef void (*MDSWriteFunciton)(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrType);
 
 #define 	REG_COIL_ITEM_NUM 	20
 
 #define 	MDS_RTU_CMD_SIZE		256			/*单条指令长度*/
 typedef struct{	
 	ModbusBase											modbusBase;													/*继承modbusBase*/
+	MDSWriteFunciton								mdsWriteFun;												/*主机写回调函数*/
 	MDSqQueue 											mdSqQueue;													/*数据接收队列*/
 	MDSqQueue												mdMsgSqQueue;												/*消息处理队列*/
 	uint8														salveAddr;													/*从机地址*/
@@ -38,6 +37,9 @@ typedef struct{
 	/*当前的实时时间单位100US*/
 	uint32 timesTick;
 	
+	/*上次发送的时间*/
+	uint32 lastSendTimes;
+	
 	/*帧间隔时间3.5T*/
 	uint16 frameIntervalTime;
 	
@@ -48,6 +50,27 @@ typedef struct{
 	uint16 CRC16SendUpdate;
 }*PModbusS_RTU,ModbusS_RTU;
 
+/*异常码*/
+typedef enum{
+	READ_COIL_ANL=0x81,
+	READ_INPUT_ANL=0x82,
+	READ_HOLD_REGS=0x83,
+	READ_INPUT_REGS=0X84,
+	WRITE_SIN_COIL=0X85,
+	WRITE_SIN_REG=0x86,
+	WRITE_COILS=0X8F,
+	WRITE_REGS=0X90
+}ANLCode;
+
+/*错误码*/
+typedef enum{
+	ILLEGAL_FUN=0x01,				/*还未支持*/
+	ILLEGAL_DAT_ADDR=0x2,
+	ILLEGAL_DAT_VAL=0x3,
+	SLAVE_DEV_FAILURE=0x4,	/*还未支持*/
+	/*后面还有错误码，但是暂时未使用*/
+	
+}ErrorCode;
 
 #define MDS_RTU_FUN_CODE(a)					(((PModbusS_RTU)(a))->serialReadCache[1])
 #define MDS_RTU_CRC16(a)						(((((PModbusS_RTU)(a))->serialReadCache[a->serialReadCount-1])<<8)|\
@@ -57,6 +80,7 @@ typedef struct{
 (((PModbusS_RTU)(a))->serialReadCache[3]))
 #define MDS_RTU_REGS_NUM(a)					(((((PModbusS_RTU)(a))->serialReadCache[4])<<8)|\
 (((PModbusS_RTU)(a))->serialReadCache[5]))
+#define MDS_RTU_BYTES_NUM(a)				((a)->serialReadCache[6])
 
 
 
@@ -68,6 +92,7 @@ MDS_RTU_SendByte(a,b)
 
 
 void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
+void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun);
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU);
 
 

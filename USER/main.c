@@ -22,7 +22,7 @@
  {	 		    
 	delay_init();	    	 //延时函数初始化	  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
-	uart_init(9600);	 	//串口初始化为115200
+	uart_init(115200);	 	//串口初始化为115200
 	 
  	LED_Init();			     //LED端口初始化
 	LCD_Init();          //液晶屏初始化
@@ -50,12 +50,12 @@
 	
   LCD_Clear(WHITE);//清除屏幕
 
-	//MDS_RTU_APPInit();
-	MDM_RTU_APPInit();
+	MDS_RTU_APPInit();
+	//MDM_RTU_APPInit();
 	TIM3_Int_Init(36-1,100-1);
 	while(1){
-	//	MDS_RTU_Loop();
-		MDM_RTU_Loop();
+		MDS_RTU_Loop();
+		//MDM_RTU_Loop();
 	}
 }
 ////放到主函数的初始化中初始化

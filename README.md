@@ -4,7 +4,13 @@ XTinyModbus
 
 A small embedded Modbus protocol stack, written in C language, support master and slave, support discrete mapping, support non-blocking and blocking read and write mode, and provide a complete example, can be transplanted to different processors, simple to use, portable.<br>
 
-1.Log
+0.Log
+----
+2020/3/31	Salve adds host write callback function listen.< br >
+			Salve adds partial exception and error code support.< br >
+			Salve fixed an error sending unspaced frames.< br >
+
+1.Features
 ----
 
 ModBus RTU salve feature: <br>
@@ -96,7 +102,13 @@ XTinyModbus
 
 一个应用于嵌入式方面的小型Modbus协议栈，采用C语言编写，支持master与slave，支持离散映射，支持非阻塞与阻塞读写模式，并提供完整示例，可以移植到不同的处理器，使用简单，移植方便。<br>
 
-1.日志
+0.日志
+----
+2020/3/31 	Salve添加主机写回调函数监听。<br>
+			Salve添加部分异常码与错误码支持。<br>
+			Salve修复发送未进行帧间隔的错误。<br>
+
+1.特性
 ----
 ModBus RTU salve 特性：<br>
 1)实现Modbus RTU salve<br>
