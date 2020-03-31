@@ -1,9 +1,0 @@
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Fun.c
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Fun.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Queue.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Type.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_RegCoil.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Tool.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_CRC16.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_Serial.h
-..\obj\md_rtu_fun.o: ..\Modbus\MD_RTU_User_Fun.h
