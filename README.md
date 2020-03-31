@@ -6,9 +6,11 @@ A small embedded Modbus protocol stack, written in C language, support master an
 
 0.Log
 ----
-2020/3/31	Salve adds host write callback function listen.< br >
-			Salve adds partial exception and error code support.< br >
-			Salve fixed an error sending unspaced frames.< br >
+2020/3/31
+Salve adds host write callback function listen.<br>
+Salve adds partial exception and error code support.<br>
+Salve fixed an error sending unspaced frames.<br>
+Optimize CRC16 efficiency.<br>
 
 1.Features
 ----
@@ -108,6 +110,7 @@ XTinyModbus
 Salve添加主机写回调函数监听。<br>
 Salve添加部分异常码与错误码支持。<br>
 Salve修复发送未进行帧间隔的错误。<br>
+优化CRC16效率。<br>
 
 1.特性
 ----

@@ -56,6 +56,7 @@
 	while(1){
 		MDS_RTU_Loop();
 		//MDM_RTU_Loop();
+		//delay_ms(50);
 	}
 }
 ////放到主函数的初始化中初始化
