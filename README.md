@@ -6,6 +6,10 @@ A small embedded Modbus protocol stack, written in C language, support master an
 
 0.Log
 ----
+
+2020/4/3
+Salve changes the discrete mapping, and the input is mapped separately <br>
+
 2020/3/31
 Salve adds host write callback function listen.<br>
 Salve adds partial exception and error code support.<br>
@@ -106,6 +110,10 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/4/3
+Salve更改离散映射方式，输入分开映射<br>
+
 2020/3/31
 Salve添加主机写回调函数监听。<br>
 Salve添加部分异常码与错误码支持。<br>
@@ -193,7 +201,10 @@ RegCoilItem regCoilItem1={
 	MDS_RTU_WriteRegs(&modbusS_RTU,5,5, temp1,0);
 ```
 4.未来功能
-实现Modbus RTU主机，Modbus ASCII主机与从机。
+Modbus ASCII主机与从机。
+
+5.谢鸣
+紫§尘、
 
 
 
