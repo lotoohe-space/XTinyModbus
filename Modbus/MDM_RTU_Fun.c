@@ -201,10 +201,12 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 	MEM_RTU_END_EN(pModbus_RTU);
 }
 /*向映射中写入bit*/
-BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bit){
+BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bit, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbus_RTU = obj;
 	if(pModbus_RTU==NULL){return FALSE;}
+	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
+	
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
 		if(pModbus_RTU->pRegCoilList[i]==NULL){
 			continue;
@@ -212,7 +214,7 @@ BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bi
 		if(pModbus_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
 		(pModbus_RTU->pRegCoilList[i]->modbusAddr+pModbus_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbus_RTU->pRegCoilList[i]->addrType==BIT_TYPE){/*必须是BIT类型*/
+			if(pModbus_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是BIT类型*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pRegCoilList[i]);
 				uint16 j;
 				for(j=0;j<numOf;j++){
@@ -237,10 +239,12 @@ BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bi
 	return FALSE;
 }
 /*写离散寄存器*/
-BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uint8 isBigE){
+BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uint8 isBigE, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
 	if(pModbusS_RTU==NULL){return FALSE;}
+	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
+	
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pRegCoilList[i]==NULL){
 			continue;
@@ -248,7 +252,7 @@ BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *r
 		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==REG_TYPE){/*必须是REG类型*/
+			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是REG类型*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
 				uint16 j=0;
 				for(j=0;j<numOf;j++){
@@ -348,7 +352,7 @@ MDError MDM_RTU_NB_RW(
 								goto _exit;
 						}
 						/*单次存小于等于8bit*/
-						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte)){
+						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)byte)){
 							errRes= ERR_DATA_SAVE;
 							goto _exit;
 						}
@@ -381,7 +385,7 @@ MDError MDM_RTU_NB_RW(
 						wTemp=(rByte<<8);
 						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte);
 						wTemp|=rByte;
-						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0)){
+						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)byte)){
 							errRes= ERR_DATA_SAVE;
 							goto _exit;
 						}

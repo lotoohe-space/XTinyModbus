@@ -1,10 +1,12 @@
 #include "MDM_RTU_User_Fun.h"
 #include "MDM_RTU_Fun.h"
 /*读取bits,可以读取一个，也可以读取多个*/
-BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res){
+BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
 	if(pModbusS_RTU==NULL){return FALSE;}
+		if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
+	
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pRegCoilList[i]==NULL){
 			continue;
@@ -12,7 +14,7 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res){
 		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==BIT_TYPE){/*必须是BIT类型*/
+			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是BIT类型*/
 				uint16 	j;
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
 				for(j=offsetAddr; j<offsetAddr+numOf; j++){		
@@ -31,10 +33,12 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res){
 	}
 	return FALSE;
 }
-BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res){
+BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
 	if(pModbusS_RTU==NULL){return FALSE;}
+	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
+	
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pRegCoilList[i]==NULL){
 			continue;
@@ -42,7 +46,7 @@ BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res){
 		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==REG_TYPE){/*必须是BIT类型*/
+			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是BIT类型*/
 				uint16 	j;
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
 				for(j=0;j<numOf;j++){

@@ -7,14 +7,14 @@ RegCoilItem regCoilItemMaster0={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
 	.modbusData=regCoilDataMaster0,	/*映射的内存单元*/
 	.modbusDataSize=64,				/*映射的大小*/
-	.addrType=BIT_TYPE				/*映射的类型*/
+	.addrType=COILS_TYPE				/*映射的类型*/
 };
 uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
 RegCoilItem regCoilItemMaster1={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
 	.modbusData=regDataMaster1,	/*映射的内存单元*/
 	.modbusDataSize=32,				/*映射的大小*/
-	.addrType=REG_TYPE				/*映射的类型*/
+	.addrType=HOLD_REGS_TYPE				/*映射的类型*/
 };
 
 Modbus_RTU modbus_RTU = {0};
@@ -65,7 +65,7 @@ static void MDM_RTUUserRead(void){
 			}
 		}else {
 			/*读成功*/
-			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp);
+			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE);
 			resTemp=resTemp;
 		}	
 	}

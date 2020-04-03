@@ -276,7 +276,8 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 		)
 		{
 			/*确保读取的范围在内存的范围之内*/
-			if((funCode==1||funCode==2) && pModbus_RTU->pRegCoilList[i]->addrType==BIT_TYPE){
+			if((funCode==1&&pModbus_RTU->pRegCoilList[i]->addrType==COILS_TYPE)||
+				(funCode==2&&pModbus_RTU->pRegCoilList[i]->addrType==INPUT_TYPE)){
 				/*确保是读取的bit*/
 				/*得到位偏移*/
 				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pRegCoilList[i]);
@@ -305,7 +306,9 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 				}
 				MSD_SEND_BYTE(pModbus_RTU,tempByte);
 				MSD_SEND_END(pModbus_RTU);
-			}else if((funCode==3||funCode==4) && pModbus_RTU->pRegCoilList[i]->addrType==REG_TYPE){
+			}else if((funCode==3&&pModbus_RTU->pRegCoilList[i]->addrType==HOLD_REGS_TYPE)||
+				(funCode==4&&pModbus_RTU->pRegCoilList[i]->addrType==INPUT_REGS_TYPE)
+			){
 				/*确保读取的是reg*/
 					/*得到uint16偏移*/
 				uint16 j=0;
@@ -340,9 +343,9 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 		{
 			if(data[0]==0xFF00 || data[0]==0x0000){
 				if(data[0]==0xFF00){
-					res=MDS_RTU_WriteBit(pModbus_RTU,reg,1);
+					res=MDS_RTU_WriteBit(pModbus_RTU,reg,1,COILS_TYPE);
 				}else {
-					res=MDS_RTU_WriteBit(pModbus_RTU,reg,0);
+					res=MDS_RTU_WriteBit(pModbus_RTU,reg,0,COILS_TYPE);
 				}
 				if(res){
 					MSD_START_SEND(pModbus_RTU);
@@ -354,7 +357,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 					MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
 					MSD_SEND_END(pModbus_RTU);
 					if(pModbus_RTU->mdsWriteFun){
-						pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,BIT_TYPE);
+						pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,COILS_TYPE);
 					}
 				}else{
 					MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_COIL,ILLEGAL_DAT_ADDR);
@@ -365,7 +368,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 		}
 			break;
 		case 15:/*写多线圈*/
-			res=MDS_RTU_WriteBits(pModbus_RTU, reg, regNum, data);
+			res=MDS_RTU_WriteBits(pModbus_RTU, reg, regNum, data,COILS_TYPE);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
@@ -376,14 +379,14 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
-					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,BIT_TYPE);
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,COILS_TYPE);
 				}
 			}else{
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_COILS,ILLEGAL_DAT_ADDR);
 			}
 			break;
 		case 6:/*写单寄存器*/
-			res=MDS_RTU_WriteReg(pModbus_RTU,reg,data[0]);
+			res=MDS_RTU_WriteReg(pModbus_RTU,reg,data[0],HOLD_REGS_TYPE);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
@@ -394,14 +397,14 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
 				MSD_SEND_END(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
-					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,REG_TYPE);
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,HOLD_REGS_TYPE);
 				}
 			}else{
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_REG,ILLEGAL_DAT_ADDR);
 			}
 			break;
 		case 16:/*写多寄存器*/
-			res=MDS_RTU_WriteRegs(pModbus_RTU,reg,regNum,data,1);
+			res=MDS_RTU_WriteRegs(pModbus_RTU,reg,regNum,data,1,HOLD_REGS_TYPE);
 			if(res){
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
@@ -412,7 +415,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
-					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,REG_TYPE);
+					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,HOLD_REGS_TYPE);
 				}
 			}else{
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_REGS,ILLEGAL_DAT_ADDR);

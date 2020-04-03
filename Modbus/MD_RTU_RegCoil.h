@@ -12,8 +12,11 @@
 #include "MD_RTU_Type.h"
 
 typedef enum{		
-	BIT_TYPE=0,
-	REG_TYPE=1
+	/*¿‡–Õ*/
+	COILS_TYPE=1,
+	INPUT_TYPE=2,
+	HOLD_REGS_TYPE=3,
+	INPUT_REGS_TYPE=4
 }AddrType;
 
 typedef struct{
