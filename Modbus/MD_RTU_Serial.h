@@ -15,6 +15,6 @@
 
 void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
 void MDSSerialRecvByte(uint8 byte);
-void MDSTimeHandler100US(uint32 times);
+void MDSTimeHandler100US(void);
 
 #endif

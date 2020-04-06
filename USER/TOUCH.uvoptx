@@ -157,9 +157,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>274</LineNumber>
+          <LineNumber>88</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134225326</Address>
+          <Address>134228428</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -168,7 +168,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\Modbus\MD_RTU_Fun.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\TOUCH\../Modbus/MD_RTU_Fun.c\274</Expression>
+          <Expression>\\TOUCH\../Modbus/MD_RTU_Fun.c\88</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -241,6 +241,16 @@
           <count>13</count>
           <WinNumber>1</WinNumber>
           <ItemText>modbusS_RTU</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>pModbusRTU-&gt;timesTick,0x10</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>pModbusRTU-&gt;lastTimesTick,0x10</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

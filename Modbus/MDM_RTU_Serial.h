@@ -8,6 +8,6 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 /*bsp层中断接收调用这个函数*/
 void MDMSerialRecvByte(uint8 byte);
 /*定时器中调用该函数*/
-void MDMTimeHandler100US(uint32 times);
+void MDMTimeHandler100US(void);
 
 #endif

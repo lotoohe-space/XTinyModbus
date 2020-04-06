@@ -17,7 +17,7 @@ PModbusBase pModbusBase=NULL;
 
 void MDSSerialSendBytes(uint8 *bytes,uint16 num);
 void MDSSerialSWRecv_Send(uint8 mode);
-void MDSTimeHandler100US(uint32 times);
+void MDSTimeHandler100US(void);
 
 /*硬件初始化函数，可在此初始化串口*/
 void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity){
@@ -44,7 +44,11 @@ void MDSSerialSendBytes(uint8 *bytes,uint16 num){
 	uart_send_bytes(bytes,num);
 }
 /*定时器中调用该函数*/
-void MDSTimeHandler100US(uint32 times){
+void MDSTimeHandler100US(
+	void
+	){
 	if(pModbusBase==NULL){return;}
-	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase ,times);
+	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase 
+	//,times
+	);
 }

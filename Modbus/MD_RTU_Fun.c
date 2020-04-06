@@ -13,7 +13,9 @@
 #include "MD_RTU_User_Fun.h"
 /*处理相关*/
 void MDS_RTU_RecvByte(void *obj,uint8 byte);
-void MDS_RTU_TimeHandler(void *obj,uint32 times);
+void MDS_RTU_TimeHandler(void *obj
+//	,uint32 times
+);
 
 static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode);
 /**/
@@ -42,8 +44,8 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	
 	pModbusRTU->mdsWriteFun=NULL;
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;
-	pModbusRTU->lastSendTimes=0;
-	pModbusRTU->timesTick=0;
+	pModbusRTU->lastSendTimes=0xffff0000;
+	pModbusRTU->timesTick=0xffff0000;
 	
 	T=(1.0/(float)baud)*100000;// 100us
 	uint16 time=0;
@@ -65,13 +67,29 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	return ;
 }
 /*定时处理函数*/
-void MDS_RTU_TimeHandler(void *obj,uint32 times){
+void MDS_RTU_TimeHandler(void *obj
+	//,uint32 times
+	){
+	uint32 tempTick=0;
+	uint8 overFlag=0;
 	PModbusS_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
-	pModbusRTU->timesTick=times;
-	/*不需要处理*/
-	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}
-	if(pModbusRTU->timesTick-pModbusRTU->lastTimesTick>=pModbusRTU->frameIntervalTime){
+	
+	pModbusRTU->timesTick++;
+	
+	if(pModbusRTU->timesTick==0xFFFFFFFF){/*溢出了 pModbusRTU->lastTimesTick==0xFFFFFFFF*/
+		tempTick=0xFFFFFFFF-pModbusRTU->lastSendTimes;
+		pModbusRTU->timesTick=tempTick; /*系统时间偏移*/
+		pModbusRTU->lastSendTimes=0;/*上次发送时间清零*/
+		overFlag=1;
+	}
+	
+	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}/*已经开始接收包*/
+	if(overFlag){ /*时间溢出*/
+		pModbusRTU->timesTick += 0xFFFFFFFF-pModbusRTU->lastTimesTick;/*发送时时间偏移*/
+		pModbusRTU->lastTimesTick = tempTick; 
+	}
+	if((pModbusRTU->timesTick - pModbusRTU->lastTimesTick >= pModbusRTU->frameIntervalTime)){
 		uint16 msgLen;
 		uint16 i;
 		uint8	 byte;

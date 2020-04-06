@@ -40,7 +40,7 @@ void TIM3_IRQHandler(void)   //TIM3中断
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
 		sys_tick_100us++;
 		
-		MDSTimeHandler100US(sys_tick_100us);
-		MDMTimeHandler100US(sys_tick_100us);
+		MDSTimeHandler100US();
+		MDMTimeHandler100US();
 	}
 }

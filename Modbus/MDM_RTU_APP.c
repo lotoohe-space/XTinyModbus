@@ -72,7 +72,7 @@ static void MDM_RTUUserRead(void){
 	#else 
 		
 		if(MDM_RTU_ReadCoil(&modbusRWRTUCB,0x1,0x0000,16)==ERR_RW_FIN){
-			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp);
+			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE);
 			resTemp=resTemp;
 		}
 	#endif

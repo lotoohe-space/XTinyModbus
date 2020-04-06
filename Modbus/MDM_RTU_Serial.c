@@ -7,7 +7,7 @@ PModbusBase pModbusMBase=NULL;
 
 static void MDMSerialSendBytes(uint8 *bytes,uint16 num);
 static void MDMSerialSWRecv_Send(uint8 mode);
-void MDMTimeHandler100US(uint32 times);
+void MDMTimeHandler100US(void);
 
 /*硬件初始化函数，可在此初始化串口*/
 void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity){
@@ -18,9 +18,9 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	pModbusMBase->mdRTURecSendConv=MDMSerialSWRecv_Send;
 }
 /*定时器中调用该函数*/
-void MDMTimeHandler100US(uint32 times){
+void MDMTimeHandler100US(void){
 	if(pModbusMBase==NULL){return;}
-	pModbusMBase->mdRTUTimeHandlerFunction(pModbusMBase ,times);
+	pModbusMBase->mdRTUTimeHandlerFunction(pModbusMBase );
 }
 /*bsp层中断接收调用这个函数*/
 void MDMSerialRecvByte(uint8 byte){

@@ -9,7 +9,6 @@ CRCUpdate=crc16_update(CRCUpdate,(b))
 #define MEM_RTU_END_EN(a)		(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&CRCUpdate),2);}
 
 static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte);
-void MDM_RTU_TimeHandler(void *obj,uint32 times);
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
 
 MDError MDM_RTU_Init(
@@ -82,10 +81,10 @@ void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 	pModbusRTUCB->sendFlag=0;
 }
 /*定时处理函数*/
-void MDM_RTU_TimeHandler(void *obj,uint32 times){
+void MDM_RTU_TimeHandler(void *obj){
 	PModbus_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
-	pModbusRTU->timesTick=times;
+	pModbusRTU->timesTick++;
 	/*不需要处理*/
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}
 	if(pModbusRTU->timesTick-pModbusRTU->lastTimesTick>=pModbusRTU->frameIntervalTime){
@@ -404,7 +403,7 @@ MDError MDM_RTU_NB_RW(
 						goto _exit;
 					}
 					/*返回地址不匹配错误*/
-					if(res!=startAddr){ 
+					if(res!=startAddr){
 						errRes= ERR_WRITE_COIL;
 						goto _exit;
 					}

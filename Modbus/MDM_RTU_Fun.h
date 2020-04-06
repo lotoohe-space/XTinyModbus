@@ -81,7 +81,7 @@ void MDM_RTU_CB_Init(
 );
 
 /*定时器中断函数中调用,时间单位100us*/
-void MDM_RTU_TimeHandler(void *obj,uint32 times);
+void MDM_RTU_TimeHandler(void *obj);
 /*串口接收中断函数中调用*/
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
 

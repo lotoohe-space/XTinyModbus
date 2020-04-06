@@ -3,7 +3,9 @@
 
 #include "MD_RTU_Type.h"
 
-typedef	void (*MDS_RTU_TimeHandlerFunction)(void* obj,uint32 times);
+typedef	void (*MDS_RTU_TimeHandlerFunction)(void* obj
+	//,uint32 times
+	);
 typedef void (*MDS_RTU_SendBytesFunction)(uint8 *byte,uint16 num);
 typedef void (*MDS_RTU_RecByteFunction)(void* obj, uint8 byte);
 typedef void (*MDS_RTU_RecSendConv)(uint8 mode);
