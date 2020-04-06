@@ -7,6 +7,9 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/4
+Slave fixes a bug with a minimal probability that the timer overflow can cause packet loss.<br>
+
 2020/4/3
 Salve changes the discrete mapping, and the input is mapped separately <br>
 
@@ -110,6 +113,9 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/4/4
+Slave修复定时器溢出可能导致丢包的极小概率bug<br>
 
 2020/4/3
 Salve更改离散映射方式，输入分开映射<br>
