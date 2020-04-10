@@ -1,16 +1,35 @@
+/********************************************************************************
+* @File name: MDM_RTU_Fun.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-10
+* @Description: Modbus RTU 主机功能模块
+********************************************************************************/
+
+/*********************************头文件包含************************************/
 #include "MDM_RTU_Fun.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_CRC16.h"
+/*********************************结束******************************************/
 
-
-#define MEM_RTU_START_EN()	{uint16 CRCUpdate=0xFFFF;
-#define MEM_RTU_EN_QUEUE(a,b) MDM_RTU_SendByte((a),(b));\
-CRCUpdate=crc16_update(CRCUpdate,(b))
-#define MEM_RTU_END_EN(a)		(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&CRCUpdate),2);}
-
+/*********************************函数申明************************************/
 static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte);
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
+/*********************************结束******************************************/
 
+/*******************************************************
+*
+* Function name :MDM_RTU_Init
+* Description        :Modbus RTU 主机初始化
+* Parameter         :
+*        @pModbusRTU        主机对象指针    
+*        @mdRTUSerialInitFun    串口初始化函数
+*        @baud    波特率
+*        @dataBits    数据位
+*        @stopBits    停止位
+*        @parity    奇偶校验位
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_Init(
 	PModbus_RTU pModbusRTU,
 	MD_RTU_SerialInit mdRTUSerialInitFun,
@@ -57,13 +76,24 @@ MDError MDM_RTU_Init(
 	
 	return ERR_NONE;
 }
-/*控制块初始化*/
+/*******************************************************
+*
+* Function name :MDM_RTU_CB_Init
+* Description        :Modbus RTU 主机发送控制块初始化，控制块主要包含从发时间，次数等信息维护
+* Parameter         :
+*        @pModbusRTUCB        发送控制块对象指针    
+*        @pModbusRTU    主机对象指针
+*        @sendIntervalTime    发送间隔时间
+*        @sendOverTime    发送超时时间
+*        @RTTimes    重传次数
+* Return          : 无
+**********************************************************/
 void MDM_RTU_CB_Init(
 	PModbus_RTU_CB 	pModbusRTUCB
 	,PModbus_RTU 		pModbusRTU
 	,uint16 				sendIntervalTime
-	,uint32					sendOverTime/*发送超时时间*/
-	,uint8 					RTTimes/*重传次数 当其为255时表示一直进行重传*/
+	,uint32					sendOverTime
+	,uint8 					RTTimes
 ){
 	if(pModbusRTUCB==NULL){return ;}
 	pModbusRTUCB->sendIntervalTime=sendIntervalTime;
@@ -74,13 +104,27 @@ void MDM_RTU_CB_Init(
 	pModbusRTUCB->sendFlag=0;
 	pModbusRTU->parentObj=NULL;
 }
-/*控制块超时复位*/
+/*******************************************************
+*
+* Function name :MDM_RTU_CB_OverTimeReset
+* Description        :发送控制块超时复位
+* Parameter         :
+*        @pModbusRTUCB        发送控制块对象指针    
+* Return          : 无
+**********************************************************/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 	if(pModbusRTUCB==NULL){return ;}
 	pModbusRTUCB->RTCount=0;
 	pModbusRTUCB->sendFlag=0;
 }
-/*定时处理函数*/
+/*******************************************************
+*
+* Function name :MDM_RTU_TimeHandler
+* Description        :定时处理函数，定时单位100US
+* Parameter         :
+*        @obj        主机对象指针    
+* Return          : 无
+**********************************************************/
 void MDM_RTU_TimeHandler(void *obj){
 	PModbus_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
@@ -99,7 +143,15 @@ void MDM_RTU_TimeHandler(void *obj){
 		pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	}
 }
-/*该函数接收数据并且放入队列中*/
+/*******************************************************
+*
+* Function name :MDM_RTU_RecvByte
+* Description        :该函数接收数据并且放入队列中
+* Parameter         :
+*        @obj        主机对象指针    
+*        @byte       接收的一个字节    
+* Return          : 无
+**********************************************************/
 void MDM_RTU_RecvByte(void *obj,uint8 byte){
 	PModbus_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
@@ -109,16 +161,33 @@ void MDM_RTU_RecvByte(void *obj,uint8 byte){
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){
 		pModbusRTU->CRC16Update=0xFFFF;
 	}
-	pModbusRTU->CRC16Update=crc16_update(pModbusRTU->CRC16Update,byte);
+	pModbusRTU->CRC16Update=MD_CRC16Update(pModbusRTU->CRC16Update,byte);
 	/*保存上次接收的字符的时间戳*/
 	pModbusRTU->lastTimesTick=pModbusRTU->timesTick;
 }
-/*发送一个字节*/
+/*******************************************************
+*
+* Function name :MDM_RTU_SendByte
+* Description        :发送一个字节
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @byte       发送的一个字节    
+* Return          : 无
+**********************************************************/
 static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte){
 	if(!pModbus_RTU){ return; }
 	TO_MDBase(pModbus_RTU)->mdRTUSendBytesFunction(&byte,1);
 }
-/*获取返回的数据的数据*/
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadByte
+* Description        :从接收队列中获取数据
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @res       获取数据缓存
+*        @len       获取的数据长度    
+* Return          : 无
+**********************************************************/
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len){
 	uint8 i;
 	if(res==NULL){return ERR_VOID;}
@@ -129,7 +198,16 @@ MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len){
 	}
 	return ERR_NONE;
 }
-/*获取返回的数据的数据*/
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadUint16
+* Description        :从接收队列中获取数据
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @res       获取数据缓存
+*        @len       获取的数据长度    
+* Return          : 无
+**********************************************************/
 MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len){
 	uint8 i;
 	uint8 byte;
@@ -146,7 +224,18 @@ MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len){
 	}
 	return ERR_NONE;
 }
-/*读功能函数*/
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadFun
+* Description        :该函数发送读功能相关指令
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @funCode       功能码
+*        @slaveAddr       从机地址    
+*        @startAddr       读取开始地址    
+*        @numOf       读取的个数    
+* Return          : 无
+**********************************************************/
 static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	MEM_RTU_START_EN();
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
@@ -157,7 +246,18 @@ static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAdd
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_L_BYTE(numOf));
 	MEM_RTU_END_EN(pModbus_RTU);
 }
-/*写单个线圈与寄存器函数*/
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteSingleFun
+* Description        :写单个线圈与寄存器函数
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @funCode       功能码
+*        @slaveAddr       从机地址    
+*        @startAddr       写开始地址    
+*        @value       写入的值  
+* Return          : 无
+**********************************************************/
 static void MDM_RTU_WriteSingleFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 value){
 	MEM_RTU_START_EN();
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
@@ -168,7 +268,19 @@ static void MDM_RTU_WriteSingleFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 s
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_L_BYTE(value));
 	MEM_RTU_END_EN(pModbus_RTU);
 }
-/*写多个线圈与多个寄存器*/
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteFun
+* Description        :写多个线圈与多个寄存器
+* Parameter         :
+*        @pModbus_RTU        主机对象指针    
+*        @funCode       功能码
+*        @slaveAddr       从机地址    
+*        @startAddr       写开始地址    
+*        @numOf       写入的数据个数
+*        @data       写入的数据 
+* Return          : 无
+**********************************************************/
 static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 	uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint8 numOf,uint8 *data){
 	uint16 i;
@@ -199,7 +311,18 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 	} 
 	MEM_RTU_END_EN(pModbus_RTU);
 }
-/*向映射中写入bit*/
+/*******************************************************
+*
+* Function name :MDM_RTU_InsideWriteBits
+* Description        :向离散映射中写入bit
+* Parameter         :
+*        @obj        主机对象指针    
+*        @modbusAddr   离散映射的modbus地址
+*        @numOf       写入个数    
+*        @bit       写入的数据    
+*        @opAddrType       写入的地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
+* Return          : TRUE , FALSE
+**********************************************************/
 BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bit, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbus_RTU = obj;
@@ -237,7 +360,19 @@ BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bi
 	}
 	return FALSE;
 }
-/*写离散寄存器*/
+/*******************************************************
+*
+* Function name :MDM_RTU_InsideWriteRegs
+* Description        :写离散寄存器
+* Parameter         :
+*        @obj        主机对象指针    
+*        @modbusAddr   离散映射的modbus地址
+*        @numOf       写入个数    
+*        @reg       写入的数据    
+*        @isBigE       大端还是小端方式  
+*        @opAddrType       写入的地址类型(HOLD_REGS_TYPE,INPUT_REGS_TYPE)，参见[AddrType]
+* Return          : TRUE , FALSE
+**********************************************************/
 BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uint8 isBigE, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
@@ -264,8 +399,19 @@ BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *r
 	}
 	return FALSE;
 }
-
-/*非阻塞式读写*/
+/*******************************************************
+*
+* Function name :MDM_RTU_NB_RW
+* Description        :非阻塞式读写
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @funCode   功能码，参见[ModbusFunCode]
+*        @slaveAddr      	从机地址    
+*        @startAddr       读写开始地址    
+*        @numOf       读写数据个数  
+*        @wData       如果是写入功能码，那它就是写入的数据
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_RW(
 	PModbus_RTU_CB pModbus_RTU_CB,
 	ModbusFunCode funCode,
@@ -510,7 +656,19 @@ _exit:
 	pModbus_RTU_CB->pModbus_RTU->parentObj=NULL;
 	return errRes;
 }
-/*阻塞式读写*/
+/*******************************************************
+*
+* Function name :MDM_RTU_RW
+* Description        :阻塞式读写
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @funCode   功能码，参见[ModbusFunCode]
+*        @slaveAddr      	从机地址    
+*        @startAddr       读写开始地址    
+*        @numOf       读写数据个数  
+*        @wData       如果是写入功能码，那它就是写入的数据
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_RW(
 	PModbus_RTU_CB pModbus_RTU_CB,
 	ModbusFunCode funCode,
@@ -533,64 +691,243 @@ MDError MDM_RTU_RW(
 	//pModbus_RTU_CB->sendFlag=0;
 	return res;
 }
-
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadCoil
+* Description        :读线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_COIL,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadInput
+* Description        :读输入
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_INPUT,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadHoldReg
+* Description        :读保持寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_HOLD_REG,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadInputReg
+* Description        :读输入寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_INPUT_REG,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteSingleCoil
+* Description        :写单个线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_WriteSingleCoil(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,BOOL boolVal){
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal){
 	uint16 temp;
 	temp=boolVal?0xFF00:0x0000;
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_SIN_COIL,slaveAddr,startAddr,1,(void*)(&temp));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteSingleReg
+* Description        :写单个寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_WriteSingleReg(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16 val){
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_SIN_REG,slaveAddr,startAddr,1,(void*)(&val));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteCoils
+* Description        :写线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       写数据个数  
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_COILS,slaveAddr,startAddr,numOf,(void*)(val));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteRegs
+* Description        :写寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       写数据个数  
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_REGS,slaveAddr,startAddr,numOf,(void*)(val));
 };
-/////
+
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadCoil
+* Description        :非阻塞读线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_COIL,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadInput
+* Description        :非阻塞读输入
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_INPUT,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadHoldReg
+* Description        :非阻塞读保持寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_HOLD_REG,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadHoldReg
+* Description        :非阻塞读输入寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       读数据个数  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_INPUT_REG,slaveAddr,startAddr,numOf,NULL);
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteSingleCoil
+* Description        :非阻塞写单个线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_WriteSingleCoil(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,BOOL boolVal){
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal){
 	uint16 temp;
 	temp=boolVal?0xFF00:0x0000;
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_SIN_COIL,slaveAddr,startAddr,1,(void*)(&temp));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteSingleReg
+* Description        :非阻塞写单个寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_WriteSingleReg(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16 val){
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_SIN_REG,slaveAddr,startAddr,1,(void*)(&val));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteCoils
+* Description        :非阻塞写线圈
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       写数据个数  
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_COILS,slaveAddr,startAddr,numOf,(void*)(val));
 };
+/*******************************************************
+*
+* Function name :MDM_RTU_WriteRegs
+* Description        :非阻塞写寄存器
+* Parameter         :
+*        @pModbus_RTU_CB    写入控制块对象指针  
+*        @slaveAddr      	从机地址    
+*        @startAddr       读开始地址    
+*        @numOf       写数据个数  
+*        @boolVal      TRUE , FALSE  
+* Return          : 参见[MDError]
+**********************************************************/
 MDError MDM_RTU_NB_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_REGS,slaveAddr,startAddr,numOf,(void*)(val));

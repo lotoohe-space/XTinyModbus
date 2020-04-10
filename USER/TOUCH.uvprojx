@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DAC;..\HARDWARE\DMA;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\HARDWARE\W25QXX;..\HARDWARE\GBK_LibDrive;..\USER;..\Modbus</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DAC;..\HARDWARE\DMA;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\HARDWARE\W25QXX;..\HARDWARE\GBK_LibDrive;..\USER;..\Modbus\ModbusBase;..\Modbus\ModbusRTUMaster;..\Modbus\ModbusRTUSlave</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -559,132 +559,72 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Modbus_RTU</GroupName>
+          <GroupName>ModbusBase</GroupName>
           <Files>
-            <File>
-              <FileName>MD_RTU_APP.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_APP.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_APP.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_APP.h</FilePath>
-            </File>
             <File>
               <FileName>MD_RTU_CRC16.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_CRC16.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_CRC16.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_CRC16.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Fun.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_Fun.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Fun.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Fun.h</FilePath>
+              <FilePath>..\Modbus\ModbusBase\MD_RTU_CRC16.c</FilePath>
             </File>
             <File>
               <FileName>MD_RTU_Queue.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_Queue.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Queue.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Queue.h</FilePath>
+              <FilePath>..\Modbus\ModbusBase\MD_RTU_Queue.c</FilePath>
             </File>
             <File>
               <FileName>MD_RTU_RegCoil.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_RegCoil.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_RegCoil.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_RegCoil.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Serial.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Serial.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Type.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Type.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_User_Fun.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_User_Fun.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_User_Fun.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_User_Fun.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Modbus\MD_RTU_Serial.c</FilePath>
+              <FilePath>..\Modbus\ModbusBase\MD_RTU_RegCoil.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Modbus_Master_RTU</GroupName>
+          <GroupName>ModbusRTUSlave</GroupName>
+          <Files>
+            <File>
+              <FileName>MD_RTU_APP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUSlave\MD_RTU_APP.c</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_Fun.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUSlave\MD_RTU_Fun.c</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_Serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUSlave\MD_RTU_Serial.c</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_User_Fun.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUSlave\MD_RTU_User_Fun.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ModbusRTUMaster</GroupName>
           <Files>
             <File>
               <FileName>MDM_RTU_APP.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MDM_RTU_APP.c</FilePath>
+              <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_APP.c</FilePath>
             </File>
             <File>
               <FileName>MDM_RTU_Fun.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MDM_RTU_Fun.c</FilePath>
+              <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_Fun.c</FilePath>
             </File>
             <File>
               <FileName>MDM_RTU_Serial.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MDM_RTU_Serial.c</FilePath>
+              <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_Serial.c</FilePath>
             </File>
             <File>
               <FileName>MDM_RTU_User_Fun.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\MDM_RTU_User_Fun.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Error.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Error.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_Tool.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_Tool.h</FilePath>
-            </File>
-            <File>
-              <FileName>MD_RTU_User_Fun.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MD_RTU_User_Fun.h</FilePath>
-            </File>
-            <File>
-              <FileName>MDM_RTU_Fun.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MDM_RTU_Fun.h</FilePath>
-            </File>
-            <File>
-              <FileName>MDM_RTU_APP.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Modbus\MDM_RTU_APP.h</FilePath>
+              <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_User_Fun.c</FilePath>
             </File>
           </Files>
         </Group>

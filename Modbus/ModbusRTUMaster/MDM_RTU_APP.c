@@ -1,7 +1,19 @@
+/********************************************************************************
+* @File name: MD_RTU_APP.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-10
+* @Description: Modbus RTU 用户APP模块
+********************************************************************************/
+
+/*********************************头文件包含************************************/
 #include "MDM_RTU_APP.h"
 #include "MDM_RTU_Fun.h"
 #include "MDM_RTU_Serial.h"
 #include "MDM_RTU_User_Fun.h"
+/*********************************结束******************************************/
+
+/*********************************全局变量************************************/
 uint16 regCoilDataMaster0[4]={0};
 RegCoilItem regCoilItemMaster0={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
@@ -23,8 +35,16 @@ Modbus_RTU_CB modbusRWRTUCB1 = {0};
 Modbus_RTU_CB modbusRWRTUCB2 = {0};
 Modbus_RTU_CB modbusRWRTUCB3 = {0};
 Modbus_RTU_CB modbusRWRTUCB4 = {0};
+/*********************************结束******************************************/
+
+/*******************************************************
+*
+* Function name :MDM_RTU_APPInit
+* Description        :主机用户APP初始化函数
+* Parameter         :无
+* Return          : TRUE success , FALSE fail
+**********************************************************/
 BOOL MDM_RTU_APPInit(void){
-	
 	if(MDM_RTU_Init(&modbus_RTU,MDMInitSerial,9600,8,1,0)!=ERR_NONE){
 		return FALSE;
 	}
@@ -110,6 +130,7 @@ static void MDM_RTU_UserUpdate(void){
 	MDM_RTUUserRead();
 	MDM_RTUUserWrite();
 }
+
 /*循环调用*/
 void MDM_RTU_Loop(void){
 	MDM_RTU_UserUpdate();

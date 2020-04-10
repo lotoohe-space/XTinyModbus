@@ -1,11 +1,26 @@
+/********************************************************************************
+* @File name: MD_RTU_Fun.h
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-10
+* @Description: Modbus RTU 主机功能模块
+********************************************************************************/
+
 #ifndef _MEM_RTU_FUN_H__
 #define _MEM_RTU_FUN_H__
+/*********************************头文件包含************************************/
 #include "MD_RTU_Queue.h"
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Error.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_RegCoil.h"
+/*********************************结束******************************************/
 
+/*********************************配置宏************************************/
+#define MDM_REG_COIL_ITEM_NUM 20		/*离散映射个数*/
+/*********************************结束******************************************/
+
+/*********************************头文件包含************************************/
 /*modbus rtu 中的 功能码*/
 typedef enum{
 	READ_COIL=1,
@@ -17,8 +32,6 @@ typedef enum{
 	WRITE_COILS=15,
 	WRITE_REGS=16
 }ModbusFunCode;
-
-#define MDM_REG_COIL_ITEM_NUM 20
 
 typedef struct{
 	/*继承modbusBase*/
@@ -79,7 +92,16 @@ void MDM_RTU_CB_Init(
 	,uint32					sendOverTime/*发送超时时间*/
 	,uint8 					RTTimes/*重传次数 当其为255时表示一直进行重传*/
 );
+/*********************************结束******************************************/
 
+/*********************************宏定义************************************/
+#define MEM_RTU_START_EN()	{uint16 CRCUpdate=0xFFFF;
+#define MEM_RTU_EN_QUEUE(a,b) MDM_RTU_SendByte((a),(b));\
+CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
+#define MEM_RTU_END_EN(a)		(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&CRCUpdate),2);}
+/*********************************结束******************************************/
+
+/*********************************函数定义************************************/
 /*定时器中断函数中调用,时间单位100us*/
 void MDM_RTU_TimeHandler(void *obj);
 /*串口接收中断函数中调用*/
@@ -103,9 +125,9 @@ MDError MDM_RTU_NB_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint1
 MDError MDM_RTU_NB_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_NB_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_NB_WriteSingleCoil(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,BOOL boolVal);
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal);
 MDError MDM_RTU_NB_WriteSingleReg(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16 val);
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val);
 MDError MDM_RTU_NB_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val);
 MDError MDM_RTU_NB_WriteRegs(
@@ -117,12 +139,13 @@ MDError MDM_RTU_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 s
 MDError MDM_RTU_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_WriteSingleCoil(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,BOOL boolVal);
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal);
 MDError MDM_RTU_WriteSingleReg(
-	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16 val);
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val);
 MDError MDM_RTU_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val);
 MDError MDM_RTU_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val);
-	
+/*********************************结束******************************************/
+
 #endif

@@ -1,31 +1,17 @@
-/**
-* @file 		MD_RTU_CRC16.c
-* @brief		无
-* @details	无
-* @author		zspace
-* @date		2020/3/23
-* @version	A001
-* @par History:  无       
-*/
-#include "MD_RTU_CRC16.h"
+/********************************************************************************
+* @File name: MD_RTU_CRC16.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-10
+* @Description: Modbus RTU CRC16计算模块
+********************************************************************************/
 
-///*CRC16校验*/
-//uint16 MDS_RTU_CRC16_CAL(uint8 *addr,uint16 num)
-//{
-//	uint16 crc=0xFFFF;
-//	for(;num > 0;num--)
-//	{
-//		crc = crc^(*addr++);
-//		for(int i = 0;i<8;i++)
-//		{
-//				if(crc & 0x0001)
-//						crc = (crc>>1)^0xa001;
-//				else
-//						crc >>= 1;
-//		}
-//	}
-//  return crc;
-//}
+/*********************************头文件包含************************************/
+#include "MD_RTU_CRC16.h"
+/*********************************结束******************************************/
+
+/*********************************变量申明************************************/
+#if MD_RTU_CRC16_FAST_MODE
 static const uint16 crc16_table[256]=
 {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
@@ -61,36 +47,34 @@ static const uint16 crc16_table[256]=
         0x4400, 0x84C1, 0x8581, 0x4540, 0x8701, 0x47C0, 0x4680, 0x8641,
         0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
 };
-uint16 crc16_update(uint16 crc, uint8 a)
+#endif
+/*********************************结束******************************************/
+
+/*******************************************************
+*
+* Function name :MD_CRC16Update
+* Description        :该函数需要通过累计计算得到CRC16的值
+* Parameter         :
+*        @CRC        上次计算的CRC16值    
+*        @byte    需要参与计算的一字节
+* Return          : 无
+**********************************************************/
+uint16 MD_CRC16Update(uint16 CRC, uint8 byte)
 {
-	 return ((crc) >> 8) ^ crc16_table[((crc) ^ a) & 0xff];
-//  int i;
+#if MD_RTU_CRC16_FAST_MODE
+	 return ((CRC) >> 8) ^ crc16_table[((CRC) ^ byte) & 0xff];
+#else
+  int i;
 
-//  crc ^= a;
-//  for (i = 0; i < 8; ++i)
-//  {
-//    if (crc & 1)
-//      crc = (crc >> 1) ^ 0xA001;
-//    else
-//      crc = (crc >> 1);
-//  }
+  crc ^= a;
+  for (i = 0; i < 8; ++i)
+  {
+    if (crc & 1)
+      crc = (crc >> 1) ^ 0xA001;
+    else
+      crc = (crc >> 1);
+  }
 
-//  return crc;
+  return crc;
+#endif
 }
-
-//uint16 crc16_update(uint16 crc, uint8 a)
-//{
-//  int i;
-
-//  crc ^= a;
-//  for (i = 0; i < 8; ++i)
-//  {
-//    if (crc & 1)
-//      crc = (crc >> 1) ^ 0xA001;
-//    else
-//      crc = (crc >> 1);
-//  }
-
-//  return crc;
-//}
-

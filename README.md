@@ -7,6 +7,9 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/10
+Code to add comments, specification of comments, optimize the structure of the file storage.<br>
+
 2020/4/4
 Slave fixes a bug with a minimal probability that the timer overflow can cause packet loss.<br>
 
@@ -114,8 +117,11 @@ XTinyModbus
 0.日志
 ----
 
+2020/4/10
+代码添加注释，规范注释方式，优化文件存放结构。<br>
+
 2020/4/4
-Slave修复定时器溢出可能导致丢包的极小概率bug<br>
+Slave修复定时器溢出可能导致丢包的极小概率bug。<br>
 
 2020/4/3
 Salve更改离散映射方式，输入分开映射<br>

@@ -1,6 +1,28 @@
+/********************************************************************************
+* @File name: MD_RTU_User_Fun.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-10
+* @Description: Modbus RTU 主机用户调用函数
+********************************************************************************/
+
+/*********************************头文件包含************************************/
 #include "MDM_RTU_User_Fun.h"
 #include "MDM_RTU_Fun.h"
-/*读取bits,可以读取一个，也可以读取多个*/
+/*********************************结束******************************************/
+
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadBits
+* Description        :读取离散映射的bits,可以读取一个，也可以读取多个
+* Parameter         :
+*        @modbusAddr        modbus的地址    
+*        @numOf    需要读取的个数
+*        @opAddrType    地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
+* Return          : 
+*        @res    返回的值
+*				 函数返回 TRUE success , FALSE fail
+**********************************************************/
 BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
@@ -33,6 +55,18 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 	}
 	return FALSE;
 }
+/*******************************************************
+*
+* Function name :MDM_RTU_ReadRegs
+* Description        :读取离散映射的寄存器,可以读取一个，也可以读取多个
+* Parameter         :
+*        @modbusAddr        modbus的地址    
+*        @numOf    需要读取的个数
+*        @opAddrType    地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
+* Return          : 
+*        @res    返回的值
+*				 函数返回 TRUE success , FALSE fail
+**********************************************************/
 BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, AddrType opAddrType){
 	uint16 i;
 	PModbus_RTU pModbusS_RTU = obj;
