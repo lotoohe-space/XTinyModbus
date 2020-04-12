@@ -237,6 +237,7 @@ MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len){
 * Return          : нч
 **********************************************************/
 static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
+	MD_RTU_SEND_MODE(pModbus_RTU);
 	MEM_RTU_START_EN();
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
@@ -245,6 +246,7 @@ static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAdd
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_H_BYTE(numOf));
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_L_BYTE(numOf));
 	MEM_RTU_END_EN(pModbus_RTU);
+	MD_RTU_RECV_MODE(pModbus_RTU);
 }
 /*******************************************************
 *
@@ -259,6 +261,7 @@ static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAdd
 * Return          : нч
 **********************************************************/
 static void MDM_RTU_WriteSingleFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 value){
+	MD_RTU_SEND_MODE(pModbus_RTU);
 	MEM_RTU_START_EN();
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
@@ -267,6 +270,7 @@ static void MDM_RTU_WriteSingleFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 s
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_H_BYTE(value));
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_L_BYTE(value));
 	MEM_RTU_END_EN(pModbus_RTU);
+	MD_RTU_RECV_MODE(pModbus_RTU);
 }
 /*******************************************************
 *
@@ -285,6 +289,7 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 	uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint8 numOf,uint8 *data){
 	uint16 i;
 	uint8 wLen;
+	MD_RTU_SEND_MODE(pModbus_RTU);
 	MEM_RTU_START_EN();
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
@@ -310,6 +315,7 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 		}
 	} 
 	MEM_RTU_END_EN(pModbus_RTU);
+	MD_RTU_RECV_MODE(pModbus_RTU);
 }
 /*******************************************************
 *

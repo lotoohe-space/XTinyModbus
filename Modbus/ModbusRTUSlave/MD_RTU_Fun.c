@@ -276,10 +276,10 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	}
 
 	/*功能码01-04具有基本类似的传输结构*/
-	//01 读取线圈状态 	取得一组逻辑线圈的当前状态（ON/OFF)
-	//02 读取输入状态 	取得一组开关输入的当前状态(ON/OFF)
-	//03 读取保持寄存器 在一个或多个保持寄存器中取得当前的二进制值
-	//04 读取输入寄存器 在一个或多个输入寄存器中取得当前的二进制值
+	/*01 读取线圈状态 	取得一组逻辑线圈的当前状态（ON/OFF)*/
+	/*02 读取输入状态 	取得一组开关输入的当前状态(ON/OFF)*/
+	/*03 读取保持寄存器 在一个或多个保持寄存器中取得当前的二进制值*/
+	/*04 读取输入寄存器 在一个或多个输入寄存器中取得当前的二进制值*/
 	if(MDS_RTU_FUN_CODE(pModbus_RTU)>=0x1
 		&&MDS_RTU_FUN_CODE(pModbus_RTU)<=0x4
 	){
@@ -290,8 +290,8 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 		MDS_RTU_FUN_CODE(pModbus_RTU)==0x5|| 
 		MDS_RTU_FUN_CODE(pModbus_RTU)==0x6
 	){
-	//05 强置单线圈 强置一个逻辑线圈的通断状态
-	//06 预置单寄存器 把具体二进值装入一个保持寄存器
+	/*05 强置单线圈 强置一个逻辑线圈的通断状态*/
+	/*06 预置单寄存器 把具体二进值装入一个保持寄存器*/
 		uint16 startReg=MDS_RTU_START_REG(pModbus_RTU);
 		uint16 val= ((pModbus_RTU->serialReadCache[4])<<8)|pModbus_RTU->serialReadCache[5];
 
@@ -300,8 +300,8 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 			MDS_RTU_FUN_CODE(pModbus_RTU)==15||
 			MDS_RTU_FUN_CODE(pModbus_RTU)==16
 	){
-	//15 强置多线圈 强置一串连续逻辑线圈的通断
-	//16 预置多寄存器 把具体的二进制值装入一串连续的保持寄存器
+	/*15 强置多线圈 强置一串连续逻辑线圈的通断*/
+	/*16 预置多寄存器 把具体的二进制值装入一串连续的保持寄存器*/
 		uint16 startReg=MDS_RTU_START_REG(pModbus_RTU);
 		uint16 regNum=MDS_RTU_REGS_NUM(pModbus_RTU);
 		uint8	 bytesNum=MDS_RTU_BYTES_NUM(pModbus_RTU);
@@ -331,6 +331,7 @@ __exit:
 
 	return ;
 }
+
 /*******************************************************
 *
 * Function name :MDS_RTU_SendErrorCode
@@ -342,11 +343,13 @@ __exit:
 * Return          : 无
 **********************************************************/
 static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode){
-		MSD_START_SEND(pModbus_RTU);
-		MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
-		MSD_SEND_BYTE(pModbus_RTU,anlCode);
-		MSD_SEND_BYTE(pModbus_RTU,errCode);
-		MSD_SEND_END(pModbus_RTU);	
+	MD_RTU_SEND_MODE(pModbus_RTU);
+	MSD_START_SEND(pModbus_RTU);
+	MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
+	MSD_SEND_BYTE(pModbus_RTU,anlCode);
+	MSD_SEND_BYTE(pModbus_RTU,errCode);
+	MSD_SEND_END(pModbus_RTU);	
+	MD_RTU_RECV_MODE(pModbus_RTU);
 }
 /*******************************************************
 *
@@ -380,6 +383,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 				uint16 	j;
 				uint16	lastIndex=0;
 				uint8	 	tempByte=0;
+				MD_RTU_SEND_MODE(pModbus_RTU);
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);		
 				MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -402,6 +406,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 				}
 				MSD_SEND_BYTE(pModbus_RTU,tempByte);
 				MSD_SEND_END(pModbus_RTU);
+				MD_RTU_RECV_MODE(pModbus_RTU);
 			}else if((funCode==3&&pModbus_RTU->pRegCoilList[i]->addrType==HOLD_REGS_TYPE)||
 				(funCode==4&&pModbus_RTU->pRegCoilList[i]->addrType==INPUT_REGS_TYPE)
 			){
@@ -409,6 +414,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 					/*得到uint16偏移*/
 				uint16 j=0;
 				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pRegCoilList[i]) ;
+				MD_RTU_SEND_MODE(pModbus_RTU);
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 				MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -419,7 +425,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 					MSD_SEND_BYTE(pModbus_RTU,(temp)&0xff);
 				}
 				MSD_SEND_END(pModbus_RTU);
-
+				MD_RTU_RECV_MODE(pModbus_RTU);
 			}else { 
 				/*地址不能读取*/
 				continue;
@@ -457,6 +463,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 					res=MDS_RTU_WriteBit(pModbus_RTU,reg,0,COILS_TYPE);
 				}
 				if(res){
+					MD_RTU_SEND_MODE(pModbus_RTU);
 					MSD_START_SEND(pModbus_RTU);
 					MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 					MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -465,6 +472,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 					MSD_SEND_BYTE(pModbus_RTU,((*data)>>8)&0xff);
 					MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
 					MSD_SEND_END(pModbus_RTU);
+					MD_RTU_RECV_MODE(pModbus_RTU);
 					if(pModbus_RTU->mdsWriteFun){
 						pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,COILS_TYPE);
 					}
@@ -479,6 +487,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 		case 15:/*写多线圈*/
 			res=MDS_RTU_WriteBits(pModbus_RTU, reg, regNum, data,COILS_TYPE);
 			if(res){
+				MD_RTU_SEND_MODE(pModbus_RTU);
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 				MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -487,6 +496,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((regNum)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				MD_RTU_RECV_MODE(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
 					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,COILS_TYPE);
 				}
@@ -497,6 +507,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 		case 6:/*写单寄存器*/
 			res=MDS_RTU_WriteReg(pModbus_RTU,reg,data[0],HOLD_REGS_TYPE);
 			if(res){
+				MD_RTU_SEND_MODE(pModbus_RTU);
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 				MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -505,6 +516,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((*data)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(*data)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				MD_RTU_RECV_MODE(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
 					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,1,HOLD_REGS_TYPE);
 				}
@@ -515,6 +527,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 		case 16:/*写多寄存器*/
 			res=MDS_RTU_WriteRegs(pModbus_RTU,reg,regNum,data,1,HOLD_REGS_TYPE);
 			if(res){
+				MD_RTU_SEND_MODE(pModbus_RTU);
 				MSD_START_SEND(pModbus_RTU);
 				MSD_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 				MSD_SEND_BYTE(pModbus_RTU,funCode);
@@ -523,6 +536,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MSD_SEND_BYTE(pModbus_RTU,((regNum)>>8)&0xff);
 				MSD_SEND_BYTE(pModbus_RTU,(regNum)&0xff);
 				MSD_SEND_END(pModbus_RTU);
+				MD_RTU_RECV_MODE(pModbus_RTU);
 				if(pModbus_RTU->mdsWriteFun){
 					pModbus_RTU->mdsWriteFun(pModbus_RTU,reg,regNum,HOLD_REGS_TYPE);
 				}

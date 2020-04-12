@@ -36,7 +36,7 @@ typedef struct{
 
 	PRegCoilItem 										pRegCoilList[REG_COIL_ITEM_NUM];					/*寄存器注册表*/
 
-	/*上次接收的时间,0xFFFFFFF表示未起开始检测帧*/
+	/*上次接收的时间,0xFFFFFFFF表示未起开始检测帧*/
 	uint32 lastTimesTick;
 	/*当前的实时时间单位100US*/
 	uint32 timesTick;

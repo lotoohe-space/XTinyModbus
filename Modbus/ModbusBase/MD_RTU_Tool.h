@@ -36,9 +36,16 @@ typedef struct{
 #define MD_SET_BIT(a,b) (a)|=(1<<(b))
 #define MD_CLR_BIT(a,b) (a)&=(~(1<<(b)))
 
+/*收发模式转换*/
+#define MD_RTU_SEND_MODE(a)	while((a)->lastTimesTick!=0xFFFFFFFF);\
+if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(TRUE)
+#define MD_RTU_RECV_MODE(a)	while((a)->lastTimesTick!=0xFFFFFFFF);\
+if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(FALSE)
+
 /*交换一个半字的高低字节*/
 #define MD_SWAP_HL(a) (a)=((((a)&0xff)<<8)|(((a)>>8)&0xff))
 
+/*取高低字节*/
 #define MD_H_BYTE(a)	(((a)>>8)&0xff)
 #define MD_L_BYTE(a)	((a)&0xff)
 

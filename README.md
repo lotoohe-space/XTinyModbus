@@ -7,6 +7,9 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/12
+Added transceiver conversion control.<br>
+
 2020/4/10
 Code to add comments, specification of comments, optimize the structure of the file storage.<br>
 
@@ -116,6 +119,9 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/4/12
+增加收发转换控制。<br>
 
 2020/4/10
 代码添加注释，规范注释方式，优化文件存放结构。<br>
