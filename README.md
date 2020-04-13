@@ -7,6 +7,9 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/13
+Slave adds the send cache, which is optional and enabled by default through the macro configuration in md_rtu_fun. h.<br>
+
 2020/4/12
 Added transceiver conversion control.<br>
 
@@ -120,6 +123,9 @@ XTinyModbus
 0.日志
 ----
 
+2020/4/13
+Slave增加发送缓存，该项为可选项，可以通过MD_RTU_Fun.h内的宏配置，默认开启。<br>
+
 2020/4/12
 增加收发转换控制。<br>
 
@@ -130,18 +136,18 @@ XTinyModbus
 Slave修复定时器溢出可能导致丢包的极小概率bug。<br>
 
 2020/4/3
-Salve更改离散映射方式，输入分开映射<br>
+Slave更改离散映射方式，输入分开映射<br>
 
 2020/3/31
-Salve添加主机写回调函数监听。<br>
-Salve添加部分异常码与错误码支持。<br>
-Salve修复发送未进行帧间隔的错误。<br>
+Slave添加主机写回调函数监听。<br>
+Slave添加部分异常码与错误码支持。<br>
+Slave修复发送未进行帧间隔的错误。<br>
 优化CRC16效率。<br>
 
 1.特性
 ----
-ModBus RTU salve 特性：<br>
-1)实现Modbus RTU salve<br>
+ModBus RTU Slave 特性：<br>
+1)实现Modbus RTU Slave<br>
 2)加入双队列机制。<br>
 3)实现功能码1,2,3,4,5,6,15,16。<br>
 4)支持modbus地址与本机地址离散映射。<br>

@@ -61,6 +61,18 @@ void uart_send_bytes(u8* bytes,u16 len){
     USART1->DR = (u8) (bytes[i]);  
 	}
 }
+u8 *sendBytes=NULL;
+u16 sendLen=0;
+u16 sendI=0;
+u8 sendFlag=0;
+void uart_send_bytes_by_isr(u8* bytes,u16 len){
+	sendBytes=bytes;
+	sendLen=len;
+	sendI=0;
+	sendFlag=0;
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+	while(sendFlag==0);
+}
 #if EN_USART1_RX   //如果使能了接收
 //串口1中断服务程序
 //注意,读取USARTx->SR能避免莫名其妙的错误   	
@@ -120,29 +132,21 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 	OSIntEnter();    
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
-		{
+	{
 		Res =USART_ReceiveData(USART1);	//读取接收到的数据
 		MDSSerialRecvByte(Res);
-		MDMSerialRecvByte(Res);
-//		if((USART_RX_STA&0x8000)==0)//接收未完成
-//			{
-//			if(USART_RX_STA&0x4000)//接收到了0x0d
-//				{
-//				if(Res!=0x0a)USART_RX_STA=0;//接收错误,重新开始
-//				else USART_RX_STA|=0x8000;	//接收完成了 
-//				}
-//			else //还没收到0X0D
-//				{	
-//				if(Res==0x0d)USART_RX_STA|=0x4000;
-//				else
-//					{
-//					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
-//					USART_RX_STA++;
-//					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
-//					}		 
-//				}
-//			}   		 
-     } 
+		//	MDMSerialRecvByte(Res);
+
+	} 
+	 /*发送中断*/
+  if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET){  
+    USART_SendData(USART1, sendBytes[sendI++]);
+    if(sendI == sendLen)//发送数据完成
+    {   
+			sendFlag=1;
+      USART_ITConfig(USART1, USART_IT_TXE, DISABLE); //关闭发送中断
+    }   
+  }   
 #if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 
 #endif

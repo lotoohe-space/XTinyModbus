@@ -16,10 +16,11 @@
 /*********************************结束******************************************/
 
 /*********************************配置参数***************************************/
-#define 	REG_COIL_ITEM_NUM 	20			/*离散映射最大数量*/
-#define 	MDS_RTU_CMD_SIZE		256			/*单条指令长度*/
+#define 	REG_COIL_ITEM_NUM 				20				/*离散映射最大数量*/
+#define 	MDS_RTU_CMD_SIZE					256				/*单条指令长度*/
+#define 	MDS_RTU_SEND_CACHE_SIZE		256				/*发送缓存长度*/
+#define 	MSD_USE_SEND_CACHE 				1					/*是否启用发送缓存*/
 /*********************************结束******************************************/
-
 
 /*********************************变量类型申明***********************************/
 typedef void (*MDSWriteFunciton)(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrType);
@@ -33,8 +34,11 @@ typedef struct{
 	
 	uint8														serialReadCache[MDS_RTU_CMD_SIZE];	/*单指令读取队列*/
 	uint16													serialReadCount;										/*指令的长度*/
+	
+	uint8														serialSendCache[MDS_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
+	uint16													serialSendCount;											/*发送的字节数*/
 
-	PRegCoilItem 										pRegCoilList[REG_COIL_ITEM_NUM];					/*寄存器注册表*/
+	PRegCoilItem 										pRegCoilList[REG_COIL_ITEM_NUM];		/*寄存器注册表*/
 
 	/*上次接收的时间,0xFFFFFFFF表示未起开始检测帧*/
 	uint32 lastTimesTick;
@@ -50,8 +54,8 @@ typedef struct{
 	/*接收的CRC16*/
 	uint16 CRC16Update;
 	
-	/*发送的CRC16*/
-	uint16 CRC16SendUpdate;
+	///*发送的CRC16*/
+	//uint16 CRC16SendUpdate;
 }*PModbusS_RTU,ModbusS_RTU;
 
 /*异常码*/
@@ -87,11 +91,23 @@ typedef enum{
 (((PModbusS_RTU)(a))->serialReadCache[5]))
 #define MDS_RTU_BYTES_NUM(a)				((a)->serialReadCache[6])
 
+
+#if	MSD_USE_SEND_CACHE 
+	/*开始发送*/
+#define MDS_START_SEND(a)		{uint16 CRC16=0xFFFF;a->serialSendCount=0
+	/*发送一个字节*/
+#define MDS_SEND_BYTE(a,b)	CRC16=MD_CRC16Update(CRC16,(b));\
+	a->serialSendCache[a->serialSendCount++]=b
+	/*结束发送*/
+#define MDS_SEND_END(a)			a->serialSendCache[a->serialSendCount++]=(uint8)(CRC16);\
+	a->serialSendCache[a->serialSendCount++]=(uint8)(CRC16>>8);\
+(TO_MDBase(a))->mdRTUSendBytesFunction(a->serialSendCache,a->serialSendCount);}
+#else
 /*下面宏用来发送modbus数据,并同时计算校验*/
-#define MSD_START_SEND(a)		(a)->CRC16SendUpdate=0xFFFF
-#define MSD_SEND_BYTE(a,b)	(a)->CRC16SendUpdate=MD_CRC16Update((a)->CRC16SendUpdate,(b));\
-MDS_RTU_SendByte(a,b)
-#define MSD_SEND_END(a)			(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&((a)->CRC16SendUpdate)),2)
+#define MDS_START_SEND(a)		{uint16 CRC16=0xFFFF;
+#define MDS_SEND_BYTE(a,b)	CRC16=MD_CRC16Update(CRC16,(b));MDS_RTU_SendByte(a,b)
+#define MDS_SEND_END(a)			(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&(CRC16)),2);}
+#endif
 /*********************************结束******************************************/
 
 

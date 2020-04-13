@@ -78,7 +78,7 @@ void MDSSerialSWRecv_Send(uint8 mode){
 **********************************************************/
 void MDSSerialSendBytes(uint8 *bytes,uint16 num){
 	/*在下面调用bsp的发送函数*/
-	uart_send_bytes(bytes,num);
+	uart_send_bytes_by_isr(bytes,num);
 }
 /*******************************************************
 *
@@ -89,5 +89,5 @@ void MDSSerialSendBytes(uint8 *bytes,uint16 num){
 **********************************************************/
 void MDSTimeHandler100US(void){
 	if(pModbusBase==NULL){return;}
-	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase );
+	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase);
 }
