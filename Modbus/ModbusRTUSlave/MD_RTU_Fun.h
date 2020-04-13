@@ -34,10 +34,10 @@ typedef struct{
 	
 	uint8														serialReadCache[MDS_RTU_CMD_SIZE];	/*单指令读取队列*/
 	uint16													serialReadCount;										/*指令的长度*/
-	
+#if MSD_USE_SEND_CACHE
 	uint8														serialSendCache[MDS_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
 	uint16													serialSendCount;											/*发送的字节数*/
-
+#endif
 	PRegCoilItem 										pRegCoilList[REG_COIL_ITEM_NUM];		/*寄存器注册表*/
 
 	/*上次接收的时间,0xFFFFFFFF表示未起开始检测帧*/

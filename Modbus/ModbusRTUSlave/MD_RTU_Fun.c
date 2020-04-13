@@ -46,7 +46,9 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	MDInitQueue(&(pModbusRTU->mdMsgSqQueue));
 	pModbusRTU->salveAddr=salveAddr;
 	pModbusRTU->serialReadCount=0;
+#if MSD_USE_SEND_CACHE
 	pModbusRTU->serialSendCount=0;
+#endif
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
 		pModbusRTU->pRegCoilList[i] = NULL;
 	}
