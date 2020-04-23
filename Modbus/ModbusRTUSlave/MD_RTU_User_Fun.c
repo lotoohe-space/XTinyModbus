@@ -19,19 +19,19 @@ BOOL MDS_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*指定类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*指定类型*/
 				uint16 	j;
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				for(j=offsetAddr; j<offsetAddr+numOf; j++){		
 					if(
 						MD_GET_BIT(
-						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[j>>4],j%16)
+						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[j>>4],j%16)
 					){
 							MD_SET_BIT(res[j>>3],j%8);
 					}else{
@@ -52,17 +52,17 @@ BOOL MDS_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, Add
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType == opAddrType){
+			if(pModbusS_RTU->pMapTableList[i]->addrType == opAddrType){
 				uint16 	j;
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				for(j=0;j<numOf;j++){
-					res[j]=MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[offsetAddr+j];
+					res[j]=MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr+j];
 				}
 				return TRUE;
 			}
@@ -77,20 +77,20 @@ BOOL MDS_RTU_WriteBit(void* obj,uint16 modbusAddr,uint8 bit, AddrType opAddrType
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+1)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+1)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				if(bit){
 					MD_SET_BIT(
-						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[offsetAddr>>4],offsetAddr%16);
+						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr>>4],offsetAddr%16);
 				}else{
 					MD_CLR_BIT(
-						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[offsetAddr>>4],offsetAddr%16);
+						MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr>>4],offsetAddr%16);
 				}
 				return TRUE;
 			}
@@ -105,14 +105,14 @@ BOOL MDS_RTU_WriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit, Ad
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是BIT类型*/
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是BIT类型*/
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				uint16 j;
 				for(j=0;j<numOf;j++){
 					uint8 *byteData=(uint8*)bit;
@@ -121,12 +121,12 @@ BOOL MDS_RTU_WriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit, Ad
 					){
 						MD_SET_BIT(
 							MDS_RTU_REG_COIL_ITEM_DATA(
-							pModbusS_RTU->pRegCoilList[i])[(offsetAddr+j)>>4]
+							pModbusS_RTU->pMapTableList[i])[(offsetAddr+j)>>4]
 						,(j+offsetAddr)%16);
 					}else{
 						MD_CLR_BIT(
 							MDS_RTU_REG_COIL_ITEM_DATA(
-							pModbusS_RTU->pRegCoilList[i])[(offsetAddr+j)>>4]
+							pModbusS_RTU->pMapTableList[i])[(offsetAddr+j)>>4]
 						,(j+offsetAddr)%16);
 					}
 				}
@@ -143,15 +143,15 @@ BOOL MDS_RTU_WriteReg(void* obj,uint16 modbusAddr,uint16 reg, AddrType opAddrTyp
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+1)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+1)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
-				MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[offsetAddr]=reg;
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
+				MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr]=reg;
 				return TRUE;
 			}
 		}
@@ -165,17 +165,17 @@ BOOL MDS_RTU_WriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uin
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pRegCoilList[i]==NULL){
+		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pRegCoilList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pRegCoilList[i]->modbusAddr+pModbusS_RTU->pRegCoilList[i]->modbusDataSize)>=(modbusAddr+numOf)
+		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pRegCoilList[i]->addrType==opAddrType){/*必须是REG类型*/
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pRegCoilList[i]);
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是REG类型*/
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				uint16 j=0;
 				for(j=0;j<numOf;j++){
-					MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pRegCoilList[i])[offsetAddr+j]=
+					MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr+j]=
 					isBigE?MD_SWAP_HL(reg[j]):reg[j];
 				}		
 				return TRUE;

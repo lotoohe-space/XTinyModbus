@@ -10,7 +10,7 @@
 #define _MD_RTU_FUN_H__
 /*********************************头文件包含************************************/
 #include "MD_RTU_Queue.h"
-#include "MD_RTU_RegCoil.h"
+#include "MD_RTU_MapTable.h"
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Tool.h"
 /*********************************结束******************************************/
@@ -38,7 +38,7 @@ typedef struct{
 	uint8														serialSendCache[MDS_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
 	uint16													serialSendCount;											/*发送的字节数*/
 #endif
-	PRegCoilItem 										pRegCoilList[REG_COIL_ITEM_NUM];		/*寄存器注册表*/
+	PMapTableItem 									pMapTableList[REG_COIL_ITEM_NUM];		/*寄存器注册表*/
 	
 	/*上次接收的时间,0xFFFFFFFF表示未起开始检测帧*/
 	uint32 lastTimesTick;
@@ -114,7 +114,7 @@ typedef enum{
 /*********************************函数申明************************************/
 void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
 void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun);
-BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PRegCoilItem pRegCoilItem);
+BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU);
 /*********************************结束******************************************/
 

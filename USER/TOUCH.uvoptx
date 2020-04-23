@@ -748,8 +748,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Modbus\ModbusBase\MD_RTU_RegCoil.c</PathWithFileName>
-      <FilenameWithoutPath>MD_RTU_RegCoil.c</FilenameWithoutPath>
+      <PathWithFileName>..\Modbus\ModbusBase\MD_RTU_MapTable.c</PathWithFileName>
+      <FilenameWithoutPath>MD_RTU_MapTable.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

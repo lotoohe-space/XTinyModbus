@@ -8,7 +8,7 @@
 * @par History:  无       
 */
 #include "MD_RTU_APP.h"
-#include "MD_RTU_RegCoil.h"
+#include "MD_RTU_MapTable.h"
 #include "MD_RTU_Fun.h"
 #include "MD_RTU_User_Fun.h"
 #include "MD_RTU_Serial.h"
@@ -16,33 +16,33 @@
 
 void MDSAPPWriteFunciton(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrType);
 
-uint16 regCoilData0[32]={1,2,3,4,5,6,7,8,9,10,11,12};
-RegCoilItem regCoilItem0={
+uint16 mapTableData0[32]={1,2,3,4,5,6,7,8,9,10,11,12};
+MapTableItem mapTableItem0={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
-	.modbusData=regCoilData0,	/*映射的内存单元*/
+	.modbusData=mapTableData0,	/*映射的内存单元*/
 	.modbusDataSize=32,				/*映射的大小*/
 	.addrType=HOLD_REGS_TYPE				/*映射的类型*/
 };
-uint16 regCoilData2[32]={11,21,31,41,51,61,71,81,91,101,111,121};
-RegCoilItem regCoilItem2={
+uint16 mapTableData2[32]={11,21,31,41,51,61,71,81,91,101,111,121};
+MapTableItem mapTableItem2={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
-	.modbusData=regCoilData2,	/*映射的内存单元*/
+	.modbusData=mapTableData2,	/*映射的内存单元*/
 	.modbusDataSize=32,				/*映射的大小*/
 	.addrType=INPUT_REGS_TYPE				/*映射的类型*/
 };
 
-uint16 regCoilData1[4]={0};
-RegCoilItem regCoilItem1={
+uint16 mapTableData1[4]={0};
+MapTableItem mapTableItem1={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
-	.modbusData=regCoilData1,	/*映射的内存单元*/
+	.modbusData=mapTableData1,	/*映射的内存单元*/
 	.modbusDataSize=64,				/*映射的大小*/
 	.addrType=COILS_TYPE				/*映射的类型*/
 };
 
-uint16 regCoilData3[4]={0x5555,0x5555};
-RegCoilItem regCoilItem3={
+uint16 mapTableData3[4]={0x5555,0x5555};
+MapTableItem mapTableItem3={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
-	.modbusData=regCoilData3,	/*映射的内存单元*/
+	.modbusData=mapTableData3,	/*映射的内存单元*/
 	.modbusDataSize=64,				/*映射的大小*/
 	.addrType=INPUT_TYPE				/*映射的类型*/
 };
@@ -51,18 +51,18 @@ ModbusS_RTU modbusS_RTU={0};
 
 BOOL MDS_RTU_APPInit(void){
 	
-	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,115200,8,1,0);
+	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,9600,8,1,0);
 	
-	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem0)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem0)==FALSE){
 		return FALSE;
 	}
-	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem1)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem1)==FALSE){
 		return FALSE;
 	}
-	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem2)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem2)==FALSE){
 		return FALSE;
 	}
-	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem3)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem3)==FALSE){
 		return FALSE;
 	}
 

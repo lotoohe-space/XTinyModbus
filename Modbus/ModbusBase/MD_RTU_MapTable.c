@@ -7,7 +7,7 @@
 ********************************************************************************/
 
 /*********************************头文件包含************************************/
-#include "MD_RTU_RegCoil.h"
+#include "MD_RTU_MapTable.h"
 /*********************************结束******************************************/
 
 /*******************************************************
@@ -19,13 +19,13 @@
 *        @pRegCoilItem    添加某个 映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize){
+uint8 RegCoilListAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
-	PRegCoilItem *pRegCoilList=obj;
+	PMapTableItem *pMapTableList=obj;
 	if(!obj){return FALSE;}
 	for(i=0;i<tabSize;i++){
-		if(pRegCoilList[i]==NULL){
-			pRegCoilList[i]=pRegCoilItem;
+		if(pMapTableList[i]==NULL){
+			pMapTableList[i]=pMapTableItem;
 			return TRUE;
 		}
 	}
@@ -40,13 +40,13 @@ uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize){
 *        @pRegCoilItem    删除某个映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize){
+uint8 RegCoilListDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
-	PRegCoilItem *pRegCoilList=obj;
+	PMapTableItem *pMapTableList=obj;
 	if(!obj){return FALSE;}
 	for(i=0;i<tabSize;i++){
-		if(pRegCoilList[i]==pRegCoilItem){
-			pRegCoilList[i]=NULL;
+		if(pMapTableList[i]==pMapTableItem){
+			pMapTableList[i]=NULL;
 			return TRUE;
 		}
 	}

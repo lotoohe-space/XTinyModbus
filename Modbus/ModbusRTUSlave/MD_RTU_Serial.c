@@ -40,6 +40,10 @@ void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	
 	pModbusBase->mdRTUSendBytesFunction=MDSSerialSendBytes;
 	pModbusBase->mdRTURecSendConv=MDSSerialSWRecv_Send;
+	
+	
+	/*Ó²¼þ³õÊ¼»¯*/
+	uart_init(baud);
 }
 /*******************************************************
 *

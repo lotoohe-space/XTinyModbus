@@ -14,15 +14,15 @@
 /*********************************结束******************************************/
 
 /*********************************全局变量************************************/
-uint16 regCoilDataMaster0[4]={0};
-RegCoilItem regCoilItemMaster0={
+uint16 mapTableDataMaster0[4]={0};
+MapTableItem mapTableItemMaster0={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
-	.modbusData=regCoilDataMaster0,	/*映射的内存单元*/
+	.modbusData=mapTableDataMaster0,	/*映射的内存单元*/
 	.modbusDataSize=64,							/*映射的大小*/
 	.addrType=COILS_TYPE						/*映射的类型*/
 };
 uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
-RegCoilItem regCoilItemMaster1={
+MapTableItem mapTableItemMaster1={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=regDataMaster1,			/*映射的内存单元*/
 	.modbusDataSize=32,							/*映射的大小*/
@@ -49,19 +49,19 @@ BOOL MDM_RTU_APPInit(void){
 		return FALSE;
 	}
 	
-	if(MDM_RTU_AddMapItem(&modbus_RTU,&regCoilItemMaster0)==FALSE){
+	if(MDM_RTU_AddMapItem(&modbus_RTU,&mapTableItemMaster0)==FALSE){
 		return FALSE;
 	}
-	if(MDM_RTU_AddMapItem(&modbus_RTU,&regCoilItemMaster1)==FALSE){
+	if(MDM_RTU_AddMapItem(&modbus_RTU,&mapTableItemMaster1)==FALSE){
 		return FALSE;
 	}
 	
 	/*RW控制块*/
-	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,0,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,0,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,0,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,0,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,0,25000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,500,25000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,500,25000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,500,25000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,500,25000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,500,25000,3);
 	return TRUE;
 }
 uint16	temp=~(0x5555);

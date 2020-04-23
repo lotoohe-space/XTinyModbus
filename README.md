@@ -7,6 +7,14 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/23
+Slave 	Fixes a BUG in the CRC macro.<br>
+		Fixed discrete mapping table master and slave size inconsistency BUG.<br>
+Master 	Fixes bugs that cause errors in read commands and dependent variables.<br>
+
+The serial port initialization location is changed to md_rtu_serial.c and mdm_rtu_serial.c.<br>
+Fixed some naming conventions.<br>
+
 2020/4/13
 Slave adds the send cache, which is optional and enabled by default through the macro configuration in md_rtu_fun. h.<br>
 
@@ -122,6 +130,13 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/4/23
+Slave 	修复CRC宏的一个BUG。<br>
+		修复离散映射表主从机大小不一致的BUG。<br>
+Master	修复读命令，因变量从用导致错误的BUG。<br>
+串口初始化位置修改到MD_RTU_Serial.c 与 MDM_RTU_Serial.c内。<br>
+修正一些命名规范。<br>
 
 2020/4/13
 Slave增加发送缓存，该项为可选项，可以通过MD_RTU_Fun.h内的宏配置，默认开启。<br>

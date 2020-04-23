@@ -572,9 +572,9 @@
               <FilePath>..\Modbus\ModbusBase\MD_RTU_Queue.c</FilePath>
             </File>
             <File>
-              <FileName>MD_RTU_RegCoil.c</FileName>
+              <FileName>MD_RTU_MapTable.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Modbus\ModbusBase\MD_RTU_RegCoil.c</FilePath>
+              <FilePath>..\Modbus\ModbusBase\MD_RTU_MapTable.c</FilePath>
             </File>
           </Files>
         </Group>

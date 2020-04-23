@@ -24,12 +24,12 @@ typedef struct{
 	uint16*			modbusData;		/*存储的数据*/
 	uint16		modbusDataSize;	/*参见[AddrType]*/
 	AddrType	addrType;				/*地址类型*/
-}*PRegCoilItem,RegCoilItem;
+}*PMapTableItem,MapTableItem;
 /*********************************结束******************************************/
 
 /*********************************函数申明************************************/
-uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize);
-uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize);
+uint8 RegCoilListAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
+uint8 RegCoilListDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
 /*********************************结束******************************************/
 
 #endif

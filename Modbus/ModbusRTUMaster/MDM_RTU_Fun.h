@@ -13,7 +13,7 @@
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Error.h"
 #include "MD_RTU_Tool.h"
-#include "MD_RTU_RegCoil.h"
+#include "MD_RTU_MapTable.h"
 /*********************************结束******************************************/
 
 /*********************************配置宏************************************/
@@ -37,7 +37,7 @@ typedef struct{
 	/*继承modbusBase*/
 	ModbusBase		modbusBase;
 	/*离散映射列表，读取到的数据被存与其中*/
-	PRegCoilItem 	pRegCoilList[MDM_REG_COIL_ITEM_NUM];
+	PMapTableItem pMapTableList[MDM_REG_COIL_ITEM_NUM];
 	/*数据接收队列*/
 	MDSqQueue 		mdSqQueue;
 
@@ -110,7 +110,7 @@ void MDM_RTU_RecvByte(void *obj,uint8 byte);
 /*控制块超时复位*/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB);
 
-BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PRegCoilItem pRegCoilItem);
+BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 
 /*从队列中获取数据*/
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len);

@@ -50,7 +50,7 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	pModbusRTU->serialSendCount=0;
 #endif
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		pModbusRTU->pRegCoilList[i] = NULL;
+		pModbusRTU->pMapTableList[i] = NULL;
 	}
 	
 	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDS_RTU_TimeHandler;
@@ -178,11 +178,11 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 *        @byte    接收到的单字节
 * Return          : 无
 **********************************************************/
-BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PRegCoilItem pRegCoilItem){
-	if(pModbusRTU==NULL ||pRegCoilItem==NULL){
+BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
+	if(pModbusRTU==NULL ||pMapTableItem==NULL){
 			return FALSE;
 	}
-	return RegCoilListAdd(pModbusRTU->pRegCoilList, pRegCoilItem,REG_COIL_ITEM_NUM);
+	return RegCoilListAdd(pModbusRTU->pMapTableList, pMapTableItem,REG_COIL_ITEM_NUM);
 }
 #if	!MSD_USE_SEND_CACHE 
 /*******************************************************
@@ -386,19 +386,19 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 	if(pModbus_RTU==NULL){return FALSE;}
 	
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
-		if(pModbus_RTU->pRegCoilList[i]==NULL){
+		if(pModbus_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbus_RTU->pRegCoilList[i]->modbusAddr<=reg&&
-		(pModbus_RTU->pRegCoilList[i]->modbusAddr+pModbus_RTU->pRegCoilList[i]->modbusDataSize)>=(reg+regNum)
+		if(pModbus_RTU->pMapTableList[i]->modbusAddr<=reg&&
+		(pModbus_RTU->pMapTableList[i]->modbusAddr+pModbus_RTU->pMapTableList[i]->modbusDataSize)>=(reg+regNum)
 		)
 		{
 			/*确保读取的范围在内存的范围之内*/
-			if((funCode==1&&pModbus_RTU->pRegCoilList[i]->addrType==COILS_TYPE)||
-				(funCode==2&&pModbus_RTU->pRegCoilList[i]->addrType==INPUT_TYPE)){
+			if((funCode==1&&pModbus_RTU->pMapTableList[i]->addrType==COILS_TYPE)||
+				(funCode==2&&pModbus_RTU->pMapTableList[i]->addrType==INPUT_TYPE)){
 				/*确保是读取的bit*/
 				/*得到位偏移*/
-				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pRegCoilList[i]);
+				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]);
 				uint16 	j;
 				uint16	lastIndex=0;
 				uint8	 	tempByte=0;
@@ -416,7 +416,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 					}
 					if(
 						MD_GET_BIT(
-						MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pRegCoilList[i])[j>>4],j%16)
+						MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pMapTableList[i])[j>>4],j%16)
 					){
 							MD_SET_BIT(tempByte,j%8);
 					}else{
@@ -426,20 +426,20 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 				MDS_SEND_BYTE(pModbus_RTU,tempByte);
 				MDS_SEND_END(pModbus_RTU);
 				MD_RTU_RECV_MODE(pModbus_RTU);
-			}else if((funCode==3&&pModbus_RTU->pRegCoilList[i]->addrType==HOLD_REGS_TYPE)||
-				(funCode==4&&pModbus_RTU->pRegCoilList[i]->addrType==INPUT_REGS_TYPE)
+			}else if((funCode==3&&pModbus_RTU->pMapTableList[i]->addrType==HOLD_REGS_TYPE)||
+				(funCode==4&&pModbus_RTU->pMapTableList[i]->addrType==INPUT_REGS_TYPE)
 			){
 				/*确保读取的是reg*/
 					/*得到uint16偏移*/
 				uint16 j=0;
-				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pRegCoilList[i]) ;
+				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]) ;
 				MD_RTU_SEND_MODE(pModbus_RTU);
 				MDS_START_SEND(pModbus_RTU);
 				MDS_SEND_BYTE(pModbus_RTU,pModbus_RTU->salveAddr);
 				MDS_SEND_BYTE(pModbus_RTU,funCode);
 				MDS_SEND_BYTE(pModbus_RTU,regNum<<1);
 				for(j=0;j<regNum<<1;j+=2){
-					uint16 temp=MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pRegCoilList[i])[offsetAddr+(j>>1)];
+					uint16 temp=MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pMapTableList[i])[offsetAddr+(j>>1)];
 					MDS_SEND_BYTE(pModbus_RTU,(temp>>8)&0xff);
 					MDS_SEND_BYTE(pModbus_RTU,(temp)&0xff);
 				}
