@@ -28,8 +28,8 @@ typedef struct{
 /*********************************结束******************************************/
 
 /*********************************函数申明************************************/
-uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem);
-uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem);
+uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize);
+uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize);
 /*********************************结束******************************************/
 
 #endif

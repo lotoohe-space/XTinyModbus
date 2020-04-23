@@ -16,16 +16,16 @@
 /*********************************全局变量************************************/
 uint16 regCoilDataMaster0[4]={0};
 RegCoilItem regCoilItemMaster0={
-	.modbusAddr=0x0000,				/*MODBUS中的地址*/
+	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=regCoilDataMaster0,	/*映射的内存单元*/
-	.modbusDataSize=64,				/*映射的大小*/
-	.addrType=COILS_TYPE				/*映射的类型*/
+	.modbusDataSize=64,							/*映射的大小*/
+	.addrType=COILS_TYPE						/*映射的类型*/
 };
 uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
 RegCoilItem regCoilItemMaster1={
-	.modbusAddr=0x0000,				/*MODBUS中的地址*/
-	.modbusData=regDataMaster1,	/*映射的内存单元*/
-	.modbusDataSize=32,				/*映射的大小*/
+	.modbusAddr=0x0000,							/*MODBUS中的地址*/
+	.modbusData=regDataMaster1,			/*映射的内存单元*/
+	.modbusDataSize=32,							/*映射的大小*/
 	.addrType=HOLD_REGS_TYPE				/*映射的类型*/
 };
 
@@ -48,12 +48,11 @@ BOOL MDM_RTU_APPInit(void){
 	if(MDM_RTU_Init(&modbus_RTU,MDMInitSerial,9600,8,1,0)!=ERR_NONE){
 		return FALSE;
 	}
-		/*添加一个地址映射*/
-	if(RegCoilListAdd(&(modbus_RTU.pRegCoilList), &regCoilItemMaster0)==FALSE){
+	
+	if(MDM_RTU_AddMapItem(&modbus_RTU,&regCoilItemMaster0)==FALSE){
 		return FALSE;
 	}
-		/*添加一个地址映射*/
-	if(RegCoilListAdd(&(modbus_RTU.pRegCoilList), &regCoilItemMaster1)==FALSE){
+	if(MDM_RTU_AddMapItem(&modbus_RTU,&regCoilItemMaster1)==FALSE){
 		return FALSE;
 	}
 	

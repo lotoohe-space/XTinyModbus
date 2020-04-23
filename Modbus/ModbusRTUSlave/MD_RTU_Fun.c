@@ -169,6 +169,21 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 	/*保存上次接收的字符的时间戳*/
 	pModbusRTU->lastTimesTick=pModbusRTU->timesTick;
 }
+/*******************************************************
+*
+* Function name :MDS_RTU_AddMapItem
+* Description        :该函数向离散映射表中添加一条映射记录
+* Parameter         :
+*        @obj            从机结构体指针
+*        @byte    接收到的单字节
+* Return          : 无
+**********************************************************/
+BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PRegCoilItem pRegCoilItem){
+	if(pModbusRTU==NULL ||pRegCoilItem==NULL){
+			return FALSE;
+	}
+	return RegCoilListAdd(pModbusRTU->pRegCoilList, pRegCoilItem,REG_COIL_ITEM_NUM);
+}
 #if	!MSD_USE_SEND_CACHE 
 /*******************************************************
 *

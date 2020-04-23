@@ -8,7 +8,6 @@
 
 /*********************************头文件包含************************************/
 #include "MD_RTU_RegCoil.h"
-#include "MD_RTU_Fun.h"
 /*********************************结束******************************************/
 
 /*******************************************************
@@ -20,11 +19,11 @@
 *        @pRegCoilItem    添加某个 映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem){
+uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize){
 	uint16 i=0;
 	PRegCoilItem *pRegCoilList=obj;
 	if(!obj){return FALSE;}
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<tabSize;i++){
 		if(pRegCoilList[i]==NULL){
 			pRegCoilList[i]=pRegCoilItem;
 			return TRUE;
@@ -41,11 +40,11 @@ uint8 RegCoilListAdd(void* obj,PRegCoilItem pRegCoilItem){
 *        @pRegCoilItem    删除某个映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem){
+uint8 RegCoilListDel(void* obj,PRegCoilItem pRegCoilItem,uint16 tabSize){
 	uint16 i=0;
 	PRegCoilItem *pRegCoilList=obj;
 	if(!obj){return FALSE;}
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<tabSize;i++){
 		if(pRegCoilList[i]==pRegCoilItem){
 			pRegCoilList[i]=NULL;
 			return TRUE;

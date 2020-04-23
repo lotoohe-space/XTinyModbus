@@ -178,6 +178,23 @@ static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte){
 	if(!pModbus_RTU){ return; }
 	TO_MDBase(pModbus_RTU)->mdRTUSendBytesFunction(&byte,1);
 }
+
+/*******************************************************
+*
+* Function name :MDM_RTU_AddMapItem
+* Description        :该函数向离散映射表中添加一条映射记录
+* Parameter         :
+*        @pModbusRTU      主机结构体指针
+*        @pRegCoilItem    需要添加的项
+* Return          : 无
+**********************************************************/
+BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PRegCoilItem pRegCoilItem){
+	if(pModbusRTU==NULL ||pRegCoilItem==NULL){
+			return FALSE;
+	}
+	return RegCoilListAdd(pModbusRTU->pRegCoilList, pRegCoilItem,MDM_REG_COIL_ITEM_NUM);
+}
+
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadByte
@@ -465,6 +482,7 @@ MDError MDM_RTU_NB_RW(
 		
 		if(pModbus_RTU_CB->pModbus_RTU->recvFlag){/*收到了数据*/
 			uint8 byte;
+			uint8 funCodeByte=0;
 			/*清楚标志*/
 			pModbus_RTU_CB->pModbus_RTU->recvFlag=0;
 			
@@ -477,12 +495,12 @@ MDError MDM_RTU_NB_RW(
 				errRes =  ERR_SLAVE_ADDR;
 				goto _exit;
 			}
-			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte)){
+			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&funCodeByte)){
 				errRes =  ERR_DATA_LEN;
 				goto _exit;
 			}
 			
-			switch(byte){
+			switch(funCodeByte){
 				case 0x1:/*读线圈成功*/
 				case 0x2:/*读输入离散量*/
 				{
@@ -503,8 +521,8 @@ MDError MDM_RTU_NB_RW(
 								goto _exit;
 						}
 						/*单次存小于等于8bit*/
-						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)byte)){
-							errRes= ERR_DATA_SAVE;
+						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)funCodeByte)){
+							errRes= ERR_DATA_SAVE; 
 							goto _exit;
 						}
 						wAddr += ((index<8)?index:8);
@@ -536,7 +554,7 @@ MDError MDM_RTU_NB_RW(
 						wTemp=(rByte<<8);
 						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte);
 						wTemp|=rByte;
-						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)byte)){
+						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)funCodeByte)){
 							errRes= ERR_DATA_SAVE;
 							goto _exit;
 						}

@@ -66,15 +66,15 @@ uint16 MD_CRC16Update(uint16 CRC, uint8 byte)
 #else
   int i;
 
-  crc ^= a;
+  CRC ^= byte;
   for (i = 0; i < 8; ++i)
   {
-    if (crc & 1)
-      crc = (crc >> 1) ^ 0xA001;
+    if (CRC & 1)
+      CRC = (CRC >> 1) ^ 0xA001;
     else
-      crc = (crc >> 1);
+      CRC = (CRC >> 1);
   }
 
-  return crc;
+  return CRC;
 #endif
 }

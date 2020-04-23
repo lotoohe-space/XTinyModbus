@@ -53,19 +53,19 @@ BOOL MDS_RTU_APPInit(void){
 	
 	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,115200,8,1,0);
 	
-	/*添加一个地址映射*/
-	if(RegCoilListAdd(&(modbusS_RTU.pRegCoilList), &regCoilItem0)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem0)==FALSE){
 		return FALSE;
 	}
-	if(RegCoilListAdd(&(modbusS_RTU.pRegCoilList), &regCoilItem1)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem1)==FALSE){
 		return FALSE;
 	}
-	if(RegCoilListAdd(&(modbusS_RTU.pRegCoilList), &regCoilItem2)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem2)==FALSE){
 		return FALSE;
 	}
-	if(RegCoilListAdd(&(modbusS_RTU.pRegCoilList), &regCoilItem3)==FALSE){
+	if(MDS_RTU_AddMapItem(&modbusS_RTU,&regCoilItem3)==FALSE){
 		return FALSE;
 	}
+
 	MDS_RTU_SetWriteListenFun(&modbusS_RTU,MDSAPPWriteFunciton);
 	return TRUE;
 }

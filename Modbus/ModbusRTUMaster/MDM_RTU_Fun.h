@@ -110,6 +110,8 @@ void MDM_RTU_RecvByte(void *obj,uint8 byte);
 /*控制块超时复位*/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB);
 
+BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PRegCoilItem pRegCoilItem);
+
 /*从队列中获取数据*/
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len);
 MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len);
