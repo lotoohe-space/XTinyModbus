@@ -52,7 +52,7 @@
 
 	MDS_RTU_APPInit();
 	//MDM_RTU_APPInit();
-	TIM3_Int_Init(36-1,100-1);
+	TIM3_Int_Init(72-1,100-1);
 	while(1){
 		MDS_RTU_Loop();
 		//MDM_RTU_Loop();
