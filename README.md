@@ -243,7 +243,7 @@ RegCoilItem regCoilItem1={
 Modbus ASCII主机与从机。
 
 5.谢鸣
-紫§尘、
+紫§尘、依叶知秋
 
 
 
