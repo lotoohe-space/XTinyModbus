@@ -1,12 +1,11 @@
-/**
-* @file 		MD_RTU_User_Fun.c
-* @brief		无
-* @details	无
-* @author		zspace
-* @date		2020/3/23
-* @version	A001
-* @par History:  无       
-*/
+/********************************************************************************
+* @File name: MD_RTU_User_Fun.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-28
+* @Description: Modbus RTU 用户相关函数
+* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+********************************************************************************/
 #include "MD_RTU_User_Fun.h"
 #include "MD_RTU_Fun.h"
 

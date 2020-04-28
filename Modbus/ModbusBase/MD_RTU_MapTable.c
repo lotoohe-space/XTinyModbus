@@ -4,6 +4,7 @@
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 离散映射管理模块
+* 开源地址: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
 /*********************************头文件包含************************************/
@@ -19,7 +20,7 @@
 *        @pRegCoilItem    添加某个 映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
+uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
 	PMapTableItem *pMapTableList=obj;
 	if(!obj){return FALSE;}
@@ -40,7 +41,7 @@ uint8 RegCoilListAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 *        @pRegCoilItem    删除某个映射,参见[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
-uint8 RegCoilListDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
+uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
 	PMapTableItem *pMapTableList=obj;
 	if(!obj){return FALSE;}

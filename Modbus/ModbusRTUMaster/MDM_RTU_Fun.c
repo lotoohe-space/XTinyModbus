@@ -4,6 +4,7 @@
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 主机功能模块
+* 开源地址: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
 /*********************************头文件包含************************************/
@@ -192,7 +193,7 @@ BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pMapTableItem){
 	if(pModbusRTU==NULL || pMapTableItem==NULL){
 			return FALSE;
 	}
-	return RegCoilListAdd(pModbusRTU->pMapTableList, pMapTableItem,MDM_REG_COIL_ITEM_NUM);
+	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,MDM_REG_COIL_ITEM_NUM);
 }
 
 /*******************************************************
@@ -346,7 +347,14 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 *        @opAddrType       写入的地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
 * Return          : TRUE , FALSE
 **********************************************************/
-BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bit, AddrType opAddrType){
+BOOL MDM_RTU_InsideWriteBits(
+	void* obj,
+	uint16 modbusAddr,
+	uint16 numOf, 
+	uint8 *bit, 
+	AddrType opAddrType,
+	uint8 devAddr
+){
 	uint16 i;
 	PModbus_RTU pModbus_RTU = obj;
 	if(pModbus_RTU==NULL){return FALSE;}
@@ -356,6 +364,9 @@ BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bi
 		if(pModbus_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
+		/*检查设备号*/
+		if(devAddr!=pModbus_RTU->pMapTableList[i]->devAddr){continue;}
+		
 		if(pModbus_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbus_RTU->pMapTableList[i]->modbusAddr+pModbus_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
@@ -396,24 +407,35 @@ BOOL MDM_RTU_InsideWriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *bi
 *        @opAddrType       写入的地址类型(HOLD_REGS_TYPE,INPUT_REGS_TYPE)，参见[AddrType]
 * Return          : TRUE , FALSE
 **********************************************************/
-BOOL MDM_RTU_InsideWriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uint8 isBigE, AddrType opAddrType){
+BOOL MDM_RTU_InsideWriteRegs(
+void* obj,
+uint16 modbusAddr,
+uint16 numOf, 
+uint16 *reg,
+uint8 isBigE, 
+AddrType opAddrType,
+uint8 devAddr
+){
 	uint16 i;
-	PModbus_RTU pModbusS_RTU = obj;
-	if(pModbusS_RTU==NULL){return FALSE;}
+	PModbus_RTU pModbus_RTU = obj;
+	if(pModbus_RTU==NULL){return FALSE;}
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
-		if(pModbusS_RTU->pMapTableList[i]==NULL){
+		if(pModbus_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
-		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
+		/*检查设备号*/
+		if(devAddr!=pModbus_RTU->pMapTableList[i]->devAddr){continue;}
+		
+		if(pModbus_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
+		(pModbus_RTU->pMapTableList[i]->modbusAddr+pModbus_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是REG类型*/
-				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
+			if(pModbus_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是REG类型*/
+				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]);
 				uint16 j=0;
 				for(j=0;j<numOf;j++){
-					MDS_RTU_REG_COIL_ITEM_DATA(pModbusS_RTU->pMapTableList[i])[offsetAddr+j]=
+					MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pMapTableList[i])[offsetAddr+j]=
 					isBigE?MD_SWAP_HL(reg[j]):reg[j];
 				}		
 				return TRUE;
@@ -521,7 +543,7 @@ MDError MDM_RTU_NB_RW(
 								goto _exit;
 						}
 						/*单次存小于等于8bit*/
-						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)funCodeByte)){
+						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)funCodeByte,slaveAddr)){
 							errRes= ERR_DATA_SAVE; 
 							goto _exit;
 						}
@@ -554,7 +576,7 @@ MDError MDM_RTU_NB_RW(
 						wTemp=(rByte<<8);
 						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte);
 						wTemp|=rByte;
-						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)funCodeByte)){
+						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)funCodeByte,slaveAddr)){
 							errRes= ERR_DATA_SAVE;
 							goto _exit;
 						}

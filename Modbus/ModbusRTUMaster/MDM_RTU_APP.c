@@ -4,6 +4,7 @@
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 用户APP模块
+* 开源地址: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
 /*********************************头文件包含************************************/
@@ -19,14 +20,16 @@ MapTableItem mapTableItemMaster0={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=mapTableDataMaster0,	/*映射的内存单元*/
 	.modbusDataSize=64,							/*映射的大小*/
-	.addrType=COILS_TYPE						/*映射的类型*/
+	.addrType=COILS_TYPE,						/*映射的类型*/
+	.devAddr=1,											/*被哪个从机使用*/
 };
 uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
 MapTableItem mapTableItemMaster1={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=regDataMaster1,			/*映射的内存单元*/
 	.modbusDataSize=32,							/*映射的大小*/
-	.addrType=HOLD_REGS_TYPE				/*映射的类型*/
+	.addrType=HOLD_REGS_TYPE,				/*映射的类型*/
+	.devAddr=1,											/*被哪个从机使用*/
 };
 
 Modbus_RTU modbus_RTU = {0};
@@ -84,14 +87,14 @@ static void MDM_RTUUserRead(void){
 			}
 		}else {
 			/*读成功*/
-			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE);
+			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE,0x1);
 			resTemp=resTemp;
 		}	
 	}
 	#else 
 		
 		if(MDM_RTU_ReadCoil(&modbusRWRTUCB,0x1,0x0000,16)==ERR_RW_FIN){
-			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE);
+			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE,0x1);
 			resTemp=resTemp;
 		}
 	#endif

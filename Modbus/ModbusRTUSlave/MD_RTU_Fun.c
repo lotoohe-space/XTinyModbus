@@ -182,7 +182,7 @@ BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
 	if(pModbusRTU==NULL ||pMapTableItem==NULL){
 			return FALSE;
 	}
-	return RegCoilListAdd(pModbusRTU->pMapTableList, pMapTableItem,REG_COIL_ITEM_NUM);
+	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,REG_COIL_ITEM_NUM);
 }
 #if	!MSD_USE_SEND_CACHE 
 /*******************************************************

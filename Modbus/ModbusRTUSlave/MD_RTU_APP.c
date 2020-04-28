@@ -1,11 +1,10 @@
 /**
-* @file 		MD_RTU_APP.c
-* @brief		无
-* @details	无
-* @author		zspace
-* @date		2020/3/23
-* @version	A001
-* @par History:  无       
+* @File name: MD_RTU_APP.c
+* @Author: zspace
+* @Version: 1.0
+* @Date: 2020-4-28
+* @Description: Modbus RTU Slave从机应用模块。    
+* 开源地址: https://github.com/lotoohe-space/XTinyModbus
 */
 #include "MD_RTU_APP.h"
 #include "MD_RTU_MapTable.h"
@@ -91,7 +90,10 @@ void MDSAPPWriteFunciton(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrTy
 			break;
 		case HOLD_REGS_TYPE:
 			MDS_RTU_ReadHoldRegs(obj,modbusAddr,wLen<8?wLen:8, data);
-			data[0]=data[0];
+			//data[0]=data[0];
+			uint8 temp=MD_H_BYTE(data[0]);
+			temp=MD_L_BYTE(data[0]);
+			temp=temp;
 			break;
 		case INPUT_REGS_TYPE:
 			break;

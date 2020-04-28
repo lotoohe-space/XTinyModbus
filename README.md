@@ -7,6 +7,9 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/4/28
+Discrete mappings for Master hosts will have to specify slave Numbers instead of sharing.<br>
+
 2020/4/23
 Slave 	Fixes a BUG in the CRC macro.<br>
 		Fixed discrete mapping table master and slave size inconsistency BUG.<br>
@@ -130,6 +133,9 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/4/28
+Master	主机的离散映射将必须指定从机号，不在采用共用方式。<br>
 
 2020/4/23
 Slave 	修复CRC宏的一个BUG。<br>

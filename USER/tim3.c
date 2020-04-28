@@ -41,6 +41,6 @@ void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
 		sys_tick_100us++;
 		
 		MDSTimeHandler100US();
-		MDMTimeHandler100US();
+		//MDMTimeHandler100US();
 	}
 }

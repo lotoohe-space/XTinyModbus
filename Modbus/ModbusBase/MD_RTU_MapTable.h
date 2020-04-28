@@ -19,17 +19,19 @@ typedef enum{
 	HOLD_REGS_TYPE=3,
 	INPUT_REGS_TYPE=4
 }AddrType;
+
 typedef struct{
 	uint16 		modbusAddr;			/*modbus的地址*/
-	uint16*			modbusData;		/*存储的数据*/
-	uint16		modbusDataSize;	/*参见[AddrType]*/
-	AddrType	addrType;				/*地址类型*/
+	uint16*		modbusData;			/*存储的数据*/
+	uint16		modbusDataSize;	/*映射大小*/
+	AddrType	addrType;				/*地址类型 参见[AddrType]*/
+	uint8			devAddr;						/*指示改映射项属于哪一个设备,暂时只有主机用到该变量,从机忽略*/
 }*PMapTableItem,MapTableItem;
 /*********************************结束******************************************/
 
 /*********************************函数申明************************************/
-uint8 RegCoilListAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
-uint8 RegCoilListDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
+uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
+uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
 /*********************************结束******************************************/
 
 #endif
