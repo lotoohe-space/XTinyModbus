@@ -17,7 +17,9 @@
 /*********************************结束******************************************/
 
 /*********************************配置宏************************************/
-#define MDM_REG_COIL_ITEM_NUM 20		/*离散映射个数*/
+#define MDM_REG_COIL_ITEM_NUM 	20			/*离散映射个数*/
+#define MDM_RTU_SEND_CACHE_SIZE	256			/*发送缓存大小*/
+#define MDM_USE_SEND_CACHE			1				/*是否开启发送缓存*/
 /*********************************结束******************************************/
 
 /*********************************头文件包含************************************/
@@ -41,6 +43,11 @@ typedef struct{
 	/*数据接收队列*/
 	MDSqQueue 		mdSqQueue;
 
+#if MDM_USE_SEND_CACHE
+	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
+	uint16				serialSendCount;											/*发送的字节数*/
+#endif
+	
 	/*上次接收的时间,0xFFFFFFF表示未起开始检测帧*/
 	uint32 				lastTimesTick;
 	/*当前的实时时间单位100US*/
@@ -95,10 +102,21 @@ void MDM_RTU_CB_Init(
 /*********************************结束******************************************/
 
 /*********************************宏定义************************************/
+#if MDM_USE_SEND_CACHE
+#define MEM_RTU_START_EN(a)	{uint16 CRCUpdate=0xFFFF;(a)->serialSendCount=0
+#define MEM_RTU_EN_QUEUE(a,b) (a)->serialSendCache[(a)->serialSendCount++]=(b);\
+CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
+#define MEM_RTU_END_EN(a)		a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate);\
+	a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate>>8);\
+(TO_MDBase(a))->mdRTUSendBytesFunction(a->serialSendCache,a->serialSendCount);}
+#else
 #define MEM_RTU_START_EN()	{uint16 CRCUpdate=0xFFFF;
 #define MEM_RTU_EN_QUEUE(a,b) MDM_RTU_SendByte((a),(b));\
 CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
-#define MEM_RTU_END_EN(a)		(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&CRCUpdate),2);}
+#define MEM_RTU_END_EN(a)	MDM_RTU_SendByte(a,(uint8)CRCUpdate);\
+	MDM_RTU_SendByte(a,(uint8)(CRCUpdate>>8));\
+}
+#endif
 /*********************************结束******************************************/
 
 /*********************************函数定义************************************/

@@ -19,7 +19,7 @@
 #define 	REG_COIL_ITEM_NUM 				20				/*离散映射最大数量*/
 #define 	MDS_RTU_CMD_SIZE					256				/*单条指令长度*/
 #define 	MDS_RTU_SEND_CACHE_SIZE		256				/*发送缓存长度*/
-#define 	MSD_USE_SEND_CACHE 				1					/*是否启用发送缓存*/
+#define 	MDS_USE_SEND_CACHE 				1					/*是否启用发送缓存*/
 /*********************************结束******************************************/
 
 /*********************************变量类型申明***********************************/
@@ -34,7 +34,7 @@ typedef struct{
 	
 	uint8														serialReadCache[MDS_RTU_CMD_SIZE];	/*单指令读取队列*/
 	uint16													serialReadCount;										/*指令的长度*/
-#if MSD_USE_SEND_CACHE
+#if MDS_USE_SEND_CACHE
 	uint8														serialSendCache[MDS_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
 	uint16													serialSendCount;											/*发送的字节数*/
 #endif
@@ -92,9 +92,10 @@ typedef enum{
 #define MDS_RTU_BYTES_NUM(a)				((a)->serialReadCache[6])
 
 
-#if	MSD_USE_SEND_CACHE 
+#if	MDS_USE_SEND_CACHE 
 	/*开始发送*/
-#define MDS_START_SEND(a)		{uint16 CRC16=0xFFFF;a->serialSendCount=0
+#define MDS_START_SEND(a)		{uint16 CRC16=0xFFFF;\
+	a->serialSendCount=0
 	/*发送一个字节*/
 #define MDS_SEND_BYTE(a,b)	CRC16=MD_CRC16Update(CRC16,(b));\
 	a->serialSendCache[a->serialSendCount++]=b
@@ -104,9 +105,13 @@ typedef enum{
 (TO_MDBase(a))->mdRTUSendBytesFunction(a->serialSendCache,a->serialSendCount);}
 #else
 /*下面宏用来发送modbus数据,并同时计算校验*/
-#define MDS_START_SEND(a)		{uint16 CRC16=0xFFFF;
+#define MDS_START_SEND(a)		{uint8 CRC16Temp;uint16 CRC16=0xFFFF;
 #define MDS_SEND_BYTE(a,b)	CRC16=MD_CRC16Update(CRC16,(b));MDS_RTU_SendByte(a,b)
-#define MDS_SEND_END(a)			(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&(CRC16)),2);}
+#define MDS_SEND_END(a)			CRC16Temp=CRC16&0xFF;\
+	(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&(CRC16Temp)),1);\
+	CRC16Temp=(CRC16>>8)&0xFF;\
+	(TO_MDBase(a))->mdRTUSendBytesFunction((uint8*)(&(CRC16Temp)),1);\
+}
 #endif
 /*********************************结束******************************************/
 

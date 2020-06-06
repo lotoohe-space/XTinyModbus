@@ -14,7 +14,9 @@
 /*********************************结束******************************************/
 
 /*********************************函数申明************************************/
+#if !MDM_USE_SEND_CACHE
 static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte);
+#endif
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
 /*********************************结束******************************************/
 
@@ -52,7 +54,9 @@ MDError MDM_RTU_Init(
 	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
 	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDM_RTU_RecvByte;
 	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
-
+#if MDM_USE_SEND_CACHE
+	pModbusRTU->serialSendCount=0;
+#endif
 	/*上次接收的时间,0xFFFFFFF表示未起开始检测帧*/
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	/*当前的实时时间单位100US*/
@@ -166,6 +170,7 @@ void MDM_RTU_RecvByte(void *obj,uint8 byte){
 	/*保存上次接收的字符的时间戳*/
 	pModbusRTU->lastTimesTick=pModbusRTU->timesTick;
 }
+#if !MDM_USE_SEND_CACHE
 /*******************************************************
 *
 * Function name :MDM_RTU_SendByte
@@ -179,7 +184,7 @@ static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte){
 	if(!pModbus_RTU){ return; }
 	TO_MDBase(pModbus_RTU)->mdRTUSendBytesFunction(&byte,1);
 }
-
+#endif
 /*******************************************************
 *
 * Function name :MDM_RTU_AddMapItem
@@ -256,7 +261,7 @@ MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len){
 **********************************************************/
 static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	MD_RTU_SEND_MODE(pModbus_RTU);
-	MEM_RTU_START_EN();
+	MEM_RTU_START_EN(pModbus_RTU);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_H_BYTE(startAddr));
@@ -280,7 +285,7 @@ static void MDM_RTU_ReadFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAdd
 **********************************************************/
 static void MDM_RTU_WriteSingleFun(PModbus_RTU pModbus_RTU,uint8 funCode,uint8 slaveAddr,uint16 startAddr,uint16 value){
 	MD_RTU_SEND_MODE(pModbus_RTU);
-	MEM_RTU_START_EN();
+	MEM_RTU_START_EN(pModbus_RTU);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_H_BYTE(startAddr));
@@ -308,7 +313,7 @@ static void MDM_RTU_WriteFun(PModbus_RTU pModbus_RTU,
 	uint16 i;
 	uint8 wLen;
 	MD_RTU_SEND_MODE(pModbus_RTU);
-	MEM_RTU_START_EN();
+	MEM_RTU_START_EN(pModbus_RTU);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,slaveAddr);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,funCode);
 	MEM_RTU_EN_QUEUE(pModbus_RTU,MD_H_BYTE(startAddr));

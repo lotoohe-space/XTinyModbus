@@ -196,7 +196,7 @@ BOOL MDS_RTU_WriteCoils(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit){
 	return MDS_RTU_WriteBits( obj, modbusAddr, numOf,bit, COILS_TYPE);
 }
 BOOL MDS_RTU_WriteMulInput(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit){
-	return MDS_RTU_WriteBits( obj, modbusAddr, numOf,bit, COILS_TYPE);
+	return MDS_RTU_WriteBits( obj, modbusAddr, numOf,bit, INPUT_TYPE);
 }
 BOOL MDS_RTU_WriteHoldReg(void* obj,uint16 modbusAddr,uint16 reg){
 	return MDS_RTU_WriteReg( obj, modbusAddr, reg, HOLD_REGS_TYPE);

@@ -396,71 +396,11 @@
               <FileType>1</FileType>
               <FilePath>.\system_stm32f10x.c</FilePath>
             </File>
-            <File>
-              <FileName>bsp_amg88xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\bsp_amg88xx.c</FilePath>
-            </File>
-            <File>
-              <FileName>myiic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\myiic.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>HARDWARE</GroupName>
           <Files>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LED\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\KEY\key.c</FilePath>
-            </File>
-            <File>
-              <FileName>lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\lcd.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\SPI\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>w25qxx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\W25QXX\w25qxx.c</FilePath>
-            </File>
-            <File>
-              <FileName>touch.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\TOUCH\touch.c</FilePath>
-            </File>
-            <File>
-              <FileName>Dis_Picture.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\Dis_Picture.c</FilePath>
-            </File>
-            <File>
-              <FileName>FONT.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\FONT.c</FilePath>
-            </File>
-            <File>
-              <FileName>Picture.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\Picture.c</FilePath>
-            </File>
-            <File>
-              <FileName>Text.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\Text.c</FilePath>
-            </File>
             <File>
               <FileName>tim3.c</FileName>
               <FileType>1</FileType>
@@ -545,16 +485,6 @@
               <FileName>stm32f10x_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\STM32F10x_FWLib\src\stm32f10x_tim.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>GBK_LibDrive</GroupName>
-          <Files>
-            <File>
-              <FileName>GBK_LibDrive.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\GBK_LibDrive\GBK_LibDrive.c</FilePath>
             </File>
           </Files>
         </Group>

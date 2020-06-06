@@ -46,7 +46,7 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	MDInitQueue(&(pModbusRTU->mdMsgSqQueue));
 	pModbusRTU->salveAddr=salveAddr;
 	pModbusRTU->serialReadCount=0;
-#if MSD_USE_SEND_CACHE
+#if MDS_USE_SEND_CACHE
 	pModbusRTU->serialSendCount=0;
 #endif
 	for(i=0;i<REG_COIL_ITEM_NUM;i++){
@@ -184,7 +184,7 @@ BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
 	}
 	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,REG_COIL_ITEM_NUM);
 }
-#if	!MSD_USE_SEND_CACHE 
+#if	!MDS_USE_SEND_CACHE 
 /*******************************************************
 *
 * Function name :MDS_RTU_SendByte
@@ -289,7 +289,9 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 		return ;
 	}
 	
-	if(pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr){
+	if(pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr
+		||pModbus_RTU->serialReadCache[0]==0x00	/*广播地址*/
+	){
 		/*不属于本从机，丢弃*/
 		goto __exit;
 	}

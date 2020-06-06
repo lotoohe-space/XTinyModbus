@@ -69,7 +69,7 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 *        @obj        主机对象
 *        @modbusAddr        modbus的地址    
 *        @numOf    需要读取的个数
-*        @opAddrType    地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
+*        @opAddrType    地址类型(HOLD_REGS_TYPE,INPUT_REGS_TYPE)，参见[AddrType]
 *        @devAddr    需要读取的从机号
 * Return          : 
 *        @res    返回的值

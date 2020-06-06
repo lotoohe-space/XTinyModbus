@@ -7,6 +7,12 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/6/6
+Fixed a size end error.<br>
+Slaver 	corrected errors in reading discrete mapping functions.<br>
+		Slave supports broadcast addresses.<br>
+Master host adds send cache.<br>
+
 2020/4/28
 Discrete mappings for Master hosts will have to specify slave Numbers instead of sharing.<br>
 
@@ -133,6 +139,12 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/6/6
+修正一个大小端错误。<br>
+Slaver	修正离散映射函数读取的错误。<br>
+		从机支持广播地址。<br>
+Master	主机添加发送缓存。<br>
 
 2020/4/28
 Master	主机的离散映射将必须指定从机号，不在采用共用方式。<br>
