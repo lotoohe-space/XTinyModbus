@@ -289,8 +289,10 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 		return ;
 	}
 	
-	if(pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr
-		||pModbus_RTU->serialReadCache[0]==0x00	/*广播地址*/
+	if(
+		pModbus_RTU->serialReadCache[0]!=0x00	/*广播地址*/
+	&&
+		pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr
 	){
 		/*不属于本从机，丢弃*/
 		goto __exit;
