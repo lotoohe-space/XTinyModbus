@@ -1,5 +1,11 @@
 #include "sys.h"
-#include "usart.h"	  
+#include "usart.h"	 
+#include "Sys_Config.h"
+#if MD_USD_SALVE
+#include "MDS_RTU_Serial.h"
+#else
+#include "MDM_RTU_Serial.h"
+#endif
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
@@ -123,8 +129,7 @@ void uart_init(u32 bound){
   USART_Cmd(USART1, ENABLE);                    //使能串口1 
 
 }
-#include "MD_RTU_Serial.h"
-#include "MDM_RTU_Serial.h"
+
 void USART1_IRQHandler(void)                	//串口1中断服务程序
 	{
 	u8 Res;
@@ -134,8 +139,11 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 	{
 		Res =USART_ReceiveData(USART1);	//读取接收到的数据
+		#if MD_USD_SALVE
 		MDSSerialRecvByte(Res);
-		//MDMSerialRecvByte(Res);
+		#else
+		MDMSerialRecvByte(Res);
+		#endif
 
 	} 
 	 /*发送中断*/

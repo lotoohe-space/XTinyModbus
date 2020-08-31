@@ -6,8 +6,8 @@
 * @Description: Modbus RTU 用户相关函数
 * 开源地址: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
-#include "MD_RTU_User_Fun.h"
-#include "MD_RTU_Fun.h"
+#include "MDS_RTU_User_Fun.h"
+#include "MDS_RTU_Fun.h"
 
 /*读取bits,可以读取一个，也可以读取多个*/
 BOOL MDS_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, AddrType opAddrType){
@@ -17,7 +17,7 @@ BOOL MDS_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 	/*只能操作bits*/
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -50,7 +50,7 @@ BOOL MDS_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, Add
 	/*只能操作寄存器*/
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -75,7 +75,7 @@ BOOL MDS_RTU_WriteBit(void* obj,uint16 modbusAddr,uint8 bit, AddrType opAddrType
 	if(pModbusS_RTU==NULL){return FALSE;}
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -103,7 +103,7 @@ BOOL MDS_RTU_WriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit, Ad
 	if(pModbusS_RTU==NULL){return FALSE;}
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -141,7 +141,7 @@ BOOL MDS_RTU_WriteReg(void* obj,uint16 modbusAddr,uint16 reg, AddrType opAddrTyp
 	if(pModbusS_RTU==NULL){return FALSE;}
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -163,7 +163,7 @@ BOOL MDS_RTU_WriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uin
 	if(pModbusS_RTU==NULL){return FALSE;}
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
@@ -195,7 +195,7 @@ BOOL MDS_RTU_WriteInput(void* obj,uint16 modbusAddr,uint8 bit){
 BOOL MDS_RTU_WriteCoils(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit){
 	return MDS_RTU_WriteBits( obj, modbusAddr, numOf,bit, COILS_TYPE);
 }
-BOOL MDS_RTU_WriteMulInput(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit){
+BOOL MDS_RTU_WriteInputs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit){
 	return MDS_RTU_WriteBits( obj, modbusAddr, numOf,bit, INPUT_TYPE);
 }
 BOOL MDS_RTU_WriteHoldReg(void* obj,uint16 modbusAddr,uint16 reg){

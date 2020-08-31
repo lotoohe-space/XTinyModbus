@@ -1,6 +1,10 @@
 #include "tim3.h"
-#include "MD_RTU_Serial.h"
+#include "Sys_Config.h"
+#if MD_USD_SALVE
+#include "MDS_RTU_Serial.h"
+#else 
 #include "MDM_RTU_Serial.h"
+#endif
 
 vu32 sys_tick_100us=0;
 
@@ -39,8 +43,10 @@ void TIM3_IRQHandler(void)   //TIM3中断
 	{
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
 		sys_tick_100us++;
-		
+		#if MD_USD_SALVE
 		MDSTimeHandler100US();
-		//MDMTimeHandler100US();
+		#else
+		MDMTimeHandler100US();
+		#endif
 	}
 }

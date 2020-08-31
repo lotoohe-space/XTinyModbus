@@ -6,11 +6,11 @@
 * @Description: Modbus RTU Slave从机应用模块。    
 * 开源地址: https://github.com/lotoohe-space/XTinyModbus
 */
-#include "MD_RTU_APP.h"
+#include "MDS_RTU_APP.h"
 #include "MD_RTU_MapTable.h"
-#include "MD_RTU_Fun.h"
-#include "MD_RTU_User_Fun.h"
-#include "MD_RTU_Serial.h"
+#include "MDS_RTU_Fun.h"
+#include "MDS_RTU_User_Fun.h"
+#include "MDS_RTU_Serial.h"
 #define SALVE_ADDR	0x01
 
 void MDSAPPWriteFunciton(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrType);

@@ -27,7 +27,7 @@ BOOL MDS_RTU_WriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uin
 BOOL MDS_RTU_WriteCoil(void* obj,uint16 modbusAddr,uint8 bit);
 BOOL MDS_RTU_WriteInput(void* obj,uint16 modbusAddr,uint8 bit);
 BOOL MDS_RTU_WriteCoils(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit);
-BOOL MDS_RTU_WriteMulInput(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit);
+BOOL MDS_RTU_WriteInputs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit);
 BOOL MDS_RTU_WriteHoldReg(void* obj,uint16 modbusAddr,uint16 reg);
 BOOL MDS_RTU_WriteHoldRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg);
 BOOL MDS_RTU_WriteInputReg(void* obj,uint16 modbusAddr,uint16 reg);

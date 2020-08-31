@@ -20,6 +20,9 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 void MDMSerialRecvByte(uint8 byte);
 /*定时器中调用该函数*/
 void MDMTimeHandler100US(void);
+
+void MDMSerialSendBytes(uint8 *bytes,uint16 num);
+void MDMSerialSWRecv_Send(uint8 mode);
 /*********************************结束******************************************/
 
 #endif

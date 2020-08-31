@@ -7,10 +7,10 @@
 ********************************************************************************/
 
 /*********************************头文件包含************************************/
-#include "MD_RTU_Fun.h"
+#include "MDS_RTU_Fun.h"
 #include "MD_RTU_CRC16.h"
-#include "MD_RTU_Serial.h"
-#include "MD_RTU_User_Fun.h"
+#include "MDS_RTU_Serial.h"
+#include "MDS_RTU_User_Fun.h"
 /*********************************结束******************************************/
 
 /**********************************函数声明*************************************/
@@ -49,14 +49,14 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 #if MDS_USE_SEND_CACHE
 	pModbusRTU->serialSendCount=0;
 #endif
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		pModbusRTU->pMapTableList[i] = NULL;
 	}
 	
 	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDS_RTU_TimeHandler;
 	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDS_RTU_RecvByte;
-	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
-	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=MDSSerialSendBytes;
+	TO_MDBase(pModbusRTU)->mdRTURecSendConv=MDSSerialSWRecv_Send;
 	
 	pModbusRTU->mdsWriteFun=NULL;
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;
@@ -182,7 +182,7 @@ BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
 	if(pModbusRTU==NULL ||pMapTableItem==NULL){
 			return FALSE;
 	}
-	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,REG_COIL_ITEM_NUM);
+	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,MDS_REG_COIL_ITEM_NUM);
 }
 #if	!MDS_USE_SEND_CACHE 
 /*******************************************************
@@ -389,7 +389,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 	uint16 i=0;
 	if(pModbus_RTU==NULL){return FALSE;}
 	
-	for(i=0;i<REG_COIL_ITEM_NUM;i++){
+	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
 		if(pModbus_RTU->pMapTableList[i]==NULL){
 			continue;
 		}

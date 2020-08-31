@@ -85,7 +85,7 @@ BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, Add
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-				/*检查设备号*/
+		/*检查设备号*/
 		if(devAddr!=pModbusS_RTU->pMapTableList[i]->devAddr){continue;}
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)

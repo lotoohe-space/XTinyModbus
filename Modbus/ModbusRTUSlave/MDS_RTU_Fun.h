@@ -13,13 +13,7 @@
 #include "MD_RTU_MapTable.h"
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Tool.h"
-/*********************************结束******************************************/
-
-/*********************************配置参数***************************************/
-#define 	REG_COIL_ITEM_NUM 				20				/*离散映射最大数量*/
-#define 	MDS_RTU_CMD_SIZE					256				/*单条指令长度*/
-#define 	MDS_RTU_SEND_CACHE_SIZE		256				/*发送缓存长度*/
-#define 	MDS_USE_SEND_CACHE 				1					/*是否启用发送缓存*/
+#include "MD_RTU_Config.h"
 /*********************************结束******************************************/
 
 /*********************************变量类型申明***********************************/
@@ -38,7 +32,7 @@ typedef struct{
 	uint8														serialSendCache[MDS_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
 	uint16													serialSendCount;											/*发送的字节数*/
 #endif
-	PMapTableItem 									pMapTableList[REG_COIL_ITEM_NUM];		/*寄存器注册表*/
+	PMapTableItem 									pMapTableList[MDS_REG_COIL_ITEM_NUM];		/*寄存器注册表*/
 	
 	/*上次接收的时间,0xFFFFFFFF表示未起开始检测帧*/
 	uint32 lastTimesTick;
@@ -121,6 +115,8 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun);
 BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU);
+
+
 /*********************************结束******************************************/
 
 #endif

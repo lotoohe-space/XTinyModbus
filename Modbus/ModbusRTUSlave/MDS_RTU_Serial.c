@@ -7,8 +7,8 @@
 * 开源地址: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 /*********************************头文件包含************************************/
-#include "MD_RTU_Serial.h"
-#include "MD_RTU_Fun.h"
+#include "MDS_RTU_Serial.h"
+#include "MDS_RTU_Fun.h"
 
 #include "usart.h"
 /*********************************结束******************************************/
@@ -18,9 +18,7 @@ PModbusBase pModbusBase=NULL;			/*当前串口的Modbus*/
 /*********************************结束******************************************/
 
 /*********************************函数申明************************************/
-void MDSSerialSendBytes(uint8 *bytes,uint16 num);
-void MDSSerialSWRecv_Send(uint8 mode);
-void MDSTimeHandler100US(void);
+
 /*********************************结束******************************************/
 
 /*******************************************************
@@ -39,8 +37,8 @@ void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	pModbusBase=obj;
 	if(obj==NULL){return ;}
 	
-	pModbusBase->mdRTUSendBytesFunction=MDSSerialSendBytes;
-	pModbusBase->mdRTURecSendConv=MDSSerialSWRecv_Send;
+//	pModbusBase->mdRTUSendBytesFunction=MDSSerialSendBytes;
+//	pModbusBase->mdRTURecSendConv=MDSSerialSWRecv_Send;
 	
 	
 	/*硬件初始化*/

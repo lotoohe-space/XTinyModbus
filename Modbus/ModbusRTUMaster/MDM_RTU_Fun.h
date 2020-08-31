@@ -14,12 +14,7 @@
 #include "MD_RTU_Error.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_MapTable.h"
-/*********************************结束******************************************/
-
-/*********************************配置宏************************************/
-#define MDM_REG_COIL_ITEM_NUM 	20			/*离散映射个数*/
-#define MDM_RTU_SEND_CACHE_SIZE	256			/*发送缓存大小*/
-#define MDM_USE_SEND_CACHE			1				/*是否开启发送缓存*/
+#include "MD_RTU_Config.h"
 /*********************************结束******************************************/
 
 /*********************************头文件包含************************************/
@@ -44,8 +39,8 @@ typedef struct{
 	MDSqQueue 		mdSqQueue;
 
 #if MDM_USE_SEND_CACHE
-	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];	/*发送缓存*/
-	uint16				serialSendCount;											/*发送的字节数*/
+	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];		/*发送缓存*/
+	uint16				serialSendCount;														/*发送的字节数*/
 #endif
 	
 	/*上次接收的时间,0xFFFFFFF表示未起开始检测帧*/

@@ -9,6 +9,7 @@
 
 /*********************************头文件包含************************************/
 #include "MDM_RTU_Fun.h"
+#include "MDM_RTU_Serial.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_CRC16.h"
 /*********************************结束******************************************/
@@ -51,9 +52,9 @@ MDError MDM_RTU_Init(
 	}
 	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDM_RTU_TimeHandler;
 	/*数据发送接收有关的函数*/
-	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=MDMSerialSendBytes;
 	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDM_RTU_RecvByte;
-	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
+	TO_MDBase(pModbusRTU)->mdRTURecSendConv=MDMSerialSWRecv_Send;
 #if MDM_USE_SEND_CACHE
 	pModbusRTU->serialSendCount=0;
 #endif
@@ -62,7 +63,7 @@ MDError MDM_RTU_Init(
 	/*当前的实时时间单位100US*/
 	pModbusRTU->timesTick=0;
 	
-	T=(1.0/(float)baud)*100000;// 100us
+	T=(1.0/(float)baud)*100000;
 	uint16 time=0;
 	time=T*(dataBits+(parity?1:0));
 	if(stopBits==0){
