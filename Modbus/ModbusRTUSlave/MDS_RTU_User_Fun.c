@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_User_Fun.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-28
 * @Description: Modbus RTU 用户相关函数

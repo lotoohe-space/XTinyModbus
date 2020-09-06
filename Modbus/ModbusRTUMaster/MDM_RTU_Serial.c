@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_Serial.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 串口相关模块
@@ -10,7 +11,15 @@
 /*********************************头文件包含************************************/
 #include "MDM_RTU_Serial.h"
 #include "MD_RTU_Tool.h"
+
+/*用户相关的头文件*/
+#include "Sys_config.h"
+#if	!MDM_USD_USART3
 #include "usart.h"
+#else 
+#include "usart3.h"
+#endif
+
 /*********************************结束******************************************/
 
 /*********************************全局变量************************************/
@@ -38,11 +47,17 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	pModbusMBase=obj;
 	if(obj==NULL){return ;}
 	
-//	pModbusMBase->mdRTUSendBytesFunction=MDMSerialSendBytes;
-//	pModbusMBase->mdRTURecSendConv=MDMSerialSWRecv_Send;
+	
+	pModbusMBase->mdRTUSendBytesFunction=MDMSerialSendBytes;
+	pModbusMBase->mdRTURecSendConv=MDMSerialSWRecv_Send;
 	
 	/*硬件初始化*/
-	uart_init(baud);
+	#if	!MDM_USD_USART3
+		uart_init(baud);
+	#else 
+		init_usart3(baud);
+	#endif
+	
 }
 /*******************************************************
 *
@@ -78,7 +93,11 @@ void MDMSerialRecvByte(uint8 byte){
 void MDMSerialSWRecv_Send(uint8 mode){
 	/*收发转换*/
 	/*下面填写转换的代码*/
-	
+	#if	!MDM_USD_USART3
+		
+	#else
+		RS485_RW_CONV=mode;
+	#endif
 	/*不同的硬件可能在设置转换后需要一点延时*/
 }
 /*******************************************************
@@ -91,8 +110,12 @@ void MDMSerialSWRecv_Send(uint8 mode){
 * Return          : 无
 **********************************************************/
 void MDMSerialSendBytes(uint8 *bytes,uint16 num){
+	#if	!MDM_USD_USART3
 	/*在下面调用bsp的发送函数*/
 	uart_send_bytes(bytes,num);
+	#else
+	usart3_send_bytes(bytes,num);
+	#endif
 }
 
 

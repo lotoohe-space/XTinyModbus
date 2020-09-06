@@ -20,6 +20,16 @@
 #define MDM_USE_SEND_CACHE					1					/*是否开启发送缓存*/
 
 
+/*多从机*/
+#define MDS_USE_IDENTICAL_MAPPING		1					/*不同的从机使用同一个映射源*/
+
+#ifdef MDS_USE_IDENTICAL_MAPPING
+	#define STATIC_T static
+#else 
+	#define STATIC_T
+#endif
+
+
 /*********************************结束******************************************/
 
 

@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_Fun.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU Slave从机接收功能函数。
@@ -55,8 +56,8 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	
 	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDS_RTU_TimeHandler;
 	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDS_RTU_RecvByte;
-	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=MDSSerialSendBytes;
-	TO_MDBase(pModbusRTU)->mdRTURecSendConv=MDSSerialSWRecv_Send;
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
+	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
 	
 	pModbusRTU->mdsWriteFun=NULL;
 	pModbusRTU->lastTimesTick=0xFFFFFFFF;

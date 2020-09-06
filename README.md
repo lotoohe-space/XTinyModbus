@@ -6,6 +6,15 @@ A small embedded Modbus protocol stack, written in C language, support master an
 
 0.Log
 ----
+2020/9/6
+Add a multi slave example. <br>
+Add some macro for testing. <br>
+
+2020/8/31
+Add MD_ RTU_ Configure the protocol stack with config. H. <br>
+Test macro configuration added. <br>
+Modification of file name. <br>
+Some other changes. <br>
 
 2020/6/6
 Fixed a size end error.<br>
@@ -140,9 +149,15 @@ XTinyModbus
 0.日志
 ----
 
-2020/8/31
+2020/9/6
+增加多从机示例。<br>
+增加一些测试用的宏。<br>
+
+2020/8/31 
 增加MD_RTU_Config.h进行协议栈配置。<br>
 增加测试配置宏。<br>
+文件命名的修改。<br>
+一些其它的修改。<br>
 
 2020/6/6
 修正一个大小端错误。<br>

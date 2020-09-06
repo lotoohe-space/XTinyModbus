@@ -1,5 +1,5 @@
 /**
-* @File name: MD_RTU_APP.c
+* @File name: MD_RTU_APP_1.c
 * @Author: zspace
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
@@ -7,15 +7,18 @@
 * @Description: Modbus RTU Slave从机应用模块。    
 * 开源地址: https://github.com/lotoohe-space/XTinyModbus
 */
-#include "MDS_RTU_APP.h"
+#include "MDS_RTU_APP_1.h"
 #include "MD_RTU_MapTable.h"
 #include "MDS_RTU_Fun.h"
 #include "MDS_RTU_User_Fun.h"
-#include "MDS_RTU_Serial.h"
-#define SALVE_ADDR	0x01
+#include "MDS_RTU_Serial_1.h"
+
+
+#define SALVE_ADDR	0x02
 
 void MDSAPPWriteFunciton(void* obj,uint16 modbusAddr,uint16 wLen,AddrType addrType);
 
+#ifdef MDS_USE_IDENTICAL_MAPPING
 STATIC_T uint16 mapTableData0[32]={1,2,3,4,5,6,7,8,9,10,11,12};
 STATIC_T MapTableItem mapTableItem0={
 	.modbusAddr=0x0000,				/*MODBUS中的地址*/
@@ -46,12 +49,18 @@ STATIC_T MapTableItem mapTableItem3={
 	.modbusDataSize=64,				/*映射的大小*/
 	.addrType=INPUT_TYPE				/*映射的类型*/
 };
+#else
+extern MapTableItem mapTableItem0;
+extern MapTableItem mapTableItem1;
+extern MapTableItem mapTableItem2;
+extern MapTableItem mapTableItem3;
+#endif
 
 static ModbusS_RTU modbusS_RTU={0};
 
-BOOL MDS_RTU_APPInit(void){
+BOOL MDS_RTU_APPInit_1(void){
 	
-	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,9600,8,1,0);
+	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial_1,SALVE_ADDR,9600,8,1,0);
 	
 	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem0)==FALSE){
 		return FALSE;
@@ -101,7 +110,7 @@ static void MDSAPPWriteFunciton(void* obj,uint16 modbusAddr,uint16 wLen,AddrType
 	}
 }
 
-void MDS_RTU_Loop(void){
+void MDS_RTU_Loop_1(void){
 	MDS_RTU_Process(&modbusS_RTU);
 	MDS_RTU_UserUpdate();
 }

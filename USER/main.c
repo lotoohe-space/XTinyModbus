@@ -3,6 +3,7 @@
 #include "Sys_Config.h"
 #if MD_USD_SALVE
 #include "MDS_RTU_APP.h"
+#include "MDS_RTU_APP_1.h"
 #else
 #include "MDM_RTU_APP.h"
 #endif
@@ -13,6 +14,7 @@ int main(void)
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
 #if MD_USD_SALVE
 		MDS_RTU_APPInit();
+		MDS_RTU_APPInit_1();
 #else
 		MDM_RTU_APPInit();
 #endif
@@ -20,6 +22,7 @@ int main(void)
 	while(1){
 		#if MD_USD_SALVE
 		MDS_RTU_Loop();
+		MDS_RTU_Loop_1();
 		#else
 		MDM_RTU_Loop();
 		#endif

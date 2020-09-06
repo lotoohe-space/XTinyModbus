@@ -2,6 +2,7 @@
 #include "Sys_Config.h"
 #if MD_USD_SALVE
 #include "MDS_RTU_Serial.h"
+#include "MDS_RTU_Serial_1.h"
 #else 
 #include "MDM_RTU_Serial.h"
 #endif
@@ -37,14 +38,15 @@ void TIM3_Int_Init(u16 arr,u16 psc){
 }
 
 //定时器3中断服务程序
-void TIM3_IRQHandler(void)   //TIM3中断
+void TIM3_IRQHandler(void)   													//TIM3中断
 {
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) 	//检查指定的TIM中断发生与否:TIM 中断源 
 	{
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  		//清除TIMx的中断待处理位:TIM 中断源 
 		sys_tick_100us++;
 		#if MD_USD_SALVE
 		MDSTimeHandler100US();
+		MDSTimeHandler100US_1();
 		#else
 		MDMTimeHandler100US();
 		#endif

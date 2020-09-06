@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_APP.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 用户APP模块
@@ -15,16 +16,16 @@
 /*********************************结束******************************************/
 
 /*********************************全局变量************************************/
-uint16 mapTableDataMaster0[4]={0};
-MapTableItem mapTableItemMaster0={
+static uint16 mapTableDataMaster0[4]={0};
+static MapTableItem mapTableItemMaster0={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=mapTableDataMaster0,	/*映射的内存单元*/
 	.modbusDataSize=64,							/*映射的大小*/
 	.addrType=COILS_TYPE,						/*映射的类型*/
 	.devAddr=1,											/*被哪个从机使用*/
 };
-uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
-MapTableItem mapTableItemMaster1={
+static uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
+static MapTableItem mapTableItemMaster1={
 	.modbusAddr=0x0000,							/*MODBUS中的地址*/
 	.modbusData=regDataMaster1,			/*映射的内存单元*/
 	.modbusDataSize=32,							/*映射的大小*/
@@ -59,15 +60,15 @@ BOOL MDM_RTU_APPInit(void){
 		return FALSE;
 	}
 	
-	/*RW控制块*/
-	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,500,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,500,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,500,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,500,25000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,500,25000,3);
+	/*RW控制块,用户控制读写时间间隔，重传超时时间以及重传超时次数*/
+	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,10000,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,10000,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,10000,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,10000,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,10000,30000,3);
 	return TRUE;
 }
-uint16	temp=~(0x5555);
+uint16	temp=0xAAAA;
 uint16	temp2=0x5555;
 uint16	temp1=1234;
 uint16	data1[]={1,2,3,4,5,6};

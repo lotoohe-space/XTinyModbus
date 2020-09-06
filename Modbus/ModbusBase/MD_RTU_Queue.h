@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_Queue.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 队列功能模块

@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MDM_RTU_Fun.c
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 主机功能模块
@@ -52,9 +53,9 @@ MDError MDM_RTU_Init(
 	}
 	TO_MDBase(pModbusRTU)->mdRTUTimeHandlerFunction=MDM_RTU_TimeHandler;
 	/*数据发送接收有关的函数*/
-	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=MDMSerialSendBytes;
+	TO_MDBase(pModbusRTU)->mdRTUSendBytesFunction=NULL;
 	TO_MDBase(pModbusRTU)->mdRTURecByteFunction=MDM_RTU_RecvByte;
-	TO_MDBase(pModbusRTU)->mdRTURecSendConv=MDMSerialSWRecv_Send;
+	TO_MDBase(pModbusRTU)->mdRTURecSendConv=NULL;
 #if MDM_USE_SEND_CACHE
 	pModbusRTU->serialSendCount=0;
 #endif
@@ -97,7 +98,7 @@ MDError MDM_RTU_Init(
 void MDM_RTU_CB_Init(
 	PModbus_RTU_CB 	pModbusRTUCB
 	,PModbus_RTU 		pModbusRTU
-	,uint16 				sendIntervalTime
+	,uint32 				sendIntervalTime
 	,uint32					sendOverTime
 	,uint8 					RTTimes
 ){

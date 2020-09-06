@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_RegCoil.h
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU ¿Î…¢”≥…‰π‹¿Ìƒ£øÈ

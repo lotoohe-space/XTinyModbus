@@ -1,17 +1,15 @@
 ;******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
-;* File Name          : startup_stm32f10x_hd.s
+;* File Name          : startup_stm32f10x_ld.s
 ;* Author             : MCD Application Team
 ;* Version            : V3.4.0
 ;* Date               : 10/15/2010
-;* Description        : STM32F10x High Density Devices vector table for MDK-ARM 
+;* Description        : STM32F10x Low Density Devices vector table for MDK-ARM 
 ;*                      toolchain. 
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == Reset_Handler
 ;*                      - Set the vector table entries with the exceptions ISR address
-;*                      - Configure the clock system and also configure the external 
-;*                        SRAM mounted on STM3210E-EVAL board to be used as data 
-;*                        memory (optional, to be enabled by user)
+;*                      - Configure the clock system
 ;*                      - Branches to __main in the C library (which eventually
 ;*                        calls main()).
 ;*                      After Reset the CortexM3 processor is in Thread mode,
@@ -37,7 +35,8 @@ Stack_Size      EQU     0x00000400
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
 __initial_sp
-                                                  
+
+
 ; <h> Heap Configuration
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
@@ -95,7 +94,7 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD     DMA1_Channel5_IRQHandler   ; DMA1 Channel 5
                 DCD     DMA1_Channel6_IRQHandler   ; DMA1 Channel 6
                 DCD     DMA1_Channel7_IRQHandler   ; DMA1 Channel 7
-                DCD     ADC1_2_IRQHandler          ; ADC1 & ADC2
+                DCD     ADC1_2_IRQHandler          ; ADC1_2
                 DCD     USB_HP_CAN1_TX_IRQHandler  ; USB High Priority or CAN1 TX
                 DCD     USB_LP_CAN1_RX0_IRQHandler ; USB Low  Priority or CAN1 RX0
                 DCD     CAN1_RX1_IRQHandler        ; CAN1 RX1
@@ -107,53 +106,36 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD     TIM1_CC_IRQHandler         ; TIM1 Capture Compare
                 DCD     TIM2_IRQHandler            ; TIM2
                 DCD     TIM3_IRQHandler            ; TIM3
-                DCD     TIM4_IRQHandler            ; TIM4
+                DCD     0                          ; Reserved
                 DCD     I2C1_EV_IRQHandler         ; I2C1 Event
                 DCD     I2C1_ER_IRQHandler         ; I2C1 Error
-                DCD     I2C2_EV_IRQHandler         ; I2C2 Event
-                DCD     I2C2_ER_IRQHandler         ; I2C2 Error
+                DCD     0                          ; Reserved
+                DCD     0                          ; Reserved
                 DCD     SPI1_IRQHandler            ; SPI1
-                DCD     SPI2_IRQHandler            ; SPI2
+                DCD     0                          ; Reserved
                 DCD     USART1_IRQHandler          ; USART1
                 DCD     USART2_IRQHandler          ; USART2
-                DCD     USART3_IRQHandler          ; USART3
+                DCD     0                          ; Reserved
                 DCD     EXTI15_10_IRQHandler       ; EXTI Line 15..10
                 DCD     RTCAlarm_IRQHandler        ; RTC Alarm through EXTI Line
                 DCD     USBWakeUp_IRQHandler       ; USB Wakeup from suspend
-                DCD     TIM8_BRK_IRQHandler        ; TIM8 Break
-                DCD     TIM8_UP_IRQHandler         ; TIM8 Update
-                DCD     TIM8_TRG_COM_IRQHandler    ; TIM8 Trigger and Commutation
-                DCD     TIM8_CC_IRQHandler         ; TIM8 Capture Compare
-                DCD     ADC3_IRQHandler            ; ADC3
-                DCD     FSMC_IRQHandler            ; FSMC
-                DCD     SDIO_IRQHandler            ; SDIO
-                DCD     TIM5_IRQHandler            ; TIM5
-                DCD     SPI3_IRQHandler            ; SPI3
-                DCD     UART4_IRQHandler           ; UART4
-                DCD     UART5_IRQHandler           ; UART5
-                DCD     TIM6_IRQHandler            ; TIM6
-                DCD     TIM7_IRQHandler            ; TIM7
-                DCD     DMA2_Channel1_IRQHandler   ; DMA2 Channel1
-                DCD     DMA2_Channel2_IRQHandler   ; DMA2 Channel2
-                DCD     DMA2_Channel3_IRQHandler   ; DMA2 Channel3
-                DCD     DMA2_Channel4_5_IRQHandler ; DMA2 Channel4 & Channel5
 __Vectors_End
 
 __Vectors_Size  EQU  __Vectors_End - __Vectors
 
                 AREA    |.text|, CODE, READONLY
-                
-; Reset handler
-Reset_Handler   PROC
-                EXPORT  Reset_Handler             [WEAK]
-                IMPORT  __main
-                IMPORT  SystemInit
-                LDR     R0, =SystemInit
-                BLX     R0               
-                LDR     R0, =__main
-                BX      R0
-                ENDP
-                
+
+; Reset handler routine
+Reset_Handler    PROC
+                 EXPORT  Reset_Handler             [WEAK]
+     IMPORT  __main
+     IMPORT  SystemInit
+                 LDR     R0, =SystemInit
+                 BLX     R0
+                 LDR     R0, =__main
+                 BX      R0
+                 ENDP
+
 ; Dummy Exception Handlers (infinite loops which can be modified)
 
 NMI_Handler     PROC
@@ -230,36 +212,14 @@ Default_Handler PROC
                 EXPORT  TIM1_CC_IRQHandler         [WEAK]
                 EXPORT  TIM2_IRQHandler            [WEAK]
                 EXPORT  TIM3_IRQHandler            [WEAK]
-                EXPORT  TIM4_IRQHandler            [WEAK]
                 EXPORT  I2C1_EV_IRQHandler         [WEAK]
                 EXPORT  I2C1_ER_IRQHandler         [WEAK]
-                EXPORT  I2C2_EV_IRQHandler         [WEAK]
-                EXPORT  I2C2_ER_IRQHandler         [WEAK]
                 EXPORT  SPI1_IRQHandler            [WEAK]
-                EXPORT  SPI2_IRQHandler            [WEAK]
                 EXPORT  USART1_IRQHandler          [WEAK]
                 EXPORT  USART2_IRQHandler          [WEAK]
-                EXPORT  USART3_IRQHandler          [WEAK]
                 EXPORT  EXTI15_10_IRQHandler       [WEAK]
                 EXPORT  RTCAlarm_IRQHandler        [WEAK]
                 EXPORT  USBWakeUp_IRQHandler       [WEAK]
-                EXPORT  TIM8_BRK_IRQHandler        [WEAK]
-                EXPORT  TIM8_UP_IRQHandler         [WEAK]
-                EXPORT  TIM8_TRG_COM_IRQHandler    [WEAK]
-                EXPORT  TIM8_CC_IRQHandler         [WEAK]
-                EXPORT  ADC3_IRQHandler            [WEAK]
-                EXPORT  FSMC_IRQHandler            [WEAK]
-                EXPORT  SDIO_IRQHandler            [WEAK]
-                EXPORT  TIM5_IRQHandler            [WEAK]
-                EXPORT  SPI3_IRQHandler            [WEAK]
-                EXPORT  UART4_IRQHandler           [WEAK]
-                EXPORT  UART5_IRQHandler           [WEAK]
-                EXPORT  TIM6_IRQHandler            [WEAK]
-                EXPORT  TIM7_IRQHandler            [WEAK]
-                EXPORT  DMA2_Channel1_IRQHandler   [WEAK]
-                EXPORT  DMA2_Channel2_IRQHandler   [WEAK]
-                EXPORT  DMA2_Channel3_IRQHandler   [WEAK]
-                EXPORT  DMA2_Channel4_5_IRQHandler [WEAK]
 
 WWDG_IRQHandler
 PVD_IRQHandler
@@ -291,36 +251,15 @@ TIM1_TRG_COM_IRQHandler
 TIM1_CC_IRQHandler
 TIM2_IRQHandler
 TIM3_IRQHandler
-TIM4_IRQHandler
 I2C1_EV_IRQHandler
 I2C1_ER_IRQHandler
-I2C2_EV_IRQHandler
-I2C2_ER_IRQHandler
 SPI1_IRQHandler
-SPI2_IRQHandler
 USART1_IRQHandler
 USART2_IRQHandler
-USART3_IRQHandler
 EXTI15_10_IRQHandler
 RTCAlarm_IRQHandler
 USBWakeUp_IRQHandler
-TIM8_BRK_IRQHandler
-TIM8_UP_IRQHandler
-TIM8_TRG_COM_IRQHandler
-TIM8_CC_IRQHandler
-ADC3_IRQHandler
-FSMC_IRQHandler
-SDIO_IRQHandler
-TIM5_IRQHandler
-SPI3_IRQHandler
-UART4_IRQHandler
-UART5_IRQHandler
-TIM6_IRQHandler
-TIM7_IRQHandler
-DMA2_Channel1_IRQHandler
-DMA2_Channel2_IRQHandler
-DMA2_Channel3_IRQHandler
-DMA2_Channel4_5_IRQHandler
+
                 B       .
 
                 ENDP

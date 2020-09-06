@@ -1,7 +1,7 @@
 #include "usart3.h"
 #include "Sys_Config.h"
 #if MD_USD_SALVE
-#include "MDS_RTU_Serial.h"
+#include "MDS_RTU_Serial_1.h"
 #else 
 #include "MDM_RTU_Serial.h"
 #endif
@@ -81,9 +81,11 @@ void USART3_IRQHandler(void){
     if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
 			uint8_t data = USART_ReceiveData(USART3);
 			#if MD_USD_SALVE
-				MDSSerialRecvByte(data);
+				MDSSerialRecvByte_1(data);
 			#else 
-				MDMSerialRecvByte(data);
+				#if MDM_USD_USART3
+					MDMSerialRecvByte(data);
+				#endif
 			#endif
     }
 }

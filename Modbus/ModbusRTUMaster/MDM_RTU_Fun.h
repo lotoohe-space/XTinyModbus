@@ -1,6 +1,7 @@
 /********************************************************************************
 * @File name: MD_RTU_Fun.h
 * @Author: zspace
+* @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
 * @Description: Modbus RTU 主机功能模块
@@ -65,7 +66,7 @@ typedef struct{
 typedef struct{
 	PModbus_RTU pModbus_RTU;/*modbus rtu*/
 	
-	uint16			sendIntervalTime;/*发送的间隔时间，即多久发送一次*/
+	uint32			sendIntervalTime;/*发送的间隔时间，即多久发送一次*/
 	
 	uint32			sendTimeTick;/*发送时的时间*/
 	uint8				RTCount;/*以及重传次数*/
@@ -90,7 +91,7 @@ MDError MDM_RTU_Init(
 void MDM_RTU_CB_Init(
 	 PModbus_RTU_CB 	pModbusRTUCB
 	,PModbus_RTU 		pModbusRTU
-	,uint16 				sendIntervalTime
+	,uint32 				sendIntervalTime
 	,uint32					sendOverTime/*发送超时时间*/
 	,uint8 					RTTimes/*重传次数 当其为255时表示一直进行重传*/
 );
