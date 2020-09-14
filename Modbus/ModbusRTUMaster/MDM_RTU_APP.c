@@ -13,6 +13,7 @@
 #include "MDM_RTU_Fun.h"
 #include "MDM_RTU_Serial.h"
 #include "MDM_RTU_User_Fun.h"
+#include "MDM_RTU_RW_Man.h"
 /*********************************结束******************************************/
 
 /*********************************全局变量************************************/
@@ -41,6 +42,11 @@ Modbus_RTU_CB modbusRWRTUCB3 = {0};
 Modbus_RTU_CB modbusRWRTUCB4 = {0};
 /*********************************结束******************************************/
 
+/*********************************函数申明************************************/
+static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest0(void* arg);
+static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest1(void* arg);
+/*********************************结束******************************************/
+
 /*******************************************************
 *
 * Function name :MDM_RTU_APPInit
@@ -66,12 +72,18 @@ BOOL MDM_RTU_APPInit(void){
 	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,10000,30000,3);
 	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,10000,30000,3);
 	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,10000,30000,3);
+	
+	
+	MDM_RW_CtrlAddRW(MDM_RTU_NB_RW_CtrlTest0,NULL,"rw_test_0");
+	MDM_RW_CtrlAddRW(MDM_RTU_NB_RW_CtrlTest1,NULL,"rw_test_1");
+	
 	return TRUE;
 }
 uint16	temp=0xAAAA;
 uint16	temp2=0x5555;
 uint16	temp1=1234;
 uint16	data1[]={1,2,3,4,5,6};
+uint16	data2[]={6,5,4,3,2,1};
 #define MD_NB_MODE_TEST 1
 /*用户读取数据*/
 static void MDM_RTUUserRead(void){
@@ -128,10 +140,50 @@ static void MDM_RTUUserWrite(void){
 		MDM_RTU_WriteCoils(&modbusRWRTUCB4,0x1,0,16,(uint8*)(&temp2));
 	#endif
 }
+/*发送控制函数*/
+static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest0(void* arg){
+	MDError res;
+	#if MD_NB_MODE_TEST
+	res = MDM_RTU_NB_WriteRegs(&modbusRWRTUCB2,0x1,0,6,data1);
+	if(res != ERR_IDLE){
+		if(res != ERR_RW_FIN){/*出现错误*/
+			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
+				/*使能重传*/
+				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB1);
+				return RW_ERR;
+			} 
+		}else{
+			return RW_OK; 
+		}
+	}
+	#endif
+	return RW_NONE;
+}
+/*发送控制函数*/
+static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest1(void* arg){
+	MDError res;
+	#if MD_NB_MODE_TEST
+	res = MDM_RTU_NB_WriteRegs(&modbusRWRTUCB3,0x1,0,6,data2);
+	if(res != ERR_IDLE){
+		if(res != ERR_RW_FIN){/*出现错误*/
+			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
+				/*使能重传*/
+				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB1);
+				return RW_ERR;
+			} 
+		}else{
+			return RW_OK; 
+		}
+	}
+	#endif
+	return RW_NONE;
+}
+
+
 /*用户数据的读写*/
 static void MDM_RTU_UserUpdate(void){
-	MDM_RTUUserRead();
-	MDM_RTUUserWrite();
+//	MDM_RTUUserRead();
+//	MDM_RTUUserWrite();
 }
 
 /*循环调用*/

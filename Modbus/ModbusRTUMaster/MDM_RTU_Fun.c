@@ -731,17 +731,19 @@ MDError MDM_RTU_RW(
 	void *wData
 ){
 	MDError res;
+	void* tempObj = pModbus_RTU_CB->pModbus_RTU->parentObj;
+	pModbus_RTU_CB->pModbus_RTU->parentObj=NULL;/*设置为空，使得非阻塞和阻塞可以混合调用*/
 	do{
 		res = MDM_RTU_NB_RW(pModbus_RTU_CB,funCode,slaveAddr,startAddr,numOf,wData);
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*重传超时了*/
-				/*使能重传*/
-				MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);
-				return res;
+		if(res != ERR_RW_FIN){						/*出现错误*/
+			if(res == ERR_RW_OV_TIME_ERR){	/*重传超时了*/																
+				MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);/*使能重传*/
+				goto exit;
 			}
 		}
 	}while(res!=ERR_RW_FIN);
-	//pModbus_RTU_CB->sendFlag=0;
+	pModbus_RTU_CB->pModbus_RTU->parentObj=tempObj;/*还原设置*/
+	exit:
 	return res;
 }
 /*******************************************************

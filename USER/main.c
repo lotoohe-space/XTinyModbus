@@ -1,6 +1,8 @@
 #include "delay.h"
 #include "tim3.h"
 #include "Sys_Config.h"
+
+#include "MDM_RTU_RW_Man.h"
 #if MD_USD_SALVE
 #include "MDS_RTU_APP.h"
 #include "MDS_RTU_APP_1.h"
@@ -10,8 +12,8 @@
 
 int main(void)
  {	 		    
-	delay_init();	    	 //延时函数初始化	  
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
+	delay_init();
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 #if MD_USD_SALVE
 		MDS_RTU_APPInit();
 		MDS_RTU_APPInit_1();
@@ -26,6 +28,8 @@ int main(void)
 		#else
 		MDM_RTU_Loop();
 		#endif
+		
+		MDM_RW_CtrlLoop();
 	}
 }
 

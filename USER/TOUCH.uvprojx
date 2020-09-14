@@ -531,6 +531,11 @@
               <FileType>5</FileType>
               <FilePath>..\Modbus\ModbusBase\MD_RTU_Config.h</FilePath>
             </File>
+            <File>
+              <FileName>MD_RTU_Tool.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Modbus\ModbusBase\MD_RTU_Tool.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -557,24 +562,14 @@
               <FilePath>..\Modbus\ModbusRTUSlave\MDS_RTU_User_Fun.c</FilePath>
             </File>
             <File>
-              <FileName>MDS_RTU_APP_1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\MDS_RTU_APP_1.c</FilePath>
-            </File>
-            <File>
-              <FileName>MDS_RTU_APP_1.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MDS_RTU_APP_1.h</FilePath>
-            </File>
-            <File>
               <FileName>MDS_RTU_Serial_1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\MDS_RTU_Serial_1.c</FilePath>
+              <FilePath>..\Modbus\ModbusRTUSlave\MDS_RTU_Serial_1.c</FilePath>
             </File>
             <File>
-              <FileName>MDS_RTU_Serial_1.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\MDS_RTU_Serial_1.h</FilePath>
+              <FileName>MDS_RTU_APP_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUSlave\MDS_RTU_APP_1.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -600,6 +595,11 @@
               <FileName>MDM_RTU_User_Fun.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_User_Fun.c</FilePath>
+            </File>
+            <File>
+              <FileName>MDM_RTU_RW_Man.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\ModbusRTUMaster\MDM_RTU_RW_Man.c</FilePath>
             </File>
           </Files>
         </Group>

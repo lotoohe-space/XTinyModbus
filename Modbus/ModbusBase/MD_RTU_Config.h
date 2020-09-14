@@ -19,6 +19,8 @@
 #define MDM_RTU_SEND_CACHE_SIZE			256				/*发送缓存大小*/
 #define MDM_USE_SEND_CACHE					1					/*是否开启发送缓存*/
 
+/*与阻塞读写控制器相关配置*/
+#define MDM_RW_CTRL_LIST_SIZE 			20				/*控制器的最大个数*/
 
 /*多从机*/
 #define MDS_USE_IDENTICAL_MAPPING		1					/*不同的从机使用同一个映射源*/
