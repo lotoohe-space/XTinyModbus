@@ -9,6 +9,7 @@ typedef enum{
 	ERR_OVER_TIME,			/*超时错误*/
 	ERR_SEND_FIN,				/*发送完成*/
 	ERR_RW_OV_TIME_ERR,	/*发送超时错误*/
+	ERR_DEV_DIS,				/*设备掉线*/
 	ERR_SLAVE_ADDR,			/*从机地址不匹配*/
 	ERR_DATA_LEN,				/*数据长度错误*/
 	ERR_DATA_SAVE,			/*数据保存错误*/

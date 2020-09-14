@@ -74,8 +74,27 @@ typedef struct{
 	uint32			sendOverTime;/*设定的发送超时时间*/
 	
 	uint8				RTTimes;/*设定的重传次数 当其为255时表示一直进行重传*/
-	uint8				sendFlag;/*发送标志位 0未发送 1发送了 2发送成功 3发送失败*/
+	uint8				sendFlag;/*发送标志位
+												0 未发送 
+												1 发送了 
+												2 发送成功 
+												3 发送失败 
+												*/
+	uint8 			flag;			/*
+	bit0:Device offline polling flag (when flag is 1, the control block will not be polled when the device is offline).
+	bit1:Device offline polling enable
+	*/
 }*PModbus_RTU_CB,Modbus_RTU_CB;
+
+/*获取设备掉线标识*/
+#define MD_CB_GET_DIS_FLAG(a)	MD_GET_BIT(a->flag,0)
+#define MD_CB_SET_DIS_FLAG(a)	MD_SET_BIT(a->flag,0)
+#define MD_CB_CLR_DIS_FLAG(a)	MD_CLR_BIT(a->flag,0)
+
+/*设备使能标志位*/
+#define MD_CB_GET_DIS_FLAG_EN(a)	MD_GET_BIT(a->flag,1)
+#define MD_CB_SET_DIS_FLAG_EN(a)	MD_SET_BIT(a->flag,1)
+#define MD_CB_CLR_DIS_FLAG_EN(a)	MD_CLR_BIT(a->flag,1)
 
 /*Modbus RTU 块初始化函数*/
 MDError MDM_RTU_Init(
@@ -123,6 +142,8 @@ void MDM_RTU_RecvByte(void *obj,uint8 byte);
 
 /*控制块超时复位*/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB);
+void MDM_RTU_CB_ClrDisFlag(PModbus_RTU_CB 	pModbusRTUCB);
+void MDM_RTU_CB_SetDisPollEnFlag(PModbus_RTU_CB 	pModbusRTUCB,BOOL state);
 
 BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 

@@ -126,6 +126,35 @@ void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 }
 /*******************************************************
 *
+* Function name :MDM_RTU_CB_ClrDisFlag
+* Description        :Clear disconnection signs
+* Parameter         :
+*        @pModbusRTUCB Send control block object pointer   
+* Return          : 无
+**********************************************************/
+void MDM_RTU_CB_ClrDisFlag(PModbus_RTU_CB 	pModbusRTUCB){
+	if(pModbusRTUCB==NULL){return ;}
+	MD_CB_CLR_DIS_FLAG(pModbusRTUCB);
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_CB_SetDisPollEnFlag
+* Description	:	Set the offline polling enable flag bit.
+* Parameter	:
+*        @pModbusRTUCB  Send control block object pointer.   
+*					@state				The state to be set.
+* Return          : 无
+**********************************************************/
+void MDM_RTU_CB_SetDisPollEnFlag(PModbus_RTU_CB 	pModbusRTUCB,BOOL state){
+	if(pModbusRTUCB==NULL){return ;}
+	if(state){
+		MD_CB_SET_DIS_FLAG_EN(pModbusRTUCB);
+	}else{
+		MD_CB_CLR_DIS_FLAG_EN(pModbusRTUCB);
+	}
+}
+/*******************************************************
+*
 * Function name :MDM_RTU_TimeHandler
 * Description        :定时处理函数，定时单位100US
 * Parameter         :
@@ -479,6 +508,11 @@ MDError MDM_RTU_NB_RW(
 	if(pModbus_RTU_CB==NULL){return ERR_VOID;}
 	if(pModbus_RTU_CB->pModbus_RTU==NULL){return ERR_VOID;}
 	
+	if(MD_CB_GET_DIS_FLAG_EN(pModbus_RTU_CB)/*使能了掉线不轮询标志*/
+		&&MD_CB_GET_DIS_FLAG(pModbus_RTU_CB)){/*设备掉线了*/
+		return ERR_DEV_DIS;
+	}
+	
 	if(	pModbus_RTU_CB->pModbus_RTU->parentObj!=NULL &&
 			pModbus_RTU_CB!=pModbus_RTU_CB->pModbus_RTU->parentObj){
 			return ERR_IDLE;
@@ -684,6 +718,9 @@ MDError MDM_RTU_NB_RW(
 					if(pModbus_RTU_CB->RTCount>=pModbus_RTU_CB->RTTimes){
 						/*重传次数超了*/
 						errRes= ERR_RW_OV_TIME_ERR;
+						if(MD_CB_GET_DIS_FLAG_EN(pModbus_RTU_CB)){/*使能了掉线不轮询*/
+							MD_CB_SET_DIS_FLAG(pModbus_RTU_CB);/*设备掉线*/
+						}
 						goto _exit;
 					}
 					/*超时了*/
@@ -738,6 +775,8 @@ MDError MDM_RTU_RW(
 		if(res != ERR_RW_FIN){						/*出现错误*/
 			if(res == ERR_RW_OV_TIME_ERR){	/*重传超时了*/																
 				MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);/*使能重传*/
+				goto exit;
+			}else if(res==ERR_DEV_DIS){
 				goto exit;
 			}
 		}
