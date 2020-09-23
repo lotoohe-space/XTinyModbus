@@ -4,36 +4,36 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 串口有关模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU serial port related modules
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MDS_RTU_Serial.h"
 #include "MDS_RTU_Fun.h"
 
 #include "usart.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************全局变量************************************/
-PModbusBase pModbusBase=NULL;			/*当前串口的Modbus*/
-/*********************************结束******************************************/
+/*********************************GLOBAL VARIABLE************************************/
+PModbusBase pModbusBase=NULL;			/*Modbus of the current serial port*/
+/*********************************END******************************************/
 
-/*********************************函数申明************************************/
+/*********************************FUNCTION DECLARATION************************************/
 static void MDSSerialSendBytes(uint8 *bytes,uint16 num);
 static void MDSSerialSWRecv_Send(uint8 mode);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MDSInitSerial
-* Description        :硬件初始化函数，可在此初始化串口
-* Parameter         :
-*        @obj        从机对象指针    
-*        @baud    波特率
-*        @dataBits    数据位
-*        @stopBit    停止位
-*        @parity    奇偶校验位
-* Return          : 无
+* Description        	:Hardware initialization function, you can initialize the serial port here
+* Parameter         	:
+*        @obj        	Slave object pointer    
+*        @baud    		Baud rate
+*        @dataBits    Data bit
+*        @stopBit  		Stop bit
+*        @parity    	Parity bit
+* Return          : 	None
 **********************************************************/
 void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity){
 	pModbusBase=obj;
@@ -43,16 +43,16 @@ void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	pModbusBase->mdRTURecSendConv=MDSSerialSWRecv_Send;
 	
 	
-	/*硬件初始化*/
+	/*Hardware initialization*/
 	uart_init(baud);
 }
 /*******************************************************
 *
 * Function name :MDSSerialRecvByte
-* Description        :bsp层中断接收调用这个函数
+* Description        :Bsp layer interrupt receiving call this function
 * Parameter         :
-*        @byte        接收到的一个字节    
-* Return          : 无
+*        @byte        A byte received    
+* Return          : None
 **********************************************************/
 void MDSSerialRecvByte(uint8 byte){
 	if(pModbusBase==NULL){return;}
@@ -61,36 +61,36 @@ void MDSSerialRecvByte(uint8 byte){
 /*******************************************************
 *
 * Function name :MDSSerialSWRecv_Send
-* Description        :切换接收，或者发送
+* Description        :Switch to receive or send
 * Parameter         :
-*        @mode        TRUE 发 ,FALSE 收
-* Return          : 无
+*        @mode      TRUE send, FALSE receive
+* Return          : None
 **********************************************************/
 void MDSSerialSWRecv_Send(uint8 mode){
-	/*收发转换*/
-	/*下面填写转换的代码*/
+	/*Send and receive conversion*/
+	/*Fill in the converted code below*/
 	
-	/*不同的硬件可能在设置转换后需要一点延时*/
+	/*Different hardware may require a little delay after setting conversion*/
 }
 /*******************************************************
 *
 * Function name :MDSSerialSendBytes
-* Description        :发送函数
+* Description        :Send function
 * Parameter         :
-*        @bytes        发送的数据
-*        @num        发送多少字节
-* Return          : 无
+*        @bytes        Data sent
+*        @num        How many bytes to send
+* Return          : None
 **********************************************************/
 void MDSSerialSendBytes(uint8 *bytes,uint16 num){
-	/*在下面调用bsp的发送函数*/
+	/*Call the send function of bsp below*/
 	uart_send_bytes_by_isr(bytes,num);
 }
 /*******************************************************
 *
 * Function name :MDSTimeHandler100US
-* Description        :定时器中调用该函数，定时单位100US
-* Parameter         :无
-* Return          : 无
+* Description        :Call this function in the timer, the timing unit is 100US
+* Parameter         :None
+* Return          :NOne
 **********************************************************/
 void MDSTimeHandler100US(void){
 	if(pModbusBase==NULL){return;}

@@ -13,39 +13,39 @@ typedef void (*MDS_RTU_RecSendConv)(uint8 mode);
 typedef void (*MD_RTU_SerialInit)(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
 
 typedef struct{
-	/*数据发送接收有关的函数*/
+	/*Data sending and receiving related functions*/
 	MDS_RTU_SendBytesFunction				mdRTUSendBytesFunction;
 	MDS_RTU_RecByteFunction					mdRTURecByteFunction;
 	MDS_RTU_RecSendConv							mdRTURecSendConv;
-	/*定时器回调函数*/
+	/*Timer callback function*/
 	MDS_RTU_TimeHandlerFunction			mdRTUTimeHandlerFunction;		
 }*PModbusBase,ModbusBase;
 
-/*转换为ModbusBase*/
+/*Convert to ModbusBase*/
 #define TO_MDBase(a)		((PModbusBase)(a))
 
-/*获取RegCoilItem中的变量*/
+/*Get the variables in RegCoilItem*/
 #define MDS_RTU_REG_COIL_LIST(a)						((a)->pRegCoilList)
 #define MDS_RTU_REG_COIL_ITEM_ADDR(a)				((a)->modbusAddr)
 #define MDS_RTU_REG_COIL_ITEM_DATA(a)				((a)->modbusData)
 #define MDS_RTU_REG_COIL_ITEM_Data_Size(a)	((a)->modbusDataSize)
 #define MDS_RTU_REG_COIL_ITEM_ADDR_TYPE(a)	((a)->addrType)
 
-/*下面宏用来对变量的位进行操作*/
+/*The following macros are used to manipulate the bits of variables*/
 #define MD_GET_BIT(a,b) (((a)>>(b))&0x1)
 #define MD_SET_BIT(a,b) (a)|=(1<<(b))
 #define MD_CLR_BIT(a,b) (a)&=(~(1<<(b)))
 
-/*收发模式转换*/
+/*Transceiver mode conversion*/
 #define MD_RTU_SEND_MODE(a)	while((a)->lastTimesTick!=0xFFFFFFFF);\
 if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(TRUE)
 #define MD_RTU_RECV_MODE(a)	while((a)->lastTimesTick!=0xFFFFFFFF);\
 if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(FALSE)
 
-/*交换一个半字的高低字节*/
+/*Swap the high and low bytes of a halfword*/
 #define MD_SWAP_HL(a) (a)=((((a)&0xff)<<8)|(((a)>>8)&0xff))
 
-/*取高低字节*/
+/*Take high and low byte*/
 #define MD_H_BYTE(a)	(((a)>>8)&0xff)
 #define MD_L_BYTE(a)	((a)&0xff)
 

@@ -12,18 +12,17 @@ typedef enum{
 
 typedef MDM_RW_CtrlErr (*MDMSendReadCallBack)(void*arg);
 
-/*主机的非阻塞模式发送控制器*/
+/*Host's non-blocking mode sending controller*/
 typedef struct{
 	
-	MDMSendReadCallBack MDMSendReadFun;	/*循环调用的读写函数*/
-	void *arg;													/*传递的参数*/
-	const char *RWCtrlName;							/*发送控制的名字*/ 
-	uint8	flag;													/*标志 
-																			bit:0 是否被使用 
-																			bit:1 单次发送 
-																			bit:7 从机掉线或者单次发送完成
+	MDMSendReadCallBack MDMSendReadFun;	/*Read and write functions called cyclically*/
+	void *arg;													/*parameter*/
+	const char *RWCtrlName;							/*Send control name*/ 
+	uint8	flag;													/*Flag 
+																			bit:0 Is it used 
+																			bit:1 Single send 
+																			bit:7 The slave is disconnected or a single transmission is completed.
 																			*/
-	
 }*PMDM_RW_Ctrl,MDM_RW_Ctrl;
 
 PMDM_RW_Ctrl MDM_RW_CtrlAddRW(MDMSendReadCallBack cbFun,void *arg,const char *RWCtrlName);

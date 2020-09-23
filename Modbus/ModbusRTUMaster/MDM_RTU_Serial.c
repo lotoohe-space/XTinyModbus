@@ -4,15 +4,15 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 串口相关模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU Serial related modules
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MDM_RTU_Serial.h"
 #include "MD_RTU_Tool.h"
 
-/*用户相关的头文件*/
+/*User-related header files*/
 #include "Sys_config.h"
 #if	!MDM_USD_USART3
 #include "usart.h"
@@ -20,28 +20,28 @@
 #include "usart3.h"
 #endif
 
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************全局变量************************************/
-PModbusBase pModbusMBase=NULL;		/*当前串口的Modbus*/
-/*********************************结束******************************************/
+/*********************************GLOBAL VARIABLE************************************/
+PModbusBase pModbusMBase=NULL;		/*Modbus of the current serial port*/
+/*********************************END******************************************/
 
-/*********************************函数申明************************************/
+/*********************************FUNCTION DECLARATION************************************/
 
 //void MDMTimeHandler100US(void);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MDMInitSerial
-* Description        	:硬件初始化函数，可在此初始化串口
+* Description        	:Hardware initialization function, you can initialize the serial port here
 * Parameter         	:
-*        @obj        	主机对象指针    
-*        @baud    		波特率
-*        @dataBits    数据位
-*        @stopBit    	停止位
-*        @parity    	奇偶校验位
-* Return          		:无
+*        @obj        	Host object pointer    
+*        @baud    		Baud rate
+*        @dataBits    Data bit
+*        @stopBit    	Stop bit
+*        @parity    	Parity bit
+* Return          		:None
 **********************************************************/
 void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity){
 	pModbusMBase=obj;
@@ -51,7 +51,7 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	pModbusMBase->mdRTUSendBytesFunction=MDMSerialSendBytes;
 	pModbusMBase->mdRTURecSendConv=MDMSerialSWRecv_Send;
 	
-	/*硬件初始化*/
+	/*Hardware initialization*/
 	#if	!MDM_USD_USART3
 		uart_init(baud);
 	#else 
@@ -62,9 +62,9 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 /*******************************************************
 *
 * Function name :MDMTimeHandler100US
-* Description        :定时器中调用该函数
-* Parameter         :无
-* Return          : 无
+* Description        :Call this function in the timer
+* Parameter         :None
+* Return          :None
 **********************************************************/
 void MDMTimeHandler100US(void){
 	if(pModbusMBase==NULL){return;}
@@ -73,10 +73,10 @@ void MDMTimeHandler100US(void){
 /*******************************************************
 *
 * Function name :MDMSerialRecvByte
-* Description        :bsp层串口中断接收调用这个函数
+* Description        :Bsp layer serial port interrupt receiving call this function
 * Parameter         :
-*        @byte    接收的一字节
-* Return          : 无
+*        @byte    Byte received
+* Return          : None
 **********************************************************/
 void MDMSerialRecvByte(uint8 byte){
 	if(pModbusMBase==NULL){return;}
@@ -85,33 +85,33 @@ void MDMSerialRecvByte(uint8 byte){
 /*******************************************************
 *
 * Function name :MDMSerialRecvByte
-* Description        :切换接收，或者发送
+* Description        :Switch to receive or send
 * Parameter         :
-*        @mode    TRUE 发送， FALSE接收
-* Return          : 无
+*        @mode    TRUE send, FALSE receive
+* Return          : None
 **********************************************************/
 void MDMSerialSWRecv_Send(uint8 mode){
-	/*收发转换*/
-	/*下面填写转换的代码*/
+	/*Send and receive conversion*/
+	/*Fill in the converted code below*/
 	#if	!MDM_USD_USART3
 		
 	#else
 		RS485_RW_CONV=mode;
 	#endif
-	/*不同的硬件可能在设置转换后需要一点延时*/
+	/*Different hardware may require a little delay after setting conversion*/
 }
 /*******************************************************
 *
 * Function name :MDMSerialSendBytes
-* Description        :发送函数
+* Description        :Send function
 * Parameter         :
-*        @bytes    发送的数据
-*        @num    发送多少个字节
-* Return          : 无
+*        @bytes    Data sent
+*        @num    How many bytes to send
+* Return          : None
 **********************************************************/
 void MDMSerialSendBytes(uint8 *bytes,uint16 num){
 	#if	!MDM_USD_USART3
-	/*在下面调用bsp的发送函数*/
+	/*Call the send function of bsp below*/
 	uart_send_bytes(bytes,num);
 	#else
 	usart3_send_bytes(bytes,num);

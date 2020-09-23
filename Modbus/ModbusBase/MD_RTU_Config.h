@@ -2,37 +2,34 @@
 #ifndef _MD_RTU_CONFIG_H__
 #define _MD_RTU_CONFIG_H__
 
-/*********************************配置参数**************************************/
+/*********************************CONFIGURATION PARAMETER**************************************/
 
-#define MD_RTU_CRC16_FAST_MODE 			1					/*CRC校验方式配置*/
+#define MD_RTU_CRC16_FAST_MODE 			1					/*CRC check mode configuration*/
 
-#define MD_RTU_QUEUE_SIZE 					256				/*缓冲队列大小*/
+#define MD_RTU_QUEUE_SIZE 					256				/*Buffer queue size*/
 
-/*与从机相关配置*/
-#define MDS_REG_COIL_ITEM_NUM 			20				/*离散映射最大数量*/
-#define MDS_RTU_CMD_SIZE						256				/*单条指令长度*/
-#define MDS_RTU_SEND_CACHE_SIZE			256				/*发送缓存长度*/
-#define MDS_USE_SEND_CACHE 					1					/*是否启用发送缓存*/
+/*Configuration related to the slave*/
+#define MDS_REG_COIL_ITEM_NUM 			20				/*Maximum number of discrete maps*/
+#define MDS_RTU_CMD_SIZE						256				/*Single instruction length*/
+#define MDS_RTU_SEND_CACHE_SIZE			256				/*Send buffer length*/
+#define MDS_USE_SEND_CACHE 					1					/*Whether to enable sending cache*/
 
-/*与主机相关配置*/
-#define MDM_REG_COIL_ITEM_NUM 			20				/*离散映射最大数量*/
-#define MDM_RTU_SEND_CACHE_SIZE			256				/*发送缓存大小*/
-#define MDM_USE_SEND_CACHE					1					/*是否开启发送缓存*/
+/*Host related configuration*/
+#define MDM_REG_COIL_ITEM_NUM 			20				/*Maximum number of discrete maps*/
+#define MDM_RTU_SEND_CACHE_SIZE			256				/*Send buffer length*/
+#define MDM_USE_SEND_CACHE					1					/*Whether to enable sending cache*/
 
-/*与阻塞读写控制器相关配置*/
-#define MDM_RW_CTRL_LIST_SIZE 			20				/*控制器的最大个数*/
+/*Configuration related to blocking read-write controller*/
+#define MDM_RW_CTRL_LIST_SIZE 			20				/*Maximum number of controllers*/
 
-/*多从机*/
-#define MDS_USE_IDENTICAL_MAPPING		1					/*不同的从机使用同一个映射源*/
+#define MDS_USE_IDENTICAL_MAPPING		1					/*Different slaves use the same mapping source*/
 
 #ifdef MDS_USE_IDENTICAL_MAPPING
 	#define STATIC_T static
 #else 
 	#define STATIC_T
 #endif
-
-
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 
 #endif

@@ -6,6 +6,14 @@ A small embedded Modbus protocol stack, written in C language, support master an
 
 0.Log
 ----
+
+2020/9/24 <br>
+Added the function of not polling when the slave is disconnected, the master can use the MDM_RTU_CB_SetDisPollEnFlag function to set it,<br>
+You can use the MDM_RTU_CB_ClrDisFlag function to reset. <br>
+Add a simple host sending controller. <br>
+Fix the BUG of mixed call of host blocking mode and non-blocking mode. <br>
+All comments in the code are modified to English. <br>
+
 2020/9/6
 Add a multi slave example. <br>
 Add some macro for testing. <br>
@@ -148,6 +156,13 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/9/24 <br>
+增加从机掉线不轮询功能，主机可以使用MDM_RTU_CB_SetDisPollEnFlag函数进行设置，<br>
+可以使用MDM_RTU_CB_ClrDisFlag函数进行复位。<br>
+增加简单的主机发送控制器。<br>
+修复主机阻塞模式和非阻塞模式混合调用的BUG。<br>
+代码中所有注释修改为英文。<br>
 
 2020/9/6
 增加多从机示例。<br>

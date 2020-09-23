@@ -5,7 +5,7 @@
 * @author		zspace
 * @date		2020/3/23
 * @version	A001
-* @par History:  нч       
+* @par History:  None       
 */
 #ifndef _MD_RTU_APP_H__
 #define _MD_RTU_APP_H__

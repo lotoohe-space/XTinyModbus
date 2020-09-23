@@ -1,29 +1,25 @@
 #include "sys.h"
 
-//////////////////////////////////////////////////////////////////////////////////	 
-
-//STM32F103ZE核心板
-//系统中断分组设置化		   
 
 //********************************************************************************  
-//THUMB指令不支持汇编内联
-//采用如下方法实现执行汇编指令WFI  
+//THUMB instruction does not support assembly inline
+//Use the following method to implement the assembly instruction WFI  
 void WFI_SET(void)
 {
 	__ASM volatile("wfi");		  
 }
-//关闭所有中断
+//Close all interrupts
 void INTX_DISABLE(void)
 {		  
 	__ASM volatile("cpsid i");
 }
-//开启所有中断
+//Enable all interrupts
 void INTX_ENABLE(void)
 {
 	__ASM volatile("cpsie i");		  
 }
-//设置栈顶地址
-//addr:栈顶地址
+//Set the top address of the stack
+//addr: stack top address
 __asm void MSR_MSP(u32 addr) 
 {
     MSR MSP, r0 			//set Main Stack value

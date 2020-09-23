@@ -4,15 +4,15 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 离散映射管理模块
+* @Description: Modbus RTU Discrete mapping management module
 ********************************************************************************/
 #ifndef _MD_RTU_REGCOIL_H__
 #define _MD_RTU_REGCOIL_H__
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_Type.h"
-/*********************************结束******************************************/
-
-/*********************************自定义类型************************************/
+/*********************************END******************************************/
+	
+/*********************************CUSTOM DATA TYPE************************************/
 typedef enum{		
 	/*类型*/
 	COILS_TYPE=1,
@@ -22,17 +22,17 @@ typedef enum{
 }AddrType;
 
 typedef struct{
-	uint16 		modbusAddr;			/*modbus的地址*/
-	uint16*		modbusData;			/*存储的数据*/
-	uint16		modbusDataSize;	/*映射大小*/
-	AddrType	addrType;				/*地址类型 参见[AddrType]*/
-	uint8			devAddr;						/*指示改映射项属于哪一个设备,暂时只有主机用到该变量,从机忽略*/
+	uint16 		modbusAddr;			/*Modbus address*/
+	uint16*		modbusData;			/*Stored data*/
+	uint16		modbusDataSize;	/*Map size*/
+	AddrType	addrType;				/*Address type,Reference[AddrType]*/
+	uint8			devAddr;				/*Indicate which device the mapping item belongs to. For the time being, only the master uses this variable and the slave ignores it.*/
 }*PMapTableItem,MapTableItem;
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************函数申明************************************/
+/*********************************FUNCTION DECLARATION************************************/
 uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
 uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 #endif

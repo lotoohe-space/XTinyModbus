@@ -2,26 +2,26 @@
 #define _MDM_RTU_ERROR_H__
 
 typedef enum{
-	ERR_VOID=0,					/*空指针错误*/
-	ERR_NONE=1,					/*没有错误*/
-	ERR_IDLE,						/*代表该块当前被空闲*/
-	ERR_QUEUE,					/*队列写入错误*/
-	ERR_OVER_TIME,			/*超时错误*/
-	ERR_SEND_FIN,				/*发送完成*/
-	ERR_RW_OV_TIME_ERR,	/*发送超时错误*/
-	ERR_DEV_DIS,				/*设备掉线*/
-	ERR_SLAVE_ADDR,			/*从机地址不匹配*/
-	ERR_DATA_LEN,				/*数据长度错误*/
-	ERR_DATA_SAVE,			/*数据保存错误*/
+	ERR_VOID=0,					/*Null pointer error*/
+	ERR_NONE=1,					/*No error*/
+	ERR_IDLE,						/*The block is currently free*/
+	ERR_QUEUE,					/*Queue write error*/
+	ERR_OVER_TIME,			/*Timeout error*/
+	ERR_SEND_FIN,				/*Send complete*/
+	ERR_RW_OV_TIME_ERR,	/*Send timeout error*/
+	ERR_DEV_DIS,				/*Device disconnection*/
+	ERR_SLAVE_ADDR,			/*The slave address does not match*/
+	ERR_DATA_LEN,				/*Data length error*/
+	ERR_DATA_SAVE,			/*Data saving error*/
 	
-	/*下面的错误是从机返回的*/
-	ERR_READ_COIL,			/*读线圈错误*/
-	ERR_READ_INPUT,			/*读输入错误*/
-	ERR_READ_HOLD_REG,	/*读保持寄存器错误*/
-	ERR_READ_INPUT_REG,	/*读输入寄存器错误*/
-	ERR_WRITE_COIL,			/*写线圈错误*/
-	ERR_WRITE_REG,			/*写寄存器错误*/
-	ERR_RW_FIN,					/*代表从机收到且主机收到正确回应*/
+	/*The following error is returned from the slave machine.*/
+	ERR_READ_COIL,			/*Read coil error*/
+	ERR_READ_INPUT,			/*Read input error*/
+	ERR_READ_HOLD_REG,	/*Read holding register error*/
+	ERR_READ_INPUT_REG,	/*Error reading input register*/
+	ERR_WRITE_COIL,			/*Write coil error*/
+	ERR_WRITE_REG,			/*Write register error*/
+	ERR_RW_FIN,					/*The slave receives and the master receives the correct response*/
 }MDError;
 
 #endif

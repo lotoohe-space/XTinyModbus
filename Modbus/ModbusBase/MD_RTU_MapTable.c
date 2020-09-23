@@ -4,21 +4,21 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 离散映射管理模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU Discrete mapping management module
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_MapTable.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :RegCoilListAdd
-* Description        :添加一个映射到主机或从机
+* Description        :Add a mapping to master or slave
 * Parameter         :
-*        @obj       	从机或者主机对象指针
-*        @pRegCoilItem    添加某个 映射,参见[PRegCoilItem]
+*        @obj       	Slave or host object pointer
+*        @pRegCoilItem    A mapping added,reference[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
@@ -36,10 +36,10 @@ uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 /*******************************************************
 *
 * Function name :RegCoilListDel
-* Description        :删除一个映射到主机或从机
+* Description        :Delete a mapping to master or slave
 * Parameter         :
-*        @obj       	从机或者主机对象指针
-*        @pRegCoilItem    删除某个映射,参见[PRegCoilItem]
+*        @obj       	Slave or host object pointer
+*        @pRegCoilItem    A mapping deleted,reference[PRegCoilItem]
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){

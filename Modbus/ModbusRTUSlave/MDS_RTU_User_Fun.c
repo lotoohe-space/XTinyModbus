@@ -4,18 +4,18 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-28
-* @Description: Modbus RTU 用户相关函数
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU user related functions
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 #include "MDS_RTU_User_Fun.h"
 #include "MDS_RTU_Fun.h"
 
-/*读取bits,可以读取一个，也可以读取多个*/
+/*Read bits, you can read one or multiple*/
 BOOL MDS_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, AddrType opAddrType){
 	uint16 i;
 	PModbusS_RTU pModbusS_RTU = obj;
 	if(pModbusS_RTU==NULL){return FALSE;}
-	/*只能操作bits*/
+	/*Only operate bits*/
 	if(opAddrType != COILS_TYPE && opAddrType != INPUT_TYPE){return FALSE;}
 	
 	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
@@ -25,7 +25,7 @@ BOOL MDS_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*指定类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*Specified type*/
 				uint16 	j;
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				for(j=offsetAddr; j<offsetAddr+numOf; j++){		
@@ -48,7 +48,7 @@ BOOL MDS_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, Add
 	uint16 i;
 	PModbusS_RTU pModbusS_RTU = obj;
 	if(pModbusS_RTU==NULL){return FALSE;}
-	/*只能操作寄存器*/
+	/*Can only manipulate registers*/
 	if(opAddrType != HOLD_REGS_TYPE && opAddrType != INPUT_REGS_TYPE){return FALSE;}
 	
 	for(i=0;i<MDS_REG_COIL_ITEM_NUM;i++){
@@ -111,7 +111,7 @@ BOOL MDS_RTU_WriteBits(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *bit, Ad
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是BIT类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*Must be BIT type*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				uint16 j;
 				for(j=0;j<numOf;j++){
@@ -171,7 +171,7 @@ BOOL MDS_RTU_WriteRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *reg,uin
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是REG类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*Must be REG type*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				uint16 j=0;
 				for(j=0;j<numOf;j++){

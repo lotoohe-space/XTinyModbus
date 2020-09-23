@@ -4,54 +4,55 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 用户APP模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU User APP module
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MDM_RTU_APP.h"
 #include "MDM_RTU_Fun.h"
 #include "MDM_RTU_Serial.h"
 #include "MDM_RTU_User_Fun.h"
 #include "MDM_RTU_RW_Man.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************全局变量************************************/
+/*********************************GLOBAL VARIABLE************************************/
 static uint16 mapTableDataMaster0[4]={0};
 static MapTableItem mapTableItemMaster0={
-	.modbusAddr=0x0000,							/*MODBUS中的地址*/
-	.modbusData=mapTableDataMaster0,	/*映射的内存单元*/
-	.modbusDataSize=64,							/*映射的大小*/
-	.addrType=COILS_TYPE,						/*映射的类型*/
-	.devAddr=1,											/*被哪个从机使用*/
+	.modbusAddr=0x0000,								/*Address in MODBUS*/
+	.modbusData=mapTableDataMaster0,	/*Mapped memory unit*/
+	.modbusDataSize=64,								/*The size of the map*/
+	.addrType=COILS_TYPE,							/*Type of mapping*/
+	.devAddr=1,												/*Which slave is used*/
 };
 static uint16 regDataMaster1[32]={1,2,3,4,5,6,7,8,9,10,11,12};
 static MapTableItem mapTableItemMaster1={
-	.modbusAddr=0x0000,							/*MODBUS中的地址*/
-	.modbusData=regDataMaster1,			/*映射的内存单元*/
-	.modbusDataSize=32,							/*映射的大小*/
-	.addrType=HOLD_REGS_TYPE,				/*映射的类型*/
-	.devAddr=1,											/*被哪个从机使用*/
+	.modbusAddr=0x0000,								/*Address in MODBUS*/
+	.modbusData=regDataMaster1,				/*Mapped memory unit*/
+	.modbusDataSize=32,								/*The size of the map*/
+	.addrType=HOLD_REGS_TYPE,					/*Type of mapping*/
+	.devAddr=1,												/*Which slave is used*/
 };
 
 Modbus_RTU modbus_RTU = {0};
+
 Modbus_RTU_CB modbusRWRTUCB = {0};
 Modbus_RTU_CB modbusRWRTUCB1 = {0};
 Modbus_RTU_CB modbusRWRTUCB2 = {0};
 Modbus_RTU_CB modbusRWRTUCB3 = {0};
 Modbus_RTU_CB modbusRWRTUCB4 = {0};
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************函数申明************************************/
+/*********************************FUNCTION DECLARATION************************************/
 static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest0(void* arg);
 static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest1(void* arg);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MDM_RTU_APPInit
-* Description        :主机用户APP初始化函数
-* Parameter         :无
+* Description        :Host user APP initialization function
+* Parameter         :None
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 BOOL MDM_RTU_APPInit(void){
@@ -66,7 +67,7 @@ BOOL MDM_RTU_APPInit(void){
 		return FALSE;
 	}
 	
-	/*RW控制块,用户控制读写时间间隔，重传超时时间以及重传超时次数*/
+	/*RW control block, the user controls the read and write time interval, retransmission timeout and retransmission timeout times*/
 	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,10000,30000,3);
 	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,10000,30000,3);
 	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,10000,30000,3);
@@ -85,7 +86,7 @@ uint16	temp1=1234;
 uint16	data1[]={1,2,3,4,5,6};
 uint16	data2[]={6,5,4,3,2,1};
 #define MD_NB_MODE_TEST 1
-/*用户读取数据*/
+/*User read data*/
 static void MDM_RTUUserRead(void){
 	
 	uint16 resTemp;
@@ -93,13 +94,13 @@ static void MDM_RTUUserRead(void){
 	MDError res;
 	res = MDM_RTU_NB_ReadCoil(&modbusRWRTUCB,0x1,0,16);
 	if(res != ERR_IDLE){
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
-				/*使能重传*/
+		if(res != ERR_RW_FIN){/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){/*Timed out*/
+				/*Enable retransmission*/
 				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB);
 			}
 		}else {
-			/*读成功*/
+			/*Read successfully*/
 			MDM_RTU_ReadBits(modbusRWRTUCB.pModbus_RTU,0x0000,16, (uint8*)&resTemp,COILS_TYPE,0x1);
 			resTemp=resTemp;
 		}	
@@ -119,18 +120,18 @@ static void MDM_RTUUserWrite(void){
 	#if MD_NB_MODE_TEST
 	res = MDM_RTU_NB_WriteCoils(&modbusRWRTUCB1,0x1,0,16,(uint8*)(&temp));
 	if(res != ERR_IDLE){
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
-				/*使能重传*/
+		if(res != ERR_RW_FIN){/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){/*Timed out*/
+				/*Enable retransmission*/
 				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB1);
 			}
 		}
 	}
 	res = MDM_RTU_NB_WriteCoils(&modbusRWRTUCB4,0x1,0,16,(uint8*)(&temp2));
 	if(res != ERR_IDLE){
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
-				/*使能重传*/
+		if(res != ERR_RW_FIN){/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){/*Timed out*/
+				/*Enable retransmission*/
 				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB4);
 			}
 		}
@@ -140,18 +141,18 @@ static void MDM_RTUUserWrite(void){
 		MDM_RTU_WriteCoils(&modbusRWRTUCB4,0x1,0,16,(uint8*)(&temp2));
 	#endif
 }
-/*发送控制函数*/
+/*Send control function*/
 static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest0(void* arg){
 	MDError res;
 	#if MD_NB_MODE_TEST
 	res = MDM_RTU_NB_WriteRegs(&modbusRWRTUCB2,0x1,0,6,data1);
 	if(res != ERR_IDLE){
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
-				/*使能重传*/
+		if(res != ERR_RW_FIN){/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){/*Timed out*/
+				/*Enable retransmission*/
 				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB1);
 				return RW_ERR;
-			} 
+			}
 		}else{
 			return RW_OK; 
 		}
@@ -159,15 +160,15 @@ static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest0(void* arg){
 	#endif
 	return RW_NONE;
 }
-/*发送控制函数*/
+/*Send control function*/
 static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest1(void* arg){
 	MDError res;
 	#if MD_NB_MODE_TEST
 	res = MDM_RTU_NB_WriteRegs(&modbusRWRTUCB3,0x1,0,6,data2);
 	if(res != ERR_IDLE){
-		if(res != ERR_RW_FIN){/*出现错误*/
-			if(res == ERR_RW_OV_TIME_ERR){/*超时了*/
-				/*使能重传*/
+		if(res != ERR_RW_FIN){/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){/*Timed out*/
+				/*Enable retransmission*/
 				MDM_RTU_CB_OverTimeReset(&modbusRWRTUCB1);
 				return RW_ERR;
 			} 
@@ -180,13 +181,13 @@ static MDM_RW_CtrlErr MDM_RTU_NB_RW_CtrlTest1(void* arg){
 }
 
 
-/*用户数据的读写*/
+/*User data reading and writing*/
 static void MDM_RTU_UserUpdate(void){
-//	MDM_RTUUserRead();
-//	MDM_RTUUserWrite();
+	MDM_RTUUserRead();
+	MDM_RTUUserWrite();
 }
 
-/*循环调用*/
+/*Loop call*/
 void MDM_RTU_Loop(void){
 	MDM_RTU_UserUpdate();
 }

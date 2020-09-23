@@ -25,7 +25,7 @@ static PMDM_RW_Ctrl MDM_RW_CtrlFindByFunAddr(MDMSendReadCallBack cbFun){
 	}
 	return NULL;
 }
-/*删除一个RW接口*/
+/*Delete a RW interface*/
 void MDM_RW_CtrlDelRW(PMDM_RW_Ctrl pMDM_RW_Ctrl){
 	if(pMDM_RW_Ctrl==NULL){return ;}
 	pMDM_RW_Ctrl->arg=NULL;
@@ -33,7 +33,7 @@ void MDM_RW_CtrlDelRW(PMDM_RW_Ctrl pMDM_RW_Ctrl){
 	pMDM_RW_Ctrl->MDMSendReadFun=NULL;
 	pMDM_RW_Ctrl->RWCtrlName=NULL;
 }
-/*添加一个读写*/
+/*Add a read-write*/
 PMDM_RW_Ctrl MDM_RW_CtrlAddRW(MDMSendReadCallBack cbFun,void *arg,const char *RWCtrlName){
 	PMDM_RW_Ctrl pMDM_RW_Ctrl=MDM_RW_CtrlNew();
 	if(pMDM_RW_Ctrl==NULL){
@@ -44,7 +44,7 @@ PMDM_RW_Ctrl MDM_RW_CtrlAddRW(MDMSendReadCallBack cbFun,void *arg,const char *RW
 	pMDM_RW_Ctrl->arg=arg;
 	return pMDM_RW_Ctrl;
 }
-/*设置是否发送一次，或者循环发送*/
+/*Set whether to send once or cyclically*/
 void MDM_RW_CtrlSetRWOnceFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl,BOOL flag){
 	if(pMDM_RW_Ctrl==NULL){return ;}
 	if(flag){
@@ -53,7 +53,7 @@ void MDM_RW_CtrlSetRWOnceFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl,BOOL flag){
 		MD_CLR_BIT(pMDM_RW_Ctrl->flag,1);
 	}
 }
-/*复位从机掉线标志位*/
+/*Reset slave offline flag*/
 void MDM_RW_CtrlResetRetranFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl){
 	if(pMDM_RW_Ctrl==NULL){return ;}
 	MD_CLR_BIT(pMDM_RW_Ctrl->flag,7);
@@ -62,28 +62,28 @@ void MDM_RW_CtrlResetRetranFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl){
 /*******************************************************
 *
 * Function name :MDM_RW_CtrlLoop
-* Description        :该函数对主机裸机收发控制功能进行循环处理
+* Description        :This function cyclically processes the host bare-metal transceiver control function
 * Parameter         :
-*        						无
-* Return          : 无
+*        						None
+* Return          : None
 **********************************************************/
 void MDM_RW_CtrlLoop(void){
 	uint16 i;
 	MDM_RW_CtrlErr res;
 	for(i=0;i<MDM_RW_CTRL_LIST_SIZE;i++){
 		if(MD_GET_BIT(MDM_RW_CtrlList[i].flag,0) &&
-			(!MD_GET_BIT(MDM_RW_CtrlList[i].flag,7))/*从机掉线或者单次发送完成则不再被遍历*/
+			(!MD_GET_BIT(MDM_RW_CtrlList[i].flag,7))/*If the slave is disconnected or a single transmission is completed, it will no longer be traversed*/
 		){
 			if(MDM_RW_CtrlList[i].MDMSendReadFun==NULL){
 				continue;
 			}
 			
-			res=MDM_RW_CtrlList[i].MDMSendReadFun(MDM_RW_CtrlList[i].arg);/*循环调用*/
-			if(res==RW_ERR){/*发送失败则不发送*/
+			res=MDM_RW_CtrlList[i].MDMSendReadFun(MDM_RW_CtrlList[i].arg);/*Loop call*/
+			if(res==RW_ERR){/*Do not send if sending fails*/
 				MD_SET_BIT(MDM_RW_CtrlList[i].flag,7);
 			}
-			if(res!=RW_NONE){/*单次发送and发送成功或者失败*/
-				if(MD_GET_BIT(MDM_RW_CtrlList[i].flag,1)){/*单次发送*/
+			if(res!=RW_NONE){/*Single send and send success or failure*/
+				if(MD_GET_BIT(MDM_RW_CtrlList[i].flag,1)){/*Single send*/
 					MD_SET_BIT(MDM_RW_CtrlList[i].flag,7);
 				}
 			}

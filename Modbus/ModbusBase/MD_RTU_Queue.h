@@ -4,19 +4,17 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 队列功能模块
+* @Description: Modbus RTU Queue function module
 ********************************************************************************/
 #ifndef _SQQUEUE_H__
 #define _SQQUEUE_H__
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Config.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-
-
-/*********************************类型定义**************************************/
+/*********************************TYPE DEFINITION**************************************/
 typedef uint8 MDQueueDateType;
 
 typedef struct {
@@ -25,9 +23,9 @@ typedef struct {
 	uint16 maxVal;
 	uint8 valid;
 }*PMDSqQueue, MDSqQueue;
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************函数申明**************************************/
+/*********************************FUNCTION DECLARATION**************************************/
 uint8 MDInitQueue(MDSqQueue *q);
 uint16 MDQueueLength(MDSqQueue* q);
 void 	MDResetQueue(MDSqQueue* q);
@@ -37,7 +35,7 @@ uint8 MDenQueue(MDSqQueue* q, MDQueueDateType e);
 uint8 MDdeQueue(MDSqQueue* q, MDQueueDateType* e);
 uint8 MDdeQueueF(MDSqQueue* q, MDQueueDateType *e) ;
 uint8 MDgetTailQueue(MDSqQueue* q, MDQueueDateType* e);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 #endif
 

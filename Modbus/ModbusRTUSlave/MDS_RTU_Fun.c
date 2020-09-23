@@ -4,38 +4,38 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU Slave从机接收功能函数。
+* @Description: Modbus RTU Slave slave receiving function.
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MDS_RTU_Fun.h"
 #include "MD_RTU_CRC16.h"
 #include "MDS_RTU_Serial.h"
 #include "MDS_RTU_User_Fun.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/**********************************函数声明*************************************/
+/**********************************FUNCTION DECLARATION*************************************/
 void MDS_RTU_RecvByte(void *obj,uint8 byte);
 void MDS_RTU_TimeHandler(void *obj);
 
 static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode);
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode);
 uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MDS_RTU_Init
-* Description        :初始化一个从机
+* Description        :Initialize a slave
 * Parameter         :
-*        @pModbusRTU            从机结构体指针
-*        @mdRTUSerialInitFun    硬件串口初始化函数  
-*        @salveAddr            从机地址
-*        @baud            波特率
-*        @dataBits            数据位
-*        @stopBits           停止位 
-*        @parity       奇偶校验位
-* Return          : 无
+*        @pModbusRTU            Slave structure pointer
+*        @mdRTUSerialInitFun    Hardware serial port initialization function  
+*        @salveAddr            Slave address
+*        @baud            Baud rate
+*        @dataBits            Data bit
+*        @stopBits           Stop bit
+*        @parity       Parity bit
+* Return          : None
 **********************************************************/
 void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity){
 	uint8 i;
@@ -74,7 +74,7 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	}else if(stopBits==2){
 		time+=T*2;
 	}
-	pModbusRTU->frameIntervalTime=time;/*该参数需要根据波特率设置*/
+	pModbusRTU->frameIntervalTime=time;/*This parameter needs to be set according to the baud rate*/
 	
 	pModbusRTU->CRC16Update=0xFFFF;
 	
@@ -86,10 +86,10 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 /*******************************************************
 *
 * Function name :MDS_RTU_SetWriteListenFun
-* Description        :该函数可以设置一个回调函数，当主机写从机地址时，设置的函数将被调用
+* Description        :This function can set a callback function, when the master writes the slave address, the set function will be called.
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-*        @wFun    设置的回调函数
+*        @pModbus_RTU   Object pointer of slave
+*        @wFun    Set callback function
 * Return          : 无
 **********************************************************/
 void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun){
@@ -99,10 +99,10 @@ void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun){
 /*******************************************************
 *
 * Function name :MDS_RTU_TimeHandler
-* Description        :该函数需要在定时器中断中调用，中断间隔时间100US
+* Description        :This function needs to be called in the timer interrupt, the interrupt interval time is 100US.
 * Parameter         :
-*        @obj            从机结构体指针
-* Return          : 无
+*        @obj            Object pointer of slave
+* Return          : None
 **********************************************************/
 void MDS_RTU_TimeHandler(void *obj){
 	uint32 tempTick=0;
@@ -112,16 +112,16 @@ void MDS_RTU_TimeHandler(void *obj){
 	
 	pModbusRTU->timesTick++;
 	
-	if(pModbusRTU->timesTick==0xFFFFFFFF){/*溢出了 pModbusRTU->lastTimesTick==0xFFFFFFFF*/
+	if(pModbusRTU->timesTick==0xFFFFFFFF){/*Overflowed pModbusRTU->lastTimesTick==0xFFFFFFFF*/
 		tempTick=0xFFFFFFFF-pModbusRTU->lastSendTimes;
-		pModbusRTU->timesTick=tempTick; /*系统时间偏移*/
-		pModbusRTU->lastSendTimes=0;/*上次发送时间清零*/
+		pModbusRTU->timesTick=tempTick; /*System time offset*/
+		pModbusRTU->lastSendTimes=0;/*Clear the last sending time*/
 		overFlag=1;
 	}
 	
-	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}/*已经开始接收包*/
+	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}/*Has started receiving packets*/
 	if(overFlag){ /*时间溢出*/
-		pModbusRTU->timesTick += 0xFFFFFFFF-pModbusRTU->lastTimesTick;/*发送时时间偏移*/
+		pModbusRTU->timesTick += 0xFFFFFFFF-pModbusRTU->lastTimesTick;/*Time offset when sending*/
 		pModbusRTU->lastTimesTick = tempTick; 
 	}
 	if((pModbusRTU->timesTick - pModbusRTU->lastTimesTick >= pModbusRTU->frameIntervalTime)){
@@ -129,18 +129,18 @@ void MDS_RTU_TimeHandler(void *obj){
 		uint16 i;
 		uint8	 byte;
 		if(pModbusRTU->CRC16Update!=0x0000){
-			/*CRC错误*/
+			/*CRC error*/
 			MDResetQueue(&(pModbusRTU->mdSqQueue));
 			pModbusRTU->lastTimesTick=0xFFFFFFFF;
 			return ;
 		}
-		/*一帧结束*/
-		/*数据处理队列的消息搬到消息处理队列中*/
+		/*End of one frame*/
+		/*The messages of the data processing queue are moved to the message processing queue*/
 		msgLen=MDQueueLength(&(pModbusRTU->mdSqQueue));
 		for(i=0;i<msgLen;i++){
-			/*取出来*/
+			/*take out*/
 			if(MDdeQueue(&(pModbusRTU->mdSqQueue),&byte)==FALSE){return ;}
-			/*放进去*/
+			/*put in*/
 			if(MDenQueue(&(pModbusRTU->mdMsgSqQueue),byte)==FALSE){return ;}
 		}
 		pModbusRTU->lastTimesTick=0xFFFFFFFF;
@@ -150,16 +150,16 @@ void MDS_RTU_TimeHandler(void *obj){
 /*******************************************************
 *
 * Function name :MDS_RTU_RecvByte
-* Description        :该函数在串口中断中调用，当接收到一个字节后调用该函数
+* Description        :This function is called in the serial port interrupt, when a byte is received, this function is called
 * Parameter         :
-*        @obj            从机结构体指针
-*        @byte    接收到的单字节
-* Return          : 无
+*        @obj            Object pointer of slave
+*        @byte    Single byte received
+* Return          : None
 **********************************************************/
 void MDS_RTU_RecvByte(void *obj,uint8 byte){
 	PModbusS_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
-	/*在这里放入队列中*/
+	/*Put in the queue here*/
 	if(MDenQueue(&(pModbusRTU->mdSqQueue),byte)==FALSE){
 		return ;
 	}
@@ -167,17 +167,17 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 		pModbusRTU->CRC16Update=0xFFFF;
 	}
 	pModbusRTU->CRC16Update=MD_CRC16Update(pModbusRTU->CRC16Update,byte);
-	/*保存上次接收的字符的时间戳*/
+	/*Save the timestamp of the last character received*/
 	pModbusRTU->lastTimesTick=pModbusRTU->timesTick;
 }
 /*******************************************************
 *
 * Function name :MDS_RTU_AddMapItem
-* Description        :该函数向离散映射表中添加一条映射记录
+* Description        :This function adds a mapping record to the discrete mapping table.
 * Parameter         :
-*        @obj            从机结构体指针
-*        @byte    接收到的单字节
-* Return          : 无
+*        @obj            Object pointer of slave
+*        @byte    Mapping item added
+* Return          : None
 **********************************************************/
 BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
 	if(pModbusRTU==NULL ||pMapTableItem==NULL){
@@ -189,10 +189,10 @@ BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pMapTableItem){
 /*******************************************************
 *
 * Function name :MDS_RTU_SendByte
-* Description        :从机发送一个字节
+* Description        :Slave sends a byte
 * Parameter         :
-*        @pModbusRTU            从机结构体指针
-*        @byte    需要发送的字节
+*        @pModbusRTU  Object pointer of slave
+*        @byte    Bytes to be sent
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 static void MDS_RTU_SendByte(PModbusS_RTU pModbusRTU,uint8 byte){
@@ -203,32 +203,32 @@ static void MDS_RTU_SendByte(PModbusS_RTU pModbusRTU,uint8 byte){
 /*******************************************************
 *
 * Function name :MDS_RTU_SerialProcess
-* Description        :该函数内部调用，获取接收到的一个包数据
+* Description        :This function is called internally to get a packet data received.
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-* Return          : 无
+*        @pModbus_RTU  Object pointer of slave
+* Return          : None
 **********************************************************/
 static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 	uint8 byte;
 	if(!pModbus_RTU){return FALSE;}
 	
-	/*从队列读取一个字节*/
+	/*Read a byte from the queue*/
 	if(MDdeQueue(&(pModbus_RTU->mdMsgSqQueue),&byte)==FALSE){
 		return FALSE;
 	}
 	pModbus_RTU->serialReadCache[pModbus_RTU->serialReadCount]=byte;/*save a byte*/
 	
-	if(pModbus_RTU->serialReadCount>=1){/*已经读取功能码*/
+	if(pModbus_RTU->serialReadCount>=1){/*Function code has been read*/
 		if(
 			pModbus_RTU->serialReadCache[1]>=0x01&&
 			pModbus_RTU->serialReadCache[1]<=0x04
 		){
-			/*以上功能码具有一致性*/
+			/*The above function codes are consistent*/
 			if(pModbus_RTU->serialReadCount>5){
-				/*读取了REG与REG_NUM*/
+				/*Read REG and REG_NUM*/
 				if(pModbus_RTU->serialReadCount>=7){
 					pModbus_RTU->serialReadCount++;
-					/*数据读取够了*/
+					/*Enough data read*/
 					return TRUE;
 				}
 			}
@@ -236,28 +236,28 @@ static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 			pModbus_RTU->serialReadCache[1]==5||
 			pModbus_RTU->serialReadCache[1]==6
 		){
-			/*以上功能码具有一致性*/
-			/*写单线圈，写单寄存器*/
+			/*The above function codes are consistent*/
+			/*Write single coil, write single register*/
 			if(pModbus_RTU->serialReadCount>=7){
 				pModbus_RTU->serialReadCount++;
-				/*数据读取够了*/
+				/*Enough data read*/
 					return TRUE;
 			}	
 		}else if(	
 			pModbus_RTU->serialReadCache[1]==15||
 			pModbus_RTU->serialReadCache[1]==16
 		){
-			/*以上功能码具有一致性*/
+			/*The above function codes are consistent*/
 			if(pModbus_RTU->serialReadCount>6){
 				if(pModbus_RTU->serialReadCount>=
 					(6+pModbus_RTU->serialReadCache[6]+2)
 				){
 					pModbus_RTU->serialReadCount++;
-					/*数据读取够了*/
+					/*Enough data read*/
 					return TRUE;
 				}
 			}
-		}else {/*不支持的功能码*/
+		}else {/*Unsupported function code*/
 			
 		}
 	}
@@ -271,39 +271,39 @@ static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 /*******************************************************
 *
 * Function name :MDS_RTU_Process
-* Description        :该函数处理接收到的包数据
+* Description        :This function processes the received packet data
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-* Return          : 无
+*        @pModbus_RTU   Object pointer of slave
+* Return          : None
 **********************************************************/
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	BOOL res;
 	if(!pModbus_RTU){return ;}
 	
 	if(pModbus_RTU->timesTick - pModbus_RTU->lastSendTimes < pModbus_RTU->frameIntervalTime){
-		/*帧间隔时间，3.5T处理一帧*/
+		/*Frame interval time, 3.5T processing one frame*/
 		return;
 	}
 	
-	res = MDS_RTU_SerialProcess(pModbus_RTU);/*从队列中读取一个指令*/
+	res = MDS_RTU_SerialProcess(pModbus_RTU);/*Read an instruction from the queue*/
 	if(!res){
 		return ;
 	}
 	
 	if(
-		pModbus_RTU->serialReadCache[0]!=0x00	/*广播地址*/
+		pModbus_RTU->serialReadCache[0]!=0x00	/*Broadcast address*/
 	&&
 		pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr
 	){
-		/*不属于本从机，丢弃*/
+		/*Not belong to this slave, discard*/
 		goto __exit;
 	}
 
-	/*功能码01-04具有基本类似的传输结构*/
-	/*01 读取线圈状态 	取得一组逻辑线圈的当前状态（ON/OFF)*/
-	/*02 读取输入状态 	取得一组开关输入的当前状态(ON/OFF)*/
-	/*03 读取保持寄存器 在一个或多个保持寄存器中取得当前的二进制值*/
-	/*04 读取输入寄存器 在一个或多个输入寄存器中取得当前的二进制值*/
+/*Function code 01-04 has a basically similar transmission structure*/
+/*01 Read the coil status to obtain the current status of a group of logic coils (ON/OFF)*/
+/*02 Read input status to obtain the current status of a group of switch inputs (ON/OFF)*/
+/*03 Read the holding register Get the current binary value in one or more holding registers*/
+/*04 Read input register Get the current binary value in one or more input registers*/
 	if(MDS_RTU_FUN_CODE(pModbus_RTU)>=0x1
 		&&MDS_RTU_FUN_CODE(pModbus_RTU)<=0x4
 	){
@@ -314,8 +314,8 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 		MDS_RTU_FUN_CODE(pModbus_RTU)==0x5|| 
 		MDS_RTU_FUN_CODE(pModbus_RTU)==0x6
 	){
-	/*05 强置单线圈 强置一个逻辑线圈的通断状态*/
-	/*06 预置单寄存器 把具体二进值装入一个保持寄存器*/
+/*05 Force a single coil to force the on-off status of a logic coil*/
+/*06 Preset single register Load specific binary value into a holding register*/
 		uint16 startReg=MDS_RTU_START_REG(pModbus_RTU);
 		uint16 val= ((pModbus_RTU->serialReadCache[4])<<8)|pModbus_RTU->serialReadCache[5];
 
@@ -324,21 +324,21 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 			MDS_RTU_FUN_CODE(pModbus_RTU)==15||
 			MDS_RTU_FUN_CODE(pModbus_RTU)==16
 	){
-	/*15 强置多线圈 强置一串连续逻辑线圈的通断*/
-	/*16 预置多寄存器 把具体的二进制值装入一串连续的保持寄存器*/
+/*15 Force multiple coils to force a series of continuous logic coils on and off*/
+/*16 Preset multiple registers to load specific binary values into a series of continuous holding registers*/
 		uint16 startReg=MDS_RTU_START_REG(pModbus_RTU);
 		uint16 regNum=MDS_RTU_REGS_NUM(pModbus_RTU);
 		uint8	 bytesNum=MDS_RTU_BYTES_NUM(pModbus_RTU);
 		if(MDS_RTU_FUN_CODE(pModbus_RTU)==15){
 			if(((regNum>>3)+((regNum%8)?1:0))!=bytesNum){
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_COILS,ILLEGAL_DAT_VAL);
-				/*出现了长度不匹配错误，丢弃*/
+				/*A length mismatch error occurred, discard it*/
 				goto __exit0;
 			}
 		}else {//16
 			if((regNum<<1)!=bytesNum){
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_REGS,ILLEGAL_DAT_VAL);
-				/*出现了长度不匹配错误，丢弃*/
+				/*A length mismatch error occurred, discard*/
 				goto __exit0;
 			}
 		}
@@ -359,12 +359,12 @@ __exit:
 /*******************************************************
 *
 * Function name :MDS_RTU_SendErrorCode
-* Description        :该函数返回接收与处理中的错误码信息给主机
+* Description        :This function returns the error code information received and processed to the host
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-*        @anlCode            异常码，参见[ANLCode]
-*        @errCode            错误码,参见[ErrorCode]
-* Return          : 无
+*        @pModbus_RTU        Object pointer of slave
+*        @anlCode            Exception code, see [ANLCode]
+*        @errCode            Error code, see [ErrorCode]
+* Return          : None
 **********************************************************/
 static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode){
 	MD_RTU_SEND_MODE(pModbus_RTU);
@@ -378,12 +378,12 @@ static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,Error
 /*******************************************************
 *
 * Function name :MDS_RTU_ReadDataProcess
-* Description        :该函数处理主机的读数据请求
+* Description        :This function handles the host's read data request
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-*        @reg            读取的地址起始
-*        @regNum            读取的数据个数
-*        @funCode            操作的功能码
+*        @pModbus_RTU    Object pointer of slave
+*        @reg            Start of read address
+*        @regNum            Number of data read
+*        @funCode            Function code of operation
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode){
@@ -398,11 +398,11 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 		(pModbus_RTU->pMapTableList[i]->modbusAddr+pModbus_RTU->pMapTableList[i]->modbusDataSize)>=(reg+regNum)
 		)
 		{
-			/*确保读取的范围在内存的范围之内*/
+			/*Ensure that the read range is within the memory range*/
 			if((funCode==1&&pModbus_RTU->pMapTableList[i]->addrType==COILS_TYPE)||
 				(funCode==2&&pModbus_RTU->pMapTableList[i]->addrType==INPUT_TYPE)){
-				/*确保是读取的bit*/
-				/*得到位偏移*/
+				/*Make sure it is the read BIT*/
+				/*Get bit offset*/
 				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]);
 				uint16 	j;
 				uint16	lastIndex=0;
@@ -416,7 +416,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 					if(((j-offsetAddr)>>3)!=lastIndex){
 						MDS_SEND_BYTE(pModbus_RTU,tempByte);
 						tempByte=0;
-						/*当前写入字节位置与上次不同则说明需要发送一个字节*/
+						/*The current write byte position is different from the last time, it means that a byte needs to be sent*/
 						lastIndex=(j-offsetAddr)>>3;
 					}
 					if(
@@ -434,8 +434,8 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 			}else if((funCode==3&&pModbus_RTU->pMapTableList[i]->addrType==HOLD_REGS_TYPE)||
 				(funCode==4&&pModbus_RTU->pMapTableList[i]->addrType==INPUT_REGS_TYPE)
 			){
-				/*确保读取的是reg*/
-					/*得到uint16偏移*/
+				/*Make sure to read REG.*/
+				/*Get two bytes offset*/
 				uint16 j=0;
 				uint16 offsetAddr=reg-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]) ;
 				MD_RTU_SEND_MODE(pModbus_RTU);
@@ -451,34 +451,34 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 				MDS_SEND_END(pModbus_RTU);
 				MD_RTU_RECV_MODE(pModbus_RTU);
 			}else { 
-				/*地址不能读取*/
+				/*Address cannot be read*/
 				continue;
 			}
 			return TRUE;
 		}
 	}
-	/*地址异常*/
+	/*Address is abnormal*/
 	MDS_RTU_SendErrorCode(pModbus_RTU,(ANLCode)(0x80+funCode),ILLEGAL_DAT_ADDR);
 	return FALSE;
 }
 /*******************************************************
 *
 * Function name :MDS_RTU_WriteDataProcess
-* Description        :该函数处理主机的写数据请求
+* Description        :This function handles the host's write data request
 * Parameter         :
-*        @pModbus_RTU            从机结构体指针
-*        @reg            读取的地址起始
-*        @regNum            读取的数据个数
-*        @funCode            操作的功能码
-*        @data            写入的数据
-*        @byteCount            写入的数据占多少字节
+*        @pModbus_RTU     Object pointer of slave
+*        @reg             Start of read address
+*        @regNum          Number of data read
+*        @funCode         Function code of operation
+*        @data            Data written
+*        @byteCount       How many bytes are the data written
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,
 uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 	uint8 res=FALSE;
 	switch(funCode){
-		case 5:/*写单线圈*/
+		case 5:/*Write single coil*/
 		{
 			if(data[0]==0xFF00 || data[0]==0x0000){
 				if(data[0]==0xFF00){
@@ -508,7 +508,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 			}
 		}
 			break;
-		case 15:/*写多线圈*/
+		case 15:/*Write multiple coils*/
 			res=MDS_RTU_WriteBits(pModbus_RTU, reg, regNum, data,COILS_TYPE);
 			if(res){
 				MD_RTU_SEND_MODE(pModbus_RTU);
@@ -528,7 +528,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_COILS,ILLEGAL_DAT_ADDR);
 			}
 			break;
-		case 6:/*写单寄存器*/
+		case 6:/*Write single register*/
 			res=MDS_RTU_WriteReg(pModbus_RTU,reg,data[0],HOLD_REGS_TYPE);
 			if(res){
 				MD_RTU_SEND_MODE(pModbus_RTU);
@@ -548,7 +548,7 @@ uint16 regNum,uint8 funCode,uint16* data,uint8 byteCount){
 				MDS_RTU_SendErrorCode(pModbus_RTU,WRITE_SIN_REG,ILLEGAL_DAT_ADDR);
 			}
 			break;
-		case 16:/*写多寄存器*/
+		case 16:/*Write multiple registers*/
 			res=MDS_RTU_WriteRegs(pModbus_RTU,reg,regNum,data,1,HOLD_REGS_TYPE);
 			if(res){
 				MD_RTU_SEND_MODE(pModbus_RTU);

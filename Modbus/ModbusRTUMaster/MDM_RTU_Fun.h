@@ -4,22 +4,22 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 主机功能模块
+* @Description: Modbus RTU Host function module
 ********************************************************************************/
 
 #ifndef _MEM_RTU_FUN_H__
 #define _MEM_RTU_FUN_H__
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_Queue.h"
 #include "MD_RTU_Type.h"
 #include "MD_RTU_Error.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_MapTable.h"
 #include "MD_RTU_Config.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************头文件包含************************************/
-/*modbus rtu 中的 功能码*/
+/*********************************CUSTOM DATA TYPE************************************/
+/*Function code in Modbus RTU*/
 typedef enum{
 	READ_COIL=1,
 	READ_INPUT=2,
@@ -32,53 +32,53 @@ typedef enum{
 }ModbusFunCode;
 
 typedef struct{
-	/*继承modbusBase*/
+	/*Inherit modbusBase*/
 	ModbusBase		modbusBase;
-	/*离散映射列表，读取到的数据被存与其中*/
+	/*Discrete mapping list, the data read is stored in it*/
 	PMapTableItem pMapTableList[MDM_REG_COIL_ITEM_NUM];
-	/*数据接收队列*/
+	/*Data receiving queue*/
 	MDSqQueue 		mdSqQueue;
 
 #if MDM_USE_SEND_CACHE
-	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];		/*发送缓存*/
-	uint16				serialSendCount;														/*发送的字节数*/
+	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];		/*Send cache*/
+	uint16				serialSendCount;														/*Number of bytes sent*/
 #endif
 	
-	/*上次接收的时间,0xFFFFFFF表示未起开始检测帧*/
+	/*The time of the last reception, 0xFFFFFFF means that the detection frame has not started*/
 	uint32 				lastTimesTick;
-	/*当前的实时时间单位100US*/
+	/*Current real-time time unit 100US*/
 	uint32 				timesTick;
 	
-	/*帧间隔时间3.5T*/
+	/*Frame interval time 3.5T*/
 	uint16 				frameIntervalTime;
 	
-	/*接收的CRC16*/
+	/*CRC16 received*/
 	uint16 				CRC16Update;
 	
-	/*父类地址，用于在非阻塞读取时的时间片占用区分*/
+	/*Parent class address, used to distinguish time slice occupation during non-blocking read*/
 	void *				parentObj;
 	
-	/*为1代表接收到一帧的数据*/
+	/*1 means one frame of data is received*/
 	uint8					recvFlag;
 }*PModbus_RTU,Modbus_RTU;
 
-/*发送控制块*/
+/*Send control block*/
 typedef struct{
 	PModbus_RTU pModbus_RTU;/*modbus rtu*/
 	
-	uint32			sendIntervalTime;/*发送的间隔时间，即多久发送一次*/
+	uint32			sendIntervalTime;/*The sending interval, that is, sending once for a long time.*/
 	
-	uint32			sendTimeTick;/*发送时的时间*/
-	uint8				RTCount;/*以及重传次数*/
+	uint32			sendTimeTick;/*Time when sending*/
+	uint8				RTCount;/*Number of retransmissions*/
 	
-	uint32			sendOverTime;/*设定的发送超时时间*/
+	uint32			sendOverTime;/*Set sending timeout time*/
 	
-	uint8				RTTimes;/*设定的重传次数 当其为255时表示一直进行重传*/
-	uint8				sendFlag;/*发送标志位
-												0 未发送 
-												1 发送了 
-												2 发送成功 
-												3 发送失败 
+	uint8				RTTimes;/*The set number of retransmissions. When it is 255, it means that retransmissions will continue.*/
+	uint8				sendFlag;/*Send flag
+												0 Unsent 
+												1 Already sent 
+												2 Sent successfully 
+												3 Failed to send 
 												*/
 	uint8 			flag;			/*
 	bit0:Device offline polling flag (when flag is 1, the control block will not be polled when the device is offline).
@@ -86,17 +86,17 @@ typedef struct{
 	*/
 }*PModbus_RTU_CB,Modbus_RTU_CB;
 
-/*获取设备掉线标识*/
+/*Get device offline flag*/
 #define MD_CB_GET_DIS_FLAG(a)	MD_GET_BIT(a->flag,0)
 #define MD_CB_SET_DIS_FLAG(a)	MD_SET_BIT(a->flag,0)
 #define MD_CB_CLR_DIS_FLAG(a)	MD_CLR_BIT(a->flag,0)
 
-/*设备使能标志位*/
+/*Device enable flag*/
 #define MD_CB_GET_DIS_FLAG_EN(a)	MD_GET_BIT(a->flag,1)
 #define MD_CB_SET_DIS_FLAG_EN(a)	MD_SET_BIT(a->flag,1)
 #define MD_CB_CLR_DIS_FLAG_EN(a)	MD_CLR_BIT(a->flag,1)
 
-/*Modbus RTU 块初始化函数*/
+/*Modbus RTU block initialization function*/
 MDError MDM_RTU_Init(
 	PModbus_RTU pModbusRTU,
 	MD_RTU_SerialInit mdRTUSerialInitFun,
@@ -106,17 +106,17 @@ MDError MDM_RTU_Init(
 	uint8 parity
 );
 
-/*控制块初始化函数*/
+/*Control block initialization function*/
 void MDM_RTU_CB_Init(
 	 PModbus_RTU_CB 	pModbusRTUCB
 	,PModbus_RTU 		pModbusRTU
 	,uint32 				sendIntervalTime
-	,uint32					sendOverTime/*发送超时时间*/
-	,uint8 					RTTimes/*重传次数 当其为255时表示一直进行重传*/
+	,uint32					sendOverTime/*Send timeout*/
+	,uint8 					RTTimes/*The number of retransmissions, when it is 255, it means that retransmissions have been performed.*/
 );
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************宏定义************************************/
+/*********************************MACRO DEFINITION************************************/
 #if MDM_USE_SEND_CACHE
 #define MEM_RTU_START_EN(a)	{uint16 CRCUpdate=0xFFFF;(a)->serialSendCount=0
 #define MEM_RTU_EN_QUEUE(a,b) (a)->serialSendCache[(a)->serialSendCount++]=(b);\
@@ -132,31 +132,31 @@ CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
 	MDM_RTU_SendByte(a,(uint8)(CRCUpdate>>8));\
 }
 #endif
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************函数定义************************************/
-/*定时器中断函数中调用,时间单位100us*/
+/*********************************FUNCTION DEFINITION************************************/
+/*Called in the timer interrupt function, the time unit is 100us*/
 void MDM_RTU_TimeHandler(void *obj);
-/*串口接收中断函数中调用*/
+/*Called in the serial port receive interrupt function*/
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
 
-/*控制块超时复位*/
+/*Control block timeout reset*/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB);
 void MDM_RTU_CB_ClrDisFlag(PModbus_RTU_CB 	pModbusRTUCB);
 void MDM_RTU_CB_SetDisPollEnFlag(PModbus_RTU_CB 	pModbusRTUCB,BOOL state);
 
 BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 
-/*从队列中获取数据*/
+/*Get data from the queue*/
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len);
 MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len);
 
-/*非阻塞式读写基函数*/
+/*Non-blocking read and write basis functions*/
 MDError MDM_RTU_NB_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
-/*阻塞式读写基函数*/
+/*Blocking read and write basis functions*/
 MDError MDM_RTU_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
 
-/*下面是非阻塞式读写*/
+/*The following is non-blocking read and write*/
 MDError MDM_RTU_NB_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_NB_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_NB_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
@@ -170,7 +170,7 @@ MDError MDM_RTU_NB_WriteCoils(
 MDError MDM_RTU_NB_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val);
 
-/*下面是阻塞式读写*/
+/*The following is a blocking read and write*/
 MDError MDM_RTU_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
 MDError MDM_RTU_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
@@ -183,6 +183,6 @@ MDError MDM_RTU_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val);
 MDError MDM_RTU_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val);
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 #endif

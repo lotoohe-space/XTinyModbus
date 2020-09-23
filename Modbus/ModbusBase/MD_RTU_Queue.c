@@ -4,20 +4,20 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 队列功能模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU Queue function module
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_Queue.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name: MDInitQueue
-* Description        :初始化一个队列
+* Description        :Initialize a queue
 * Parameter         :
-*        @q        队列结构体指针   
+*        @q        Queue object pointer   
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDInitQueue(MDSqQueue *q){
@@ -31,10 +31,10 @@ uint8 MDInitQueue(MDSqQueue *q){
 /*******************************************************
 *
 * Function name :MDQueueLength
-* Description        :获取队列中数据的长度
+* Description        :Get the length of the data in the queue
 * Parameter         :
-*        @q        队列结构体指针 
-* Return          : 队列中数据的长度
+*        @q        Queue object pointer 
+* Return          : The length of the data in the queue.
 **********************************************************/
 uint16 MDQueueLength(MDSqQueue* q) {
 	if (q == NULL) { return 0; }
@@ -43,10 +43,10 @@ uint16 MDQueueLength(MDSqQueue* q) {
 /*******************************************************
 *
 * Function name: MDResetQueue
-* Description        :队列复位 （清零）
-* Parameter         :
-*        @q        队列结构体指针   
-* Return          : 无
+* Description :Queue reset (cleared)
+* Parameter :
+*        @q         Queue object pointer  
+* Return : None
 **********************************************************/
 void MDResetQueue(MDSqQueue* q) {
 	if (q == NULL) { return ; }
@@ -55,10 +55,10 @@ void MDResetQueue(MDSqQueue* q) {
 /*******************************************************
 *
 * Function name: MDQueueEmpty
-* Description        :队列是否为空
+* Description        :Whether the queue is empty
 * Parameter         :
-*        @q        队列结构体指针   
-* Return          : TRUE 空 , FALSE 不空
+*        @q       Queue object pointer 
+* Return          : TRUE empty , FALSE Not empty
 **********************************************************/
 uint8 MDQueueEmpty(MDSqQueue* q) {
 	if (q == NULL) { return 1; }
@@ -67,10 +67,10 @@ uint8 MDQueueEmpty(MDSqQueue* q) {
 /*******************************************************
 *
 * Function name: MDenQueue
-* Description        :队列尾部插入
+* Description        :Insert at the end of the queue
 * Parameter         :
-*        @q        队列结构体指针   
-*        @e        插入的元素 
+*        @q        Queue object pointer    
+*        @e        Inserted element 
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDenQueue(MDSqQueue* q, MDQueueDateType e) {
@@ -84,10 +84,10 @@ uint8 MDenQueue(MDSqQueue* q, MDQueueDateType e) {
 /*******************************************************
 *
 * Function name: MDenQueueH
-* Description        :队列头部插入
+* Description        :Queue head insertion
 * Parameter         :
-*        @q        队列结构体指针   
-*        @e        插入的元素 
+*        @q        Queue object pointer   
+*        @e        Inserted element 
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDenQueueH(MDSqQueue* q, MDQueueDateType e){		
@@ -101,14 +101,14 @@ uint8 MDenQueueH(MDSqQueue* q, MDQueueDateType e){
 /*******************************************************
 *
 * Function name: MDdeQueue
-* Description        :队列头部出队列
+* Description        :Queue head out of the queue
 * Parameter         :
-*        @q        队列结构体指针   
-*        @e        获取到的元素 
+*        @q        Queue object pointer   
+*        @e        Obtained elements 
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDdeQueue(MDSqQueue* q, MDQueueDateType *e) {
-	if (q->front == q->rear) { /*空了，则返回错误*/
+	if (q->front == q->rear) { /*Empty, return an error*/
 		return FALSE;
 	}
 	q->front = (q->front + 1) % q->maxVal;
@@ -118,10 +118,10 @@ uint8 MDdeQueue(MDSqQueue* q, MDQueueDateType *e) {
 /*******************************************************
 *
 * Function name: MDdeQueueF
-* Description        :队列尾部出队列
+* Description        :Queue tail out
 * Parameter         :
-*        @q        队列结构体指针   
-*        @e        获取到的元素 
+*        @q        Queue object pointer   
+*        @e        Obtained elements 
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDdeQueueF(MDSqQueue* q, MDQueueDateType *e) {
@@ -135,14 +135,14 @@ uint8 MDdeQueueF(MDSqQueue* q, MDQueueDateType *e) {
 /*******************************************************
 *
 * Function name: MDgetTailQueue
-* Description        :获取队列尾部元素，不影响队列，只取元素
+* Description        :Get the element at the end of the queue without affecting the queue, only the element
 * Parameter         :
-*        @q        队列结构体指针   
-*        @e        获取到的元素 
+*        @q        Queue object pointer    
+*        @e        Obtained elements 
 * Return          : TRUE success , FALSE fail
 **********************************************************/
 uint8 MDgetTailQueue(MDSqQueue* q, MDQueueDateType* e) {
-	if (q->front == q->rear) { /*空了，则返回错误*/
+	if (q->front == q->rear) { /*Empty, return an error*/
 		return FALSE;
 	}
 	*e = q->data[(q->front + 1) % q->maxVal];

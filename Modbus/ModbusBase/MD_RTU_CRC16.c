@@ -3,15 +3,15 @@
 * @Author: zspace
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU CRC16计算模块
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU CRC16 Check module
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MD_RTU_CRC16.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
-/*********************************变量申明************************************/
+/*********************************VARIABLE DECLARATION************************************/
 #if MD_RTU_CRC16_FAST_MODE
 static const uint16 crc16_table[256]=
 {
@@ -49,16 +49,16 @@ static const uint16 crc16_table[256]=
         0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
 };
 #endif
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MD_CRC16Update
-* Description        :该函数需要通过累计计算得到CRC16的值
+* Description        :This function needs to get the value of CRC16 through cumulative calculation
 * Parameter         :
-*        @CRC        上次计算的CRC16值    
-*        @byte    需要参与计算的一字节
-* Return          : 无
+*        @CRC     CRC16 value calculated last time.   
+*        @byte    Need to participate in the calculation of a byte.
+* Return          : None
 **********************************************************/
 uint16 MD_CRC16Update(uint16 CRC, uint8 byte)
 {

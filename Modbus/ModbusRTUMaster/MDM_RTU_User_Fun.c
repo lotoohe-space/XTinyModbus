@@ -4,28 +4,27 @@
 * @Emial: 1358745329@qq.com
 * @Version: 1.0
 * @Date: 2020-4-10
-* @Description: Modbus RTU 主机用户调用函数
-* 开源地址: https://github.com/lotoohe-space/XTinyModbus
+* @Description: Modbus RTU Host user call function
+* Open source address: https://github.com/lotoohe-space/XTinyModbus
 ********************************************************************************/
 
-/*********************************头文件包含************************************/
+/*********************************HEAD FILE************************************/
 #include "MDM_RTU_User_Fun.h"
 #include "MDM_RTU_Fun.h"
-/*********************************结束******************************************/
+/*********************************END******************************************/
 
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadBits
-* Description        :读取离散映射的bits,可以读取一个，也可以读取多个
+* Description        :Read discretely mapped bits, you can read one or multiple
 * Parameter         :
-*        @obj        主机对象
-*        @modbusAddr        modbus的地址    
-*        @numOf    需要读取的个数
-*        @opAddrType    地址类型(COILS_TYPE,INPUT_TYPE)，参见[AddrType]
-*        @devAddr    需要读取的从机号
+*        @obj        Host object pointer
+*        @modbusAddr        modbus address    
+*        @numOf    The number to be read
+*        @opAddrType    Address type(COILS_TYPE,INPUT_TYPE),See[AddrType]
+*        @devAddr    Slave number to be read
 * Return          : 
-*        @res    返回的值
-*				 函数返回 TRUE success , FALSE fail
+*        @res    Returned value TRUE success , FALSE fail
 **********************************************************/
 BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, AddrType opAddrType,uint8 devAddr){
 	uint16 i;
@@ -37,13 +36,13 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		/*检查设备号*/
+		/*Check the device number*/
 		if(devAddr!=pModbusS_RTU->pMapTableList[i]->devAddr){continue;}
 		
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是BIT类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*Must be Bit type*/
 				uint16 	j;
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				for(j=offsetAddr; j<offsetAddr+numOf; j++){		
@@ -65,16 +64,15 @@ BOOL MDM_RTU_ReadBits(void* obj,uint16 modbusAddr,uint16 numOf, uint8 *res, Addr
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadRegs
-* Description        :读取离散映射的寄存器,可以读取一个，也可以读取多个
+* Description        :Read discretely mapped registers, you can read one or multiple
 * Parameter         :
-*        @obj        主机对象
-*        @modbusAddr        modbus的地址    
-*        @numOf    需要读取的个数
-*        @opAddrType    地址类型(HOLD_REGS_TYPE,INPUT_REGS_TYPE)，参见[AddrType]
-*        @devAddr    需要读取的从机号
+*        @obj        Host object pointer
+*        @modbusAddr       modbus address   
+*        @numOf    The number to be read
+*        @opAddrType    Address type(HOLD_REGS_TYPE,INPUT_REGS_TYPE),See[AddrType]
+*        @devAddr    Slave number to be read
 * Return          : 
-*        @res    返回的值
-*				 函数返回 TRUE success , FALSE fail
+*        @res    TRUE success , FALSE fail
 **********************************************************/
 BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, AddrType opAddrType,uint8 devAddr){
 	uint16 i;
@@ -86,12 +84,12 @@ BOOL MDM_RTU_ReadRegs(void* obj,uint16 modbusAddr,uint16 numOf, uint16 *res, Add
 		if(pModbusS_RTU->pMapTableList[i]==NULL){
 			continue;
 		}
-		/*检查设备号*/
+		/*Check the device number*/
 		if(devAddr!=pModbusS_RTU->pMapTableList[i]->devAddr){continue;}
 		if(pModbusS_RTU->pMapTableList[i]->modbusAddr<=modbusAddr&&
 		(pModbusS_RTU->pMapTableList[i]->modbusAddr+pModbusS_RTU->pMapTableList[i]->modbusDataSize)>=(modbusAddr+numOf)
 		){
-			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是BIT类型*/
+			if(pModbusS_RTU->pMapTableList[i]->addrType==opAddrType){/*Must be BIT type*/
 				uint16 	j;
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbusS_RTU->pMapTableList[i]);
 				for(j=0;j<numOf;j++){
