@@ -1,4 +1,10 @@
-
+/********************************************************************************
+ * @File name: MD_RTU_Config.h
+ * @Author: zspace
+ * @Version: 1.0
+ * @Date: 2020-4-10
+ * @Description: Modbus configuration file.
+ ********************************************************************************/
 #ifndef _MD_RTU_CONFIG_H__
 #define _MD_RTU_CONFIG_H__
 
