@@ -47,7 +47,41 @@ MDError MDM_RTU_Init(
 	uint8 i;
 	if(pModbusRTU==NULL){return ERR_VOID;}
 	
-	MDInitQueue(&(pModbusRTU->mdSqQueue));
+#if MD_RTU_USED_OS
+	if(pModbusRTU->mdRTUMsgHandle==NULL){
+		if(!MD_RTU_CreateMsg((PModbusBase)pModbusRTU, &(pModbusRTU->mdRTUMsgHandle),MD_RTU_MSG_BOX_LENGTH)){
+			return ERR_CTE_OBJ;
+		}
+	}
+	if(pModbusRTU->mdRTULockHandle==NULL){
+		if(!MD_RTU_CreateLock((PModbusBase)pModbusRTU, &(MD_RTU_LOCK_HANDLE_ARG(pModbusRTU)))){
+			return ERR_CTE_OBJ;
+		}
+	}
+	if(pModbusRTU->mdRTULockObjHandle==NULL){
+		if(!MD_RTU_CreateLock((PModbusBase)pModbusRTU, &(MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU)))){
+			return ERR_CTE_OBJ;
+		}
+	}
+	if(pModbusRTU->mdRTULockObj1Handle==NULL){
+		if(!MD_RTU_CreateLock((PModbusBase)pModbusRTU, &(MD_RTU_LOCK_OBJ1_HANDLE_ARG(pModbusRTU)))){
+			return ERR_CTE_OBJ;
+		}
+	}
+	if(pModbusRTU->mdRTUTaskHandle==NULL){
+		if(!MD_RTU_CreateThread((PModbusBase)pModbusRTU,MDM_RTU_SysProcessTask,&MD_RTU_TASK_HANDLE_ARG(pModbusRTU))){
+			return ERR_CTE_OBJ;
+		}
+	}
+#endif
+	
+	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_HANDLE_ARG(pModbusRTU));
+	//MDInitQueue(&(pModbusRTU->mdSqQueue),UINT8_TYPE);
+	pModbusRTU->mdSqQueue.data=NULL;
+	pModbusRTU->mdSqQueue.maxVal=0;
+	MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_HANDLE_ARG(pModbusRTU));
+	
+	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 	for(i=0;i<MDM_REG_COIL_ITEM_NUM;i++){
 		pModbusRTU->pMapTableList[i] = NULL;
 	}
@@ -80,8 +114,25 @@ MDError MDM_RTU_Init(
 	if(mdRTUSerialInitFun!=NULL){
 		mdRTUSerialInitFun(pModbusRTU,baud, dataBits,stopBits,parity);
 	}
-	
+	MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 	return ERR_NONE;
+}
+/**
+* @brief This function init queue.
+* @param[in] recvQueueData ????
+* @param[in] recvQueueSize ????
+* @result None
+*/
+void MDM_RTU_QueueInit(PModbus_RTU pModbus_RTU,
+	uint8* recvQueueData,
+	uint16  recvQueueSize
+){
+	if(pModbus_RTU==NULL){
+		return ;
+	}
+	MD_RTU_LOCK((PModbusBase)pModbus_RTU,MD_RTU_LOCK_HANDLE_ARG(pModbus_RTU));
+	MDInitQueue(&(pModbus_RTU->mdSqQueue),recvQueueData,recvQueueSize);
+	MD_RTU_UNLOCK((PModbusBase)pModbus_RTU,MD_RTU_LOCK_HANDLE_ARG(pModbus_RTU));
 }
 /*******************************************************
 *
@@ -105,6 +156,7 @@ void MDM_RTU_CB_Init(
 	,uint8 					RTTimes
 ){
 	if(pModbusRTUCB==NULL){return ;}
+	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 	pModbusRTUCB->sendIntervalTime=sendIntervalTime;
 	pModbusRTUCB->pModbus_RTU=pModbusRTU;
 	pModbusRTUCB->sendTimeTick=0;
@@ -112,6 +164,7 @@ void MDM_RTU_CB_Init(
 	pModbusRTUCB->RTTimes=RTTimes;
 	pModbusRTUCB->sendFlag=0;
 	pModbusRTU->parentObj=NULL;
+	MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 }
 /*******************************************************
 *
@@ -123,8 +176,10 @@ void MDM_RTU_CB_Init(
 **********************************************************/
 void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 	if(pModbusRTUCB==NULL){return ;}
+	MD_RTU_LOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 	pModbusRTUCB->RTCount=0;
 	pModbusRTUCB->sendFlag=0;
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 }
 /*******************************************************
 *
@@ -136,7 +191,9 @@ void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 **********************************************************/
 void MDM_RTU_CB_ClrDisFlag(PModbus_RTU_CB 	pModbusRTUCB){
 	if(pModbusRTUCB==NULL){return ;}
+	MD_RTU_LOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 	MD_CB_CLR_DIS_FLAG(pModbusRTUCB);
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 }
 /*******************************************************
 *
@@ -149,11 +206,13 @@ void MDM_RTU_CB_ClrDisFlag(PModbus_RTU_CB 	pModbusRTUCB){
 **********************************************************/
 void MDM_RTU_CB_SetDisPollEnFlag(PModbus_RTU_CB 	pModbusRTUCB,BOOL state){
 	if(pModbusRTUCB==NULL){return ;}
+	MD_RTU_LOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 	if(state){
 		MD_CB_SET_DIS_FLAG_EN(pModbusRTUCB);
 	}else{
 		MD_CB_CLR_DIS_FLAG_EN(pModbusRTUCB);
 	}
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 }
 /*******************************************************
 *
@@ -163,23 +222,32 @@ void MDM_RTU_CB_SetDisPollEnFlag(PModbus_RTU_CB 	pModbusRTUCB,BOOL state){
 *        @obj        Host object pointer    
 * Return          : None
 **********************************************************/
-void MDM_RTU_TimeHandler(void *obj){
+void MDM_RTU_TimeHandler(void *obj,uint32 timesTick){
 	PModbus_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
-	pModbusRTU->timesTick++;
+	//pModbusRTU->timesTick++;
+	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
+	pModbusRTU->timesTick=timesTick;
 	/*No need to deal with*/
-	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}
+	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){
+		MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
+		return ;
+	}
 	if(pModbusRTU->timesTick-pModbusRTU->lastTimesTick>=pModbusRTU->frameIntervalTime){
 		if(pModbusRTU->CRC16Update!=0x0000){
 			/*CRC error*/
+			MD_RTU_LOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 			MDResetQueue(&(pModbusRTU->mdSqQueue));
+			MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 			pModbusRTU->lastTimesTick=0xFFFFFFFF;
+			MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 			return ;
 		}
 		/*End of one frame*/
 		pModbusRTU->recvFlag=1;
 		pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	}
+	MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 }
 /*******************************************************
 *
@@ -193,16 +261,35 @@ void MDM_RTU_TimeHandler(void *obj){
 void MDM_RTU_RecvByte(void *obj,uint8 byte){
 	PModbus_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
-	if(MDenQueue(&(pModbusRTU->mdSqQueue),byte)==FALSE){
+	MD_RTU_LOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
+	if(MDenQueue(&(pModbusRTU->mdSqQueue),&byte,UINT8_TYPE)==FALSE){
+		MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 		return ;
 	}
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
+	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){
 		pModbusRTU->CRC16Update=0xFFFF;
 	}
 	pModbusRTU->CRC16Update=MD_CRC16Update(pModbusRTU->CRC16Update,byte);
 	/*Save the timestamp of the last character received*/
 	pModbusRTU->lastTimesTick=pModbusRTU->timesTick;
+	MD_RTU_UNLOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 }
+
+#if MD_RTU_USED_OS	///< used os
+void MDM_RTU_SysProcessTask(void *arg){
+	PModbus_RTU pModbusRTU=(PModbus_RTU)arg;
+	for(;;){
+		void *msg=NULL;
+		if(MD_RTU_MSG_GET((PModbusBase)pModbusRTU,MD_RTU_MSG_HANDLE_ARG(pModbusRTU),&msg,1)){
+			MDM_RTU_RecvByte((void*)pModbusRTU,(uint8)(msg));
+		}
+		MDM_RTU_TimeHandler((void*)pModbusRTU,MD_RTU_GetSysTick());
+	}
+}
+#endif
+
 #if !MDM_USE_SEND_CACHE
 /*******************************************************
 *
@@ -228,10 +315,14 @@ static void MDM_RTU_SendByte(PModbus_RTU pModbus_RTU,uint8 byte){
 * Return          : None
 **********************************************************/
 BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pMapTableItem){
+	BOOL res;
 	if(pModbusRTU==NULL || pMapTableItem==NULL){
 			return FALSE;
 	}
-	return MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,MDM_REG_COIL_ITEM_NUM);
+	MD_RTU_LOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTU)));
+	res=MapTableAdd(pModbusRTU->pMapTableList, pMapTableItem,MDM_REG_COIL_ITEM_NUM);
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTU)));
+	return res;
 }
 
 /*******************************************************
@@ -246,9 +337,13 @@ BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pMapTableItem){
 **********************************************************/
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len){
 	uint8 i;
+	uint8 resI;
 	if(res==NULL){return ERR_VOID;}
 	for(i=0;i<len;i++){
-		if(!MDdeQueue(&(pModbusRTU->mdSqQueue),(res+i))){
+		MD_RTU_LOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
+		resI=MDdeQueue(&(pModbusRTU->mdSqQueue),(res+i),UINT8_TYPE);
+		MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
+		if(!resI){
 			return ERR_QUEUE;
 		}
 	}
@@ -268,16 +363,20 @@ MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len){
 	uint8 i;
 	uint8 byte;
 	if(res==NULL){return ERR_VOID;}
+	MD_RTU_LOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 	for(i=0;i<len;i++){
-		if(!MDdeQueue(&(pModbusRTU->mdSqQueue),&byte)){
+		if(!MDdeQueue(&(pModbusRTU->mdSqQueue),&byte,UINT8_TYPE)){
+			MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 			return ERR_QUEUE;
 		}
 		res[i]=byte<<8;
-		if(!MDdeQueue(&(pModbusRTU->mdSqQueue),&byte)){
+		if(!MDdeQueue(&(pModbusRTU->mdSqQueue),&byte,UINT8_TYPE)){
+			MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 			return ERR_QUEUE;
 		}
 		res[i]|=byte;
 	}
+	MD_RTU_UNLOCK((PModbusBase)(pModbusRTU),MD_RTU_LOCK_HANDLE_ARG((pModbusRTU)));
 	return ERR_NONE;
 }
 /*******************************************************
@@ -411,6 +510,7 @@ BOOL MDM_RTU_InsideWriteBits(
 			if(pModbus_RTU->pMapTableList[i]->addrType==opAddrType){/*Must be BIT type*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]);
 				uint16 j;
+				MD_RTU_LOCK((PModbusBase)(pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbus_RTU)));
 				for(j=0;j<numOf;j++){
 					if(
 						MD_GET_BIT( bit[j>>3] ,j%8)
@@ -426,6 +526,7 @@ BOOL MDM_RTU_InsideWriteBits(
 						,(j+offsetAddr)%16);
 					}
 				}
+				MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbus_RTU)));
 				return TRUE;
 			}
 		}
@@ -472,10 +573,12 @@ uint8 devAddr
 			if(pModbus_RTU->pMapTableList[i]->addrType==opAddrType){/*必须是REG类型*/
 				uint16 offsetAddr=modbusAddr-MDS_RTU_REG_COIL_ITEM_ADDR(pModbus_RTU->pMapTableList[i]);
 				uint16 j=0;
+				MD_RTU_LOCK((PModbusBase)(pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbus_RTU)));
 				for(j=0;j<numOf;j++){
 					MDS_RTU_REG_COIL_ITEM_DATA(pModbus_RTU->pMapTableList[i])[offsetAddr+j]=
 					isBigE?MD_SWAP_HL(reg[j]):reg[j];
 				}		
+				MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbus_RTU)));
 				return TRUE;
 			}
 		}
@@ -495,7 +598,7 @@ uint8 devAddr
 *        @wData       If it is a write function code, then it is the written data
 * Return          : See [MDError]
 **********************************************************/
-MDError MDM_RTU_NB_RW(
+static MDError MDM_RTU_NB_RW(
 	PModbus_RTU_CB pModbus_RTU_CB,
 	ModbusFunCode funCode,
 	uint8 slaveAddr,
@@ -522,7 +625,11 @@ MDError MDM_RTU_NB_RW(
 	
 	if(pModbus_RTU_CB->sendFlag==0){/*Has not been sent, or has been sent successfully*/
 		/*Clear the receive queue*/
+		MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+			MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 		MDResetQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue));
+		MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+			MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 		if(funCode>=1 && funCode<=4){
 			/*Have not sent, then send*/
 			MDM_RTU_ReadFun(pModbus_RTU_CB->pModbus_RTU,funCode,slaveAddr,startAddr,numOf);
@@ -550,41 +657,63 @@ MDError MDM_RTU_NB_RW(
 			uint8 funCodeByte=0;
 			/*Clear sign*/
 			pModbus_RTU_CB->pModbus_RTU->recvFlag=0;
-			
-			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte)){
+			MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+				MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte,UINT8_TYPE)){
 				errRes =  ERR_DATA_LEN;
+				MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+					MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 				goto _exit;
 			}
+			MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+				MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 			/*If data is received, process the data*/
 			if(slaveAddr!=byte){
 				errRes =  ERR_SLAVE_ADDR;
 				goto _exit;
 			}
-			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&funCodeByte)){
+			MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+				MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+			if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&funCodeByte,UINT8_TYPE)){
 				errRes =  ERR_DATA_LEN;
+				MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+				MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 				goto _exit;
 			}
-			
+			MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+				MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 			switch(funCodeByte){
 				case 0x1:/*Read the coil successfully*/
 				case 0x2:/*Read input discrete*/
 				{
 					uint16 i;
-					MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte);
+					MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+						MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+					MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte,UINT8_TYPE);
 					if((byte+2)!=MDQueueLength(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue))){
 						/*Wrong length*/
 						errRes =  ERR_DATA_LEN;
+						MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 						goto _exit;
 					}
+					MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+						MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 					index = numOf;
 					wAddr=startAddr;
 					for(i=0;i<byte;i++){
 						uint8 rByte;
-						if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte)){
+						MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+						if(!MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte,UINT8_TYPE)){
 								/*Wrong length*/
 								errRes =  ERR_DATA_LEN;
+								MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+									MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 								goto _exit;
 						}
+						MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 						/*Single deposit is less than or equal to 8bit*/
 						if(!MDM_RTU_InsideWriteBits(pModbus_RTU_CB->pModbus_RTU,wAddr,((index<8)?index:8), &rByte,(AddrType)funCodeByte,slaveAddr)){
 							errRes= ERR_DATA_SAVE; 
@@ -605,7 +734,11 @@ MDError MDM_RTU_NB_RW(
 				{
 					uint16 i;
 					uint16 len;
-					MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte);
+					MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+					MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&byte,UINT8_TYPE);
+					MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 					if((byte+2)!=MDQueueLength(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue))){
 						/*Wrong length*/
 						errRes= ERR_DATA_LEN;
@@ -615,10 +748,14 @@ MDError MDM_RTU_NB_RW(
 					for(i=0;i<len ;i++){
 						uint16 	wTemp;
 						uint8		rByte;
-						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte);
+						MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte,UINT8_TYPE);
 						wTemp=(rByte<<8);
-						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte);
+						MDdeQueue(&(pModbus_RTU_CB->pModbus_RTU->mdSqQueue),&rByte,UINT8_TYPE);
 						wTemp|=rByte;
+						MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
+							MD_RTU_LOCK_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 						if(!MDM_RTU_InsideWriteRegs(pModbus_RTU_CB->pModbus_RTU,startAddr+i,1,&wTemp,0,(AddrType)funCodeByte,slaveAddr)){
 							errRes= ERR_DATA_SAVE;
 							goto _exit;
@@ -761,7 +898,7 @@ _exit:
 *        @wData       If it is a write function code, then it is the written data
 * Return          : See [MDError]
 **********************************************************/
-MDError MDM_RTU_RW(
+static MDError MDM_RTU_RW(
 	PModbus_RTU_CB pModbus_RTU_CB,
 	ModbusFunCode funCode,
 	uint8 slaveAddr,
@@ -770,7 +907,12 @@ MDError MDM_RTU_RW(
 	void *wData
 ){
 	MDError res;
-	void* tempObj = pModbus_RTU_CB->pModbus_RTU->parentObj;
+	void* tempObj;
+	if(pModbus_RTU_CB==NULL){
+		return ERR_VOID;
+	}
+	MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),MD_RTU_LOCK_OBJ1_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+	tempObj=pModbus_RTU_CB->pModbus_RTU->parentObj;
 	pModbus_RTU_CB->pModbus_RTU->parentObj=NULL;/*Set to empty, so that non-blocking and blocking can be mixed calls*/
 	do{
 		res = MDM_RTU_NB_RW(pModbus_RTU_CB,funCode,slaveAddr,startAddr,numOf,wData);
@@ -785,6 +927,8 @@ MDError MDM_RTU_RW(
 	}while(res!=ERR_RW_FIN);
 	pModbus_RTU_CB->pModbus_RTU->parentObj=tempObj;/*Restore settings*/
 	exit:
+	MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);/*Enable retransmission*/
+	MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),MD_RTU_LOCK_OBJ1_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 	return res;
 }
 /*******************************************************

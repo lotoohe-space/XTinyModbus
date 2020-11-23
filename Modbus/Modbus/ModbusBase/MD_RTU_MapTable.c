@@ -1,26 +1,31 @@
-/********************************************************************************
-* @File name: MD_RTU_RegCoil.c
-* @Author: zspace
-* @Emial: 1358745329@qq.com
-* @Version: 1.0
-* @Date: 2020-4-10
-* @Description: Modbus RTU Discrete mapping management module
-* Open source address: https://github.com/lotoohe-space/XTinyModbus
-********************************************************************************/
-
+/**@file  MD_RTU_MapTable.c
+* @brief       Modbus RTU Discrete mapping management module
+* @author      zspace
+* @date        2020-4-10
+* @version     V1.0
+**********************************************************************************
+* @par Open source address
+*	https://github.com/lotoohe-space/XTinyModbus
+* @par modify log:
+* <table>
+* <tr><th>Date        <th>Version  <th>Author    <th>Description
+* <tr><td>2020-4-10  <td>1.0      <td>zspace  		<td>First version
+* </table>
+*
+**********************************************************************************
+*/
 /*********************************HEAD FILE************************************/
 #include "MD_RTU_MapTable.h"
 /*********************************END******************************************/
 
-/*******************************************************
-*
-* Function name :RegCoilListAdd
-* Description        :Add a mapping to master or slave
-* Parameter         :
-*        @obj       	Slave or host object pointer
-*        @pRegCoilItem    A mapping added,reference[PRegCoilItem]
-* Return          : TRUE success , FALSE fail
-**********************************************************/
+/**
+* @brief Add a mapping to master or slave
+* @param[in] obj	Slave or host object pointer
+* @param[in] pRegCoilItem    Slave or host object pointer
+* @return	
+* - TRUE success 
+* - FALSE fail
+*/
 uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
 	PMapTableItem *pMapTableList=obj;
@@ -33,15 +38,15 @@ uint8 MapTableAdd(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	}
 	return FALSE;
 }
-/*******************************************************
-*
-* Function name :RegCoilListDel
-* Description        :Delete a mapping to master or slave
-* Parameter         :
-*        @obj       	Slave or host object pointer
-*        @pRegCoilItem    A mapping deleted,reference[PRegCoilItem]
-* Return          : TRUE success , FALSE fail
-**********************************************************/
+
+/**
+* @brief Delete a mapping to master or slave
+* @param[in] obj	Slave or host object pointer
+* @param[in] pRegCoilItem    A mapping deleted,reference @see :: PMapTableItem
+* @return	
+* - TRUE success 
+* - FALSE fail
+*/
 uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	uint16 i=0;
 	PMapTableItem *pMapTableList=obj;
@@ -54,6 +59,3 @@ uint8 MapTableDel(void* obj,PMapTableItem pMapTableItem,uint16 tabSize){
 	}
 	return FALSE;
 }
-
-
-

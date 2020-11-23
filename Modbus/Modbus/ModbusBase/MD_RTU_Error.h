@@ -4,6 +4,7 @@
 typedef enum{
 	ERR_VOID=0,					/*Null pointer error*/
 	ERR_NONE=1,					/*No error*/
+	ERR_CTE_OBJ,				/*Object creation error*/
 	ERR_IDLE,						/*The block is currently free*/
 	ERR_QUEUE,					/*Queue write error*/
 	ERR_OVER_TIME,			/*Timeout error*/

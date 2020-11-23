@@ -19,9 +19,9 @@ typedef struct{
 	void *arg;													/*parameter*/
 	const char *RWCtrlName;							/*Send control name*/ 
 	uint8	flag;													/*Flag 
-																			bit:0 Is it used 
-																			bit:1 Single send 
-																			bit:7 The slave is disconnected or a single transmission is completed.
+																				bit:0 Is it used 
+																				bit:1 Single send 
+																				bit:7 The slave is disconnected or a single transmission is completed.
 																			*/
 }*PMDM_RW_Ctrl,MDM_RW_Ctrl;
 

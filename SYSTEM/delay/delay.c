@@ -153,7 +153,7 @@ void delay_ms(u16 nms)
 	}
 	delay_us((u32)(nms*1000));					
 }
-#else When not using OS
+#else //When not using OS
 //Delay nus
 //nus is the number of us to be delayed.    								   
 void delay_us(u32 nus)

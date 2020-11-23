@@ -4,6 +4,8 @@
 #include "MDS_RTU_Serial_1.h"
 #else 
 #include "MDM_RTU_Serial.h"
+#include "MD_RTU_SysInterface.h"
+#include "MDM_RTU_Fun.h"
 #endif
 
 void RS485RWConvInit(void)
@@ -80,12 +82,17 @@ void usart3_send_string(char *string){
 void USART3_IRQHandler(void){
     if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET){
 			uint8_t data = USART_ReceiveData(USART3);
-			#if MD_USD_SALVE
-				MDSSerialRecvByte_1(data);
-			#else 
-				#if MDM_USD_USART3
-					MDMSerialRecvByte(data);
+			#if !MD_RTU_USED_OS
+				#if MD_USD_SALVE
+					MDSSerialRecvByte_1(data);
+				#else 
+					#if MDM_USD_USART3
+						MDMSerialRecvByte(data);
+					#endif
 				#endif
+			#else
+				extern Modbus_RTU modbus_RTU;
+				MD_RTU_MsgPut((PModbusBase)(&modbus_RTU), MD_RTU_MSG_HANDLE_ARG(&modbus_RTU),(void*)(data),0);
 			#endif
     }
 }

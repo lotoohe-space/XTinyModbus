@@ -45,6 +45,7 @@ void MDSInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 	
 	/*Hardware initialization*/
 	uart_init(baud);
+	
 }
 /*******************************************************
 *
@@ -92,7 +93,7 @@ void MDSSerialSendBytes(uint8 *bytes,uint16 num){
 * Parameter         :None
 * Return          :NOne
 **********************************************************/
-void MDSTimeHandler100US(void){
+void MDSTimeHandler100US(uint32 times){
 	if(pModbusBase==NULL){return;}
-	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase);
+	pModbusBase->mdRTUTimeHandlerFunction(pModbusBase,times);
 }

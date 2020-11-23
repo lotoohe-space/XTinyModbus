@@ -1,10 +1,10 @@
-/********************************************************************************
-* @File name: MD_RTU_Fun.h
-* @Author: zspace
-* @Version: 1.0
-* @Date: 2020-4-10
-* @Description: MModbus RTU Slave receiving function module.
-********************************************************************************/
+/**
+* @file name: MD_RTU_Fun.h
+* @author zspace
+* @version 1.0
+* @date 2020-4-10
+* @brief MModbus RTU Slave receiving function module.
+*/
 
 #ifndef _MD_RTU_FUN_H__
 #define _MD_RTU_FUN_H__
@@ -109,7 +109,14 @@ typedef enum{
 
 
 /*********************************FUNCTION DECLARATION************************************/
-void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
+void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,
+	uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity);
+void MDS_RTU_QueueInit(PModbusS_RTU pModbus_RTU,
+	uint8* recvQueueData,
+	uint16  recvQueueSize,
+	uint8* msgProcessQueueData,
+	uint16 msgProcessQueueSize
+);
 void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun);
 BOOL MDS_RTU_AddMapItem(PModbusS_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 void MDS_RTU_Process(PModbusS_RTU pModbus_RTU);

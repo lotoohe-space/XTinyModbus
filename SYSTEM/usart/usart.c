@@ -5,6 +5,8 @@
 #include "MDS_RTU_Serial.h"
 #else
 #include "MDM_RTU_Serial.h"
+#include "MD_RTU_SysInterface.h"
+#include "MDM_RTU_Fun.h"
 #endif
 ////////////////////////////////////////////////////////////////////////////////// 	 
 
@@ -58,7 +60,8 @@ void uart_send_bytes(u8* bytes,u16 len){
 	u16 i=0;
 	for(i=0;i<len;i++){
 			while((USART1->SR&0X40)==0);
-    USART1->DR = (u8) (bytes[i]);  
+    USART1->DR = (u8) (bytes[i]);
+while((USART1->SR&0X40)==0);		
 	}
 }
 u8 *sendBytes=NULL;
@@ -74,7 +77,20 @@ void uart_send_bytes_by_isr(u8* bytes,u16 len){
 	while(sendFlag==0);
 }
 
-  
+void RS485RWConvInit1(void)
+{
+	GPIO_InitTypeDef  GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA| RCC_APB2Periph_AFIO, ENABLE);
+
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz; 
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_ResetBits(GPIOA,GPIO_Pin_12); 
+
+}
+
 void uart_init(u32 bound){
 
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -111,7 +127,7 @@ void uart_init(u32 bound){
   USART_Init(USART1, &USART_InitStructure); 
   USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
   USART_Cmd(USART1, ENABLE);                   
-
+	RS485RWConvInit1();
 }
 
 void USART1_IRQHandler(void)                
@@ -122,13 +138,17 @@ void USART1_IRQHandler(void)
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  
 	{
-		Res =USART_ReceiveData(USART1);	
-		#if MD_USD_SALVE
-		MDSSerialRecvByte(Res);
+		Res =USART_ReceiveData(USART1);
+		#if !MD_RTU_USED_OS		
+			#if MD_USD_SALVE
+			MDSSerialRecvByte(Res);
+			#else
+			MDMSerialRecvByte(Res);
+			#endif
 		#else
-		MDMSerialRecvByte(Res);
+		extern Modbus_RTU modbus_RTU;
+			MD_RTU_MsgPut((PModbusBase)(&modbus_RTU), MD_RTU_MSG_HANDLE_ARG(&modbus_RTU),(void*)(Res),0);
 		#endif
-
 	} 
 
   if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET){  

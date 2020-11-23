@@ -1,12 +1,19 @@
-/********************************************************************************
-* @File name: MD_RTU_CRC16.c
-* @Author: zspace
-* @Version: 1.0
-* @Date: 2020-4-10
-* @Description: Modbus RTU CRC16 Check module
-* Open source address: https://github.com/lotoohe-space/XTinyModbus
-********************************************************************************/
-
+/**@file  MD_RTU_CRC16.c
+* @brief       Modbus RTU CRC16 Check module
+* @author      zspace
+* @date        2020-4-10
+* @version     V1.0
+**********************************************************************************
+* @par Open source address
+*	https://github.com/lotoohe-space/XTinyModbus
+* @par modify log:
+* <table>
+* <tr><th>Date        <th>Version  <th>Author    <th>Description
+* <tr><td>2020-4-10  <td>1.0      <td>zspace  		<td>First version
+* </table>
+*
+**********************************************************************************
+*/
 /*********************************HEAD FILE************************************/
 #include "MD_RTU_CRC16.h"
 /*********************************END******************************************/
@@ -51,15 +58,12 @@ static const uint16 crc16_table[256]=
 #endif
 /*********************************END******************************************/
 
-/*******************************************************
-*
-* Function name :MD_CRC16Update
-* Description        :This function needs to get the value of CRC16 through cumulative calculation
-* Parameter         :
-*        @CRC     CRC16 value calculated last time.   
-*        @byte    Need to participate in the calculation of a byte.
-* Return          : None
-**********************************************************/
+/**
+* @brief This function needs to get the value of CRC16 through cumulative calculation
+* @param[in] CRC	CRC16 value calculated last time.   
+* @param[in] byte    Need to participate in the calculation of a byte.
+* @return	None
+*/
 uint16 MD_CRC16Update(uint16 CRC, uint8 byte)
 {
 #if MD_RTU_CRC16_FAST_MODE

@@ -1,0 +1,160 @@
+\hypertarget{_m_d___r_t_u___map_table_8h}{}\section{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.h File Reference}
+\label{_m_d___r_t_u___map_table_8h}\index{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}
+
+
+Modbus R\+TU Discrete mapping management module.  
+
+
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Type.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a68bc44acc1216867a7e9422eaf0f3562}{Map\+Table\+Item}}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}{Addr\+Type}} \{ \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a417e01bacde9a81c9f7c5df100b4f3e7}{C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE}} =1, 
+\mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a833326d0b04dd281eaf006c46842250d}{I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE}} =2, 
+\mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a2a92ccbff5b5d316b66fdd1559ab600f}{H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}} =3, 
+\mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892aa30b2fd7f1adf777f4c474dd2f3f3058}{I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}} =4
+ \}
+\begin{DoxyCompactList}\small\item\em Modbus R\+TU types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a866105dd7346fada9b775160cfe625d4}{Map\+Table\+Add}} (void $\ast$obj, \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} p\+Map\+Table\+Item, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} tab\+Size)
+\begin{DoxyCompactList}\small\item\em Add a mapping to master or slave. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a7ada2f3094c1b797e52872d0353fb59a}{Map\+Table\+Del}} (void $\ast$obj, \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} p\+Map\+Table\+Item, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} tab\+Size)
+\begin{DoxyCompactList}\small\item\em Delete a mapping to master or slave. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Modbus R\+TU Discrete mapping management module. 
+
+\begin{DoxyAuthor}{Author}
+zspace 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2020-\/4-\/10 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+V1.\+0
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Open source address}
+\href{https://github.com/lotoohe-space/XTinyModbus}{\tt https\+://github.\+com/lotoohe-\/space/\+X\+Tiny\+Modbus} 
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{modify log\+:}
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Date }&\textbf{ Version }&\textbf{ Author }&\textbf{ Description }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Date }&\textbf{ Version }&\textbf{ Author }&\textbf{ Description }\\\cline{1-4}
+\endhead
+2020-\/4-\/10 &1.\+0 &zspace &First version \\\cline{1-4}
+\end{longtabu}
+
+\end{DoxyParagraph}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a68bc44acc1216867a7e9422eaf0f3562}\label{_m_d___r_t_u___map_table_8h_a68bc44acc1216867a7e9422eaf0f3562}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!Map\+Table\+Item@{Map\+Table\+Item}}
+\index{Map\+Table\+Item@{Map\+Table\+Item}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}
+\subsubsection{\texorpdfstring{Map\+Table\+Item}{MapTableItem}}
+{\footnotesize\ttfamily typedef  struct \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} \mbox{\hyperlink{struct_map_table_item}{Map\+Table\+Item}}}
+
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}\label{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!Addr\+Type@{Addr\+Type}}
+\index{Addr\+Type@{Addr\+Type}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}
+\subsubsection{\texorpdfstring{Addr\+Type}{AddrType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}{Addr\+Type}}}
+
+
+
+Modbus R\+TU types. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE@{C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE@{C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE}}}\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a417e01bacde9a81c9f7c5df100b4f3e7}\label{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a417e01bacde9a81c9f7c5df100b4f3e7}} 
+C\+O\+I\+L\+S\+\_\+\+T\+Y\+PE&coil type \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE@{I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE@{I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE}}}\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a833326d0b04dd281eaf006c46842250d}\label{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a833326d0b04dd281eaf006c46842250d}} 
+I\+N\+P\+U\+T\+\_\+\+T\+Y\+PE&input type \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE@{H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE@{H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}}}\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a2a92ccbff5b5d316b66fdd1559ab600f}\label{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892a2a92ccbff5b5d316b66fdd1559ab600f}} 
+H\+O\+L\+D\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE&hold reg type \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE@{I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE@{I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE}}}\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892aa30b2fd7f1adf777f4c474dd2f3f3058}\label{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892aa30b2fd7f1adf777f4c474dd2f3f3058}} 
+I\+N\+P\+U\+T\+\_\+\+R\+E\+G\+S\+\_\+\+T\+Y\+PE&input reg type \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a866105dd7346fada9b775160cfe625d4}\label{_m_d___r_t_u___map_table_8h_a866105dd7346fada9b775160cfe625d4}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!Map\+Table\+Add@{Map\+Table\+Add}}
+\index{Map\+Table\+Add@{Map\+Table\+Add}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}
+\subsubsection{\texorpdfstring{Map\+Table\+Add()}{MapTableAdd()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} Map\+Table\+Add (\begin{DoxyParamCaption}\item[{void $\ast$}]{obj,  }\item[{\mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}}]{p\+Map\+Table\+Item,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}}}]{tab\+Size }\end{DoxyParamCaption})}
+
+
+
+Add a mapping to master or slave. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em obj} & Slave or host object pointer \\
+\hline
+\mbox{\tt in}  & {\em p\+Reg\+Coil\+Item} & Slave or host object pointer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item T\+R\+UE success
+\item F\+A\+L\+SE fail 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8h_a7ada2f3094c1b797e52872d0353fb59a}\label{_m_d___r_t_u___map_table_8h_a7ada2f3094c1b797e52872d0353fb59a}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}!Map\+Table\+Del@{Map\+Table\+Del}}
+\index{Map\+Table\+Del@{Map\+Table\+Del}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h}}
+\subsubsection{\texorpdfstring{Map\+Table\+Del()}{MapTableDel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} Map\+Table\+Del (\begin{DoxyParamCaption}\item[{void $\ast$}]{obj,  }\item[{\mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}}]{p\+Map\+Table\+Item,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}}}]{tab\+Size }\end{DoxyParamCaption})}
+
+
+
+Delete a mapping to master or slave. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em obj} & Slave or host object pointer \\
+\hline
+\mbox{\tt in}  & {\em p\+Reg\+Coil\+Item} & A mapping deleted,reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\+:\+: \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} 
+\end{DoxySeeAlso}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item T\+R\+UE success
+\item F\+A\+L\+SE fail 
+\end{DoxyItemize}
+\end{DoxyReturn}

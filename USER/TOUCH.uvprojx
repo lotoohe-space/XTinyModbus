@@ -337,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DAC;..\HARDWARE\DMA;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\HARDWARE\W25QXX;..\HARDWARE\GBK_LibDrive;..\USER;..\Modbus\Modbus\ModbusBase;..\Modbus\Modbus\ModbusRTUMaster;..\Modbus\Modbus\ModbusRTUSlave;..\Modbus\Modbus\Serial;..\Modbus\Example;..\Modbus</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\RTC;..\HARDWARE\RTC;..\HARDWARE\WKUP;..\HARDWARE\ADC;..\HARDWARE\DAC;..\HARDWARE\DMA;..\HARDWARE\SPI;..\HARDWARE\TOUCH;..\HARDWARE\W25QXX;..\HARDWARE\GBK_LibDrive;..\USER;..\Modbus\Modbus\ModbusBase;..\Modbus\Modbus\ModbusRTUMaster;..\Modbus\Modbus\ModbusRTUSlave;..\Modbus\Modbus\Serial;..\Modbus\Example;..\Modbus;..\XTinyRTOS\inc;..\Modbus\Port</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -600,6 +600,91 @@
               <FileName>MDS_RTU_APP_1.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Modbus\Example\MDS_RTU_APP_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>MD_RTU_SysInterface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Modbus\Port\MD_RTU_SysInterface.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>XTinyRTOS</GroupName>
+          <Files>
+            <File>
+              <FileName>RTOS_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_mem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_mem.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_msg.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_mutex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_mutex.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_sem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_sem.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\XTinyRTOS\src\RTOS_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_core.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_core.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_mem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_mem.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_msg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_msg.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_mutex.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_mutex.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_sem.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_sem.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_task.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_task.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>RTOS_type.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\XTinyRTOS\inc\RTOS_type.h</FilePath>
             </File>
           </Files>
         </Group>

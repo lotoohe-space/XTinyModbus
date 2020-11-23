@@ -7,6 +7,13 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2020/11/23 <br>
+Optimization of slave protocol parsing strategy, more stable <br>
+Optimize the loop queue to make it more adaptable <br>
+The loop queue memory is modified to the user specified <br>
+Host added RTOS support, can be opened through MD_RTU_USED_OS under md_rtu_config. h, the default is closed, has been transplanted to XTinyRTOS, can be modified by md_rtu_sysinteraction. c transplant <br>
+Other modifications and optimizations <br>
+
 2020/9/24 <br>
 Added the function of not polling when the slave is disconnected, the master can use the MDM_RTU_CB_SetDisPollEnFlag function to set it,<br>
 You can use the MDM_RTU_CB_ClrDisFlag function to reset. <br>
@@ -156,6 +163,13 @@ XTinyModbus
 
 0.日志
 ----
+
+2020/11/23 <br>
+优化从机协议解析策略，更加稳定<br>
+优化循环队列，使得其适应性更强<br>
+循环队列内存修改为用户指定<br>
+主机增加RTOS支持，可以通过MD_RTU_Config.h下的MD_RTU_USED_OS开启，默认关闭，已经移植好XTinyRTOS，可以通过修改MD_RTU_Sysinterface.c进行移植<br>
+其它修改及优化<br>
 
 2020/9/24 <br>
 增加从机掉线不轮询功能，主机可以使用MDM_RTU_CB_SetDisPollEnFlag函数进行设置，<br>

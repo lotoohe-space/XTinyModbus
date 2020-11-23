@@ -1,0 +1,101 @@
+\hypertarget{_m_d___r_t_u___map_table_8c}{}\section{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.c File Reference}
+\label{_m_d___r_t_u___map_table_8c}\index{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c@{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c}}
+
+
+Modbus R\+TU Discrete mapping management module.  
+
+
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} \mbox{\hyperlink{_m_d___r_t_u___map_table_8c_a866105dd7346fada9b775160cfe625d4}{Map\+Table\+Add}} (void $\ast$obj, \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} p\+Map\+Table\+Item, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} tab\+Size)
+\begin{DoxyCompactList}\small\item\em Add a mapping to master or slave. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} \mbox{\hyperlink{_m_d___r_t_u___map_table_8c_a7ada2f3094c1b797e52872d0353fb59a}{Map\+Table\+Del}} (void $\ast$obj, \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} p\+Map\+Table\+Item, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} tab\+Size)
+\begin{DoxyCompactList}\small\item\em Delete a mapping to master or slave. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Modbus R\+TU Discrete mapping management module. 
+
+\begin{DoxyAuthor}{Author}
+zspace 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2020-\/4-\/10 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+V1.\+0
+\end{DoxyVersion}
+\begin{DoxyParagraph}{Open source address}
+\href{https://github.com/lotoohe-space/XTinyModbus}{\tt https\+://github.\+com/lotoohe-\/space/\+X\+Tiny\+Modbus} 
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{modify log\+:}
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Date }&\textbf{ Version }&\textbf{ Author }&\textbf{ Description }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Date }&\textbf{ Version }&\textbf{ Author }&\textbf{ Description }\\\cline{1-4}
+\endhead
+2020-\/4-\/10 &1.\+0 &zspace &First version \\\cline{1-4}
+\end{longtabu}
+
+\end{DoxyParagraph}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8c_a866105dd7346fada9b775160cfe625d4}\label{_m_d___r_t_u___map_table_8c_a866105dd7346fada9b775160cfe625d4}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c}!Map\+Table\+Add@{Map\+Table\+Add}}
+\index{Map\+Table\+Add@{Map\+Table\+Add}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c}}
+\subsubsection{\texorpdfstring{Map\+Table\+Add()}{MapTableAdd()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} Map\+Table\+Add (\begin{DoxyParamCaption}\item[{void $\ast$}]{obj,  }\item[{\mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}}]{p\+Map\+Table\+Item,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}}}]{tab\+Size }\end{DoxyParamCaption})}
+
+
+
+Add a mapping to master or slave. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em obj} & Slave or host object pointer \\
+\hline
+\mbox{\tt in}  & {\em p\+Reg\+Coil\+Item} & Slave or host object pointer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item T\+R\+UE success
+\item F\+A\+L\+SE fail 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\mbox{\Hypertarget{_m_d___r_t_u___map_table_8c_a7ada2f3094c1b797e52872d0353fb59a}\label{_m_d___r_t_u___map_table_8c_a7ada2f3094c1b797e52872d0353fb59a}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c}!Map\+Table\+Del@{Map\+Table\+Del}}
+\index{Map\+Table\+Del@{Map\+Table\+Del}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+c}}
+\subsubsection{\texorpdfstring{Map\+Table\+Del()}{MapTableDel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} Map\+Table\+Del (\begin{DoxyParamCaption}\item[{void $\ast$}]{obj,  }\item[{\mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}}]{p\+Map\+Table\+Item,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}}}]{tab\+Size }\end{DoxyParamCaption})}
+
+
+
+Delete a mapping to master or slave. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em obj} & Slave or host object pointer \\
+\hline
+\mbox{\tt in}  & {\em p\+Reg\+Coil\+Item} & A mapping deleted,reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\+:\+: \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} 
+\end{DoxySeeAlso}
+\begin{DoxyReturn}{Returns}
+
+\begin{DoxyItemize}
+\item T\+R\+UE success
+\item F\+A\+L\+SE fail 
+\end{DoxyItemize}
+\end{DoxyReturn}

@@ -33,6 +33,14 @@ static MapTableItem mapTableItemMaster1={
 	.addrType=HOLD_REGS_TYPE,					/*Type of mapping*/
 	.devAddr=1,												/*Which slave is used*/
 };
+static uint16 regDataMaster2[32]={1,2,3,4,5,6,7,8,9,10,11,12};
+static MapTableItem mapTableItemMaster2={
+	.modbusAddr=0x0000,								/*Address in MODBUS*/
+	.modbusData=regDataMaster2,				/*Mapped memory unit*/
+	.modbusDataSize=32,								/*The size of the map*/
+	.addrType=HOLD_REGS_TYPE,					/*Type of mapping*/
+	.devAddr=2,												/*Which slave is used*/
+};
 
 Modbus_RTU modbus_RTU = {0};
 
@@ -41,6 +49,8 @@ Modbus_RTU_CB modbusRWRTUCB1 = {0};
 Modbus_RTU_CB modbusRWRTUCB2 = {0};
 Modbus_RTU_CB modbusRWRTUCB3 = {0};
 Modbus_RTU_CB modbusRWRTUCB4 = {0};
+
+static uint8 MDSRecvQueueData[MDM_RTU_QUEUE_SIZE+1]={0};
 /*********************************END******************************************/
 
 /*********************************FUNCTION DECLARATION************************************/
@@ -59,6 +69,7 @@ BOOL MDM_RTU_APPInit(void){
 	if(MDM_RTU_Init(&modbus_RTU,MDMInitSerial,9600,8,1,0)!=ERR_NONE){
 		return FALSE;
 	}
+	MDM_RTU_QueueInit(&modbus_RTU,MDSRecvQueueData,sizeof(MDSRecvQueueData));
 	
 	if(MDM_RTU_AddMapItem(&modbus_RTU,&mapTableItemMaster0)==FALSE){
 		return FALSE;
@@ -66,13 +77,15 @@ BOOL MDM_RTU_APPInit(void){
 	if(MDM_RTU_AddMapItem(&modbus_RTU,&mapTableItemMaster1)==FALSE){
 		return FALSE;
 	}
-	
+	if(MDM_RTU_AddMapItem(&modbus_RTU,&mapTableItemMaster2)==FALSE){
+		return FALSE;
+	}
 	/*RW control block, the user controls the read and write time interval, retransmission timeout and retransmission timeout times*/
-	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,10000,30000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,10000,30000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,10000,30000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,10000,30000,3);
-	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,10000,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB,&modbus_RTU,0,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB1,&modbus_RTU,0,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB2,&modbus_RTU,0,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB3,&modbus_RTU,0,30000,3);
+	MDM_RTU_CB_Init(&modbusRWRTUCB4,&modbus_RTU,0,30000,3);
 	
 	
 	MDM_RW_CtrlAddRW(MDM_RTU_NB_RW_CtrlTest0,NULL,"rw_test_0");

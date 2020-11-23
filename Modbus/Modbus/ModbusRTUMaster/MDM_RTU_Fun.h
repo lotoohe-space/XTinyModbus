@@ -16,6 +16,7 @@
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_MapTable.h"
 #include "MD_RTU_Config.h"
+#include "MD_RTU_SysInterface.h"
 /*********************************END******************************************/
 
 /*********************************CUSTOM DATA TYPE************************************/
@@ -38,7 +39,14 @@ typedef struct{
 	PMapTableItem pMapTableList[MDM_REG_COIL_ITEM_NUM];
 	/*Data receiving queue*/
 	MDSqQueue 		mdSqQueue;
-
+#if MD_RTU_USED_OS
+  /**/
+	MD_RTU_LOCK_HANDLE mdRTULockHandle;
+	MD_RTU_LOCK_HANDLE mdRTULockObjHandle;
+	MD_RTU_LOCK_HANDLE mdRTULockObj1Handle;
+	MD_RTU_TASK_HANDLE mdRTUTaskHandle;
+	MD_RTU_MSG_HANDLE  mdRTUMsgHandle;
+#endif
 #if MDM_USE_SEND_CACHE
 	uint8					serialSendCache[MDM_RTU_SEND_CACHE_SIZE];		/*Send cache*/
 	uint16				serialSendCount;														/*Number of bytes sent*/
@@ -61,6 +69,20 @@ typedef struct{
 	/*1 means one frame of data is received*/
 	uint8					recvFlag;
 }*PModbus_RTU,Modbus_RTU;
+
+#if MD_RTU_USED_OS
+#define MD_RTU_LOCK_HANDLE_ARG(a) 			(a)->mdRTULockHandle
+#define MD_RTU_LOCK_OBJ_HANDLE_ARG(a) 	(a)->mdRTULockObjHandle
+#define MD_RTU_LOCK_OBJ1_HANDLE_ARG(a) 	(a)->mdRTULockObj1Handle
+#define MD_RTU_TASK_HANDLE_ARG(a) 			(a)->mdRTUTaskHandle
+#define MD_RTU_MSG_HANDLE_ARG(a) 				(a)->mdRTUMsgHandle
+#else
+#define MD_RTU_LOCK_HANDLE_ARG(a) 
+#define MD_RTU_LOCK_OBJ_HANDLE_ARG(a)
+#define MD_RTU_LOCK_OBJ1_HANDLE_ARG(a) 
+//#define MD_RTU_SEM_HANDLE_ARG(a)
+#define MD_RTU_MSG_HANDLE_ARG(a)
+#endif
 
 /*Send control block*/
 typedef struct{
@@ -96,24 +118,9 @@ typedef struct{
 #define MD_CB_SET_DIS_FLAG_EN(a)	MD_SET_BIT(a->flag,1)
 #define MD_CB_CLR_DIS_FLAG_EN(a)	MD_CLR_BIT(a->flag,1)
 
-/*Modbus RTU block initialization function*/
-MDError MDM_RTU_Init(
-	PModbus_RTU pModbusRTU,
-	MD_RTU_SerialInit mdRTUSerialInitFun,
-	uint32 baud,
-	uint8 dataBits,
-	uint8 stopBits,
-	uint8 parity
-);
 
-/*Control block initialization function*/
-void MDM_RTU_CB_Init(
-	 PModbus_RTU_CB 	pModbusRTUCB
-	,PModbus_RTU 		pModbusRTU
-	,uint32 				sendIntervalTime
-	,uint32					sendOverTime/*Send timeout*/
-	,uint8 					RTTimes/*The number of retransmissions, when it is 255, it means that retransmissions have been performed.*/
-);
+
+
 /*********************************END******************************************/
 
 /*********************************MACRO DEFINITION************************************/
@@ -135,8 +142,35 @@ CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
 /*********************************END******************************************/
 
 /*********************************FUNCTION DEFINITION************************************/
+
+#if MD_RTU_USED_OS	///< used os
+void MDM_RTU_SysProcessTask(void *arg);
+#endif
+
+/*Modbus RTU block initialization function*/
+MDError MDM_RTU_Init(
+	PModbus_RTU pModbusRTU,
+	MD_RTU_SerialInit mdRTUSerialInitFun,
+	uint32 baud,
+	uint8 dataBits,
+	uint8 stopBits,
+	uint8 parity
+);
+/*Control block initialization function*/
+void MDM_RTU_CB_Init(
+	 PModbus_RTU_CB 	pModbusRTUCB
+	,PModbus_RTU 		pModbusRTU
+	,uint32 				sendIntervalTime
+	,uint32					sendOverTime/*Send timeout*/
+	,uint8 					RTTimes/*The number of retransmissions, when it is 255, it means that retransmissions have been performed.*/
+);
+void MDM_RTU_QueueInit(PModbus_RTU pModbus_RTU,
+	uint8* recvQueueData,
+	uint16  recvQueueSize
+);
+
 /*Called in the timer interrupt function, the time unit is 100us*/
-void MDM_RTU_TimeHandler(void *obj);
+void MDM_RTU_TimeHandler(void *obj,uint32 timesTick);
 /*Called in the serial port receive interrupt function*/
 void MDM_RTU_RecvByte(void *obj,uint8 byte);
 
@@ -151,10 +185,10 @@ BOOL MDM_RTU_AddMapItem(PModbus_RTU pModbusRTU,PMapTableItem pRegCoilItem);
 MDError MDM_RTU_ReadByte(PModbus_RTU pModbusRTU,uint8 *res,uint8 len);
 MDError MDM_RTU_ReadUint16(PModbus_RTU pModbusRTU,uint16 *res,uint8 len);
 
-/*Non-blocking read and write basis functions*/
-MDError MDM_RTU_NB_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
-/*Blocking read and write basis functions*/
-MDError MDM_RTU_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
+///*Non-blocking read and write basis functions*/
+//MDError MDM_RTU_NB_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
+///*Blocking read and write basis functions*/
+//MDError MDM_RTU_RW(PModbus_RTU_CB pModbus_RTU_CB,ModbusFunCode funCode,uint8 slaveAddr,uint16 startAddr,uint16 numOf,void *wData);
 
 /*The following is non-blocking read and write*/
 MDError MDM_RTU_NB_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);

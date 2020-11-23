@@ -66,9 +66,9 @@ void MDMInitSerial(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 pari
 * Parameter         :None
 * Return          :None
 **********************************************************/
-void MDMTimeHandler100US(void){
+void MDMTimeHandler100US(uint32 times){
 	if(pModbusMBase==NULL){return;}
-	pModbusMBase->mdRTUTimeHandlerFunction(pModbusMBase );
+	pModbusMBase->mdRTUTimeHandlerFunction(pModbusMBase,times);
 }
 /*******************************************************
 *
@@ -94,7 +94,7 @@ void MDMSerialSWRecv_Send(uint8 mode){
 	/*Send and receive conversion*/
 	/*Fill in the converted code below*/
 	#if	!MDM_USD_USART3
-		
+		RS485_RW_CONV1=mode;
 	#else
 		RS485_RW_CONV=mode;
 	#endif

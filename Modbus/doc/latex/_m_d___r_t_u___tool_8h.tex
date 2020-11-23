@@ -1,0 +1,190 @@
+\hypertarget{_m_d___r_t_u___tool_8h}{}\section{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.h File Reference}
+\label{_m_d___r_t_u___tool_8h}\index{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+Base/\+M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Type.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_p_modbus_base}{P\+Modbus\+Base}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_aee384de8d16180b22424e58d23e0a736}{T\+O\+\_\+\+M\+D\+Base}}(a)~((\mbox{\hyperlink{struct_p_modbus_base}{P\+Modbus\+Base}})(a))
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a0c0aae5396670b00dec65ff6933443fe}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST}}(a)~((a)-\/$>$p\+Reg\+Coil\+List)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a75744792ff9e378e047e2a3726acb7ff}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR}}(a)~((a)-\/$>$modbus\+Addr)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a6ec300fef82067a22674e799cd15a889}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA}}(a)~((a)-\/$>$modbus\+Data)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_afea1343589c4dd831c098f24e000b259}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size}}(a)~((a)-\/$>$modbus\+Data\+Size)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a68fb9e311cf4ce6fd85474a2eaa74b00}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE}}(a)~((a)-\/$>$addr\+Type)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a2e1f79651b25286828bb670a4200ba4e}{M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT}}(a,  b)~(((a)$>$$>$(b))\&0x1)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a26a242fe51430d0eb7d4bac5c0f673cd}{M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT}}(a,  b)~(a)$\vert$=(1$<$$<$(b))
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a318affc6b65730754144295678e8d491}{M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT}}(a,  b)~(a)\&=($\sim$(1$<$$<$(b)))
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a3bb6410d057e32d9c0422b61ae2c79c2}{M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE}}(a)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a308bd75419eb039374bbecc9e08fd43d}{M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE}}(a)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a62b24124e15be28a3c4e509eec9930b0}{M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL}}(a)~(a)=((((a)\&0xff)$<$$<$8)$\vert$(((a)$>$$>$8)\&0xff))
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a151e7b322d4995648bff8670db60861e}{M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE}}(a)~(((a)$>$$>$8)\&0xff)
+\item 
+\#define \mbox{\hyperlink{_m_d___r_t_u___tool_8h_af1cc5001765f7010ad756956bb29a4ed}{M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE}}(a)~((a)\&0xff)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d___r_t_u___tool_8h_abff31b0ee2eb0ef8f7aea335d64a2177}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function}}) (void $\ast$obj)
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a772570d4938ab57b56e3a0ffc9d5dc07}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function}}) (\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} $\ast$byte, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} num)
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a30ce081ebf66425c6a1c805bbcacfa36}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function}}) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} byte)
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a3c018adc9939498dee8cda0acd6a23a2}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv}}) (\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} mode)
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d___r_t_u___tool_8h_abef481eadffaa05b26292b885515da04}{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}}) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}} baud, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} data\+Bits, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} stop\+Bit, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} parity)
+\item 
+typedef struct \mbox{\hyperlink{struct_p_modbus_base}{P\+Modbus\+Base}} \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a6888030ca3addf2a416ddff791eb3670}{Modbus\+Base}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a318affc6b65730754144295678e8d491}\label{_m_d___r_t_u___tool_8h_a318affc6b65730754144295678e8d491}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT@{M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT}}
+\index{M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT@{M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT}{MD\_CLR\_BIT}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+C\+L\+R\+\_\+\+B\+IT(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(a)\&=($\sim$(1$<$$<$(b)))}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a2e1f79651b25286828bb670a4200ba4e}\label{_m_d___r_t_u___tool_8h_a2e1f79651b25286828bb670a4200ba4e}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT@{M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT}}
+\index{M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT@{M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT}{MD\_GET\_BIT}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+G\+E\+T\+\_\+\+B\+IT(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(((a)$>$$>$(b))\&0x1)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a151e7b322d4995648bff8670db60861e}\label{_m_d___r_t_u___tool_8h_a151e7b322d4995648bff8670db60861e}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE@{M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE}}
+\index{M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE@{M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE}{MD\_H\_BYTE}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+H\+\_\+\+B\+Y\+TE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~(((a)$>$$>$8)\&0xff)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_af1cc5001765f7010ad756956bb29a4ed}\label{_m_d___r_t_u___tool_8h_af1cc5001765f7010ad756956bb29a4ed}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE@{M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE}}
+\index{M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE@{M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE}{MD\_L\_BYTE}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+L\+\_\+\+B\+Y\+TE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)\&0xff)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a308bd75419eb039374bbecc9e08fd43d}\label{_m_d___r_t_u___tool_8h_a308bd75419eb039374bbecc9e08fd43d}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE@{M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE}}
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE@{M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE}{MD\_RTU\_RECV\_MODE}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+R\+T\+U\+\_\+\+R\+E\+C\+V\+\_\+\+M\+O\+DE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{while}((a)->lastTimesTick!=0xFFFFFFFF);\(\backslash\)
+if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(\mbox{\hyperlink{_m_d___r_t_u___type_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}})
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a3bb6410d057e32d9c0422b61ae2c79c2}\label{_m_d___r_t_u___tool_8h_a3bb6410d057e32d9c0422b61ae2c79c2}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE@{M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE}}
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE@{M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE}{MD\_RTU\_SEND\_MODE}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+R\+T\+U\+\_\+\+S\+E\+N\+D\+\_\+\+M\+O\+DE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keywordflow}{while}((a)->lastTimesTick!=0xFFFFFFFF);\(\backslash\)
+if((a)->modbusBase.mdRTURecSendConv)(a)->modbusBase.mdRTURecSendConv(\mbox{\hyperlink{_m_d___r_t_u___type_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}})
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a26a242fe51430d0eb7d4bac5c0f673cd}\label{_m_d___r_t_u___tool_8h_a26a242fe51430d0eb7d4bac5c0f673cd}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT@{M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT}}
+\index{M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT@{M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT}{MD\_SET\_BIT}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+S\+E\+T\+\_\+\+B\+IT(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(a)$\vert$=(1$<$$<$(b))}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a62b24124e15be28a3c4e509eec9930b0}\label{_m_d___r_t_u___tool_8h_a62b24124e15be28a3c4e509eec9930b0}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL@{M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL}}
+\index{M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL@{M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL}{MD\_SWAP\_HL}}
+{\footnotesize\ttfamily \#define M\+D\+\_\+\+S\+W\+A\+P\+\_\+\+HL(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~(a)=((((a)\&0xff)$<$$<$8)$\vert$(((a)$>$$>$8)\&0xff))}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a75744792ff9e378e047e2a3726acb7ff}\label{_m_d___r_t_u___tool_8h_a75744792ff9e378e047e2a3726acb7ff}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR}{MDS\_RTU\_REG\_COIL\_ITEM\_ADDR}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+DR(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$modbus\+Addr)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a68fb9e311cf4ce6fd85474a2eaa74b00}\label{_m_d___r_t_u___tool_8h_a68fb9e311cf4ce6fd85474a2eaa74b00}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE}{MDS\_RTU\_REG\_COIL\_ITEM\_ADDR\_TYPE}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+A\+D\+D\+R\+\_\+\+T\+Y\+PE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$addr\+Type)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a6ec300fef82067a22674e799cd15a889}\label{_m_d___r_t_u___tool_8h_a6ec300fef82067a22674e799cd15a889}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA}{MDS\_RTU\_REG\_COIL\_ITEM\_DATA}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+D\+A\+TA(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$modbus\+Data)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_afea1343589c4dd831c098f24e000b259}\label{_m_d___r_t_u___tool_8h_afea1343589c4dd831c098f24e000b259}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size}{MDS\_RTU\_REG\_COIL\_ITEM\_Data\_Size}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+I\+T\+E\+M\+\_\+\+Data\+\_\+\+Size(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$modbus\+Data\+Size)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a0c0aae5396670b00dec65ff6933443fe}\label{_m_d___r_t_u___tool_8h_a0c0aae5396670b00dec65ff6933443fe}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST}{MDS\_RTU\_REG\_COIL\_LIST}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+\_\+\+C\+O\+I\+L\+\_\+\+L\+I\+ST(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$p\+Reg\+Coil\+List)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_aee384de8d16180b22424e58d23e0a736}\label{_m_d___r_t_u___tool_8h_aee384de8d16180b22424e58d23e0a736}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!T\+O\+\_\+\+M\+D\+Base@{T\+O\+\_\+\+M\+D\+Base}}
+\index{T\+O\+\_\+\+M\+D\+Base@{T\+O\+\_\+\+M\+D\+Base}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{T\+O\+\_\+\+M\+D\+Base}{TO\_MDBase}}
+{\footnotesize\ttfamily \#define T\+O\+\_\+\+M\+D\+Base(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((\mbox{\hyperlink{struct_p_modbus_base}{P\+Modbus\+Base}})(a))}
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_abef481eadffaa05b26292b885515da04}\label{_m_d___r_t_u___tool_8h_abef481eadffaa05b26292b885515da04}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}}
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}{MD\_RTU\_SerialInit}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}} baud, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} data\+Bits, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} stop\+Bit, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} parity)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a30ce081ebf66425c6a1c805bbcacfa36}\label{_m_d___r_t_u___tool_8h_a30ce081ebf66425c6a1c805bbcacfa36}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function}{MDS\_RTU\_RecByteFunction}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Byte\+Function) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} byte)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a3c018adc9939498dee8cda0acd6a23a2}\label{_m_d___r_t_u___tool_8h_a3c018adc9939498dee8cda0acd6a23a2}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv}{MDS\_RTU\_RecSendConv}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Rec\+Send\+Conv) (\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} mode)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a772570d4938ab57b56e3a0ffc9d5dc07}\label{_m_d___r_t_u___tool_8h_a772570d4938ab57b56e3a0ffc9d5dc07}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function}{MDS\_RTU\_SendBytesFunction}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Bytes\+Function) (\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} $\ast$byte, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} num)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_abff31b0ee2eb0ef8f7aea335d64a2177}\label{_m_d___r_t_u___tool_8h_abff31b0ee2eb0ef8f7aea335d64a2177}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function}{MDS\_RTU\_TimeHandlerFunction}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Time\+Handler\+Function) (void $\ast$obj)}
+
+\mbox{\Hypertarget{_m_d___r_t_u___tool_8h_a6888030ca3addf2a416ddff791eb3670}\label{_m_d___r_t_u___tool_8h_a6888030ca3addf2a416ddff791eb3670}} 
+\index{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}!Modbus\+Base@{Modbus\+Base}}
+\index{Modbus\+Base@{Modbus\+Base}!M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h@{M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h}}
+\subsubsection{\texorpdfstring{Modbus\+Base}{ModbusBase}}
+{\footnotesize\ttfamily typedef  struct \mbox{\hyperlink{struct_p_modbus_base}{P\+Modbus\+Base}} \mbox{\hyperlink{_m_d___r_t_u___tool_8h_a6888030ca3addf2a416ddff791eb3670}{Modbus\+Base}}}
+

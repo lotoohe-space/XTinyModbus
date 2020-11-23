@@ -16,7 +16,7 @@
 
 /**********************************FUNCTION DECLARATION*************************************/
 void MDS_RTU_RecvByte(void *obj,uint8 byte);
-void MDS_RTU_TimeHandler(void *obj);
+void MDS_RTU_TimeHandler(void *obj,uint32 times);
 
 static void MDS_RTU_SendErrorCode(PModbusS_RTU pModbus_RTU,ANLCode anlCode,ErrorCode errCode);
 uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,uint8 funCode);
@@ -37,14 +37,19 @@ uint8 MDS_RTU_WriteDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum
 *        @parity       Parity bit
 * Return          : None
 **********************************************************/
-void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity){
+void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,uint8 salveAddr,
+	uint32 baud,uint8 dataBits,uint8 stopBits,uint8 parity){
 	uint8 i;
 	float T;
 	if(pModbusRTU==NULL){
 		return ;
 	}
-	MDInitQueue(&(pModbusRTU->mdSqQueue));
-	MDInitQueue(&(pModbusRTU->mdMsgSqQueue));
+	/*Init is queue.*/
+	pModbusRTU->mdMsgSqQueue.data=NULL;
+	pModbusRTU->mdMsgSqQueue.maxVal=0;
+	pModbusRTU->mdSqQueue.data=NULL;
+	pModbusRTU->mdSqQueue.maxVal=0;
+	
 	pModbusRTU->salveAddr=salveAddr;
 	pModbusRTU->serialReadCount=0;
 #if MDS_USE_SEND_CACHE
@@ -83,6 +88,26 @@ void MDS_RTU_Init(PModbusS_RTU pModbusRTU,MD_RTU_SerialInit mdRTUSerialInitFun,u
 	}
 	return ;
 }
+/**
+* @brief This function init queue.
+* @param[in] recvQueueData ????
+* @param[in] recvQueueSize ????
+* @param[in] msgProcessQueueData	????
+* @param[in] msgProcessQueueSize	????
+* @result None
+*/
+void MDS_RTU_QueueInit(PModbusS_RTU pModbus_RTU,
+	uint8* recvQueueData,
+	uint16  recvQueueSize,
+	uint8* msgProcessQueueData,
+	uint16 msgProcessQueueSize
+){
+	if(pModbus_RTU==NULL){
+		return ;
+	}
+	MDInitQueue(&(pModbus_RTU->mdSqQueue),recvQueueData,recvQueueSize);
+	MDInitQueue(&(pModbus_RTU->mdMsgSqQueue),msgProcessQueueData,msgProcessQueueSize);
+}
 /*******************************************************
 *
 * Function name :MDS_RTU_SetWriteListenFun
@@ -104,13 +129,14 @@ void MDS_RTU_SetWriteListenFun(PModbusS_RTU pModbus_RTU,MDSWriteFunciton wFun){
 *        @obj            Object pointer of slave
 * Return          : None
 **********************************************************/
-void MDS_RTU_TimeHandler(void *obj){
+void MDS_RTU_TimeHandler(void *obj,uint32 times){
 	uint32 tempTick=0;
 	uint8 overFlag=0;
 	PModbusS_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
 	
-	pModbusRTU->timesTick++;
+	//pModbusRTU->timesTick++;
+	pModbusRTU->timesTick=times;
 	
 	if(pModbusRTU->timesTick==0xFFFFFFFF){/*Overflowed pModbusRTU->lastTimesTick==0xFFFFFFFF*/
 		tempTick=0xFFFFFFFF-pModbusRTU->lastSendTimes;
@@ -120,7 +146,7 @@ void MDS_RTU_TimeHandler(void *obj){
 	}
 	
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){return ;}/*Has started receiving packets*/
-	if(overFlag){ /*Ê±¼äÒç³ö*/
+	if(overFlag){
 		pModbusRTU->timesTick += 0xFFFFFFFF-pModbusRTU->lastTimesTick;/*Time offset when sending*/
 		pModbusRTU->lastTimesTick = tempTick; 
 	}
@@ -137,11 +163,12 @@ void MDS_RTU_TimeHandler(void *obj){
 		/*End of one frame*/
 		/*The messages of the data processing queue are moved to the message processing queue*/
 		msgLen=MDQueueLength(&(pModbusRTU->mdSqQueue));
+		MDenQueue(&(pModbusRTU->mdMsgSqQueue),&msgLen,UINT8_TYPE);/*Save frame length*/
 		for(i=0;i<msgLen;i++){
 			/*take out*/
-			if(MDdeQueue(&(pModbusRTU->mdSqQueue),&byte)==FALSE){return ;}
+			if(MDdeQueue(&(pModbusRTU->mdSqQueue),&byte,UINT8_TYPE)==FALSE){return ;}
 			/*put in*/
-			if(MDenQueue(&(pModbusRTU->mdMsgSqQueue),byte)==FALSE){return ;}
+			if(MDenQueue(&(pModbusRTU->mdMsgSqQueue),&byte,UINT8_TYPE)==FALSE){return ;}
 		}
 		pModbusRTU->lastTimesTick=0xFFFFFFFF;
 	}
@@ -160,7 +187,7 @@ void MDS_RTU_RecvByte(void *obj,uint8 byte){
 	PModbusS_RTU pModbusRTU=obj;
 	if(!pModbusRTU){ return; }
 	/*Put in the queue here*/
-	if(MDenQueue(&(pModbusRTU->mdSqQueue),byte)==FALSE){
+	if(MDenQueue(&(pModbusRTU->mdSqQueue),&byte,UINT8_TYPE)==FALSE){
 		return ;
 	}
 	if(pModbusRTU->lastTimesTick==0xFFFFFFFF){
@@ -210,63 +237,49 @@ static void MDS_RTU_SendByte(PModbusS_RTU pModbusRTU,uint8 byte){
 **********************************************************/
 static BOOL MDS_RTU_SerialProcess(PModbusS_RTU pModbus_RTU){
 	uint8 byte;
+	uint8 recvLen;
+	uint16 i;
 	if(!pModbus_RTU){return FALSE;}
 	
-	/*Read a byte from the queue*/
-	if(MDdeQueue(&(pModbus_RTU->mdMsgSqQueue),&byte)==FALSE){
+	if(MDdeQueue(&(pModbus_RTU->mdMsgSqQueue),&recvLen,UINT8_TYPE)==FALSE){
 		return FALSE;
 	}
-	pModbus_RTU->serialReadCache[pModbus_RTU->serialReadCount]=byte;/*save a byte*/
-	
-	if(pModbus_RTU->serialReadCount>=1){/*Function code has been read*/
-		if(
-			pModbus_RTU->serialReadCache[1]>=0x01&&
-			pModbus_RTU->serialReadCache[1]<=0x04
-		){
-			/*The above function codes are consistent*/
-			if(pModbus_RTU->serialReadCount>5){
-				/*Read REG and REG_NUM*/
-				if(pModbus_RTU->serialReadCount>=7){
-					pModbus_RTU->serialReadCount++;
-					/*Enough data read*/
-					return TRUE;
-				}
-			}
-		}else if(	
-			pModbus_RTU->serialReadCache[1]==5||
-			pModbus_RTU->serialReadCache[1]==6
-		){
-			/*The above function codes are consistent*/
-			/*Write single coil, write single register*/
-			if(pModbus_RTU->serialReadCount>=7){
-				pModbus_RTU->serialReadCount++;
-				/*Enough data read*/
-					return TRUE;
-			}	
-		}else if(	
-			pModbus_RTU->serialReadCache[1]==15||
-			pModbus_RTU->serialReadCache[1]==16
-		){
-			/*The above function codes are consistent*/
-			if(pModbus_RTU->serialReadCount>6){
-				if(pModbus_RTU->serialReadCount>=
-					(6+pModbus_RTU->serialReadCache[6]+2)
-				){
-					pModbus_RTU->serialReadCount++;
-					/*Enough data read*/
-					return TRUE;
-				}
-			}
-		}else {/*Unsupported function code*/
-			
+	for(i=0;i<recvLen;i++){
+		/*Read a byte from the queue*/
+		if(MDdeQueue(&(pModbus_RTU->mdMsgSqQueue),&byte,UINT8_TYPE)==FALSE){
+			return FALSE;
 		}
-	}
-	
-	if(pModbus_RTU->serialReadCount<=MDS_RTU_CMD_SIZE){
+		if(pModbus_RTU->serialReadCount>MDS_RTU_CMD_SIZE-1){/**/
+			continue;
+		}
+		pModbus_RTU->serialReadCache[pModbus_RTU->serialReadCount]=byte;/*save a byte*/
 		pModbus_RTU->serialReadCount++;
 	}
 	
-	return FALSE;
+	if(pModbus_RTU->serialReadCount>=1){/*Function code has been read*/
+		if(pModbus_RTU->serialReadCache[1]==1
+			||pModbus_RTU->serialReadCache[1]==2
+			||pModbus_RTU->serialReadCache[1]==3
+			||pModbus_RTU->serialReadCache[1]==4
+		||pModbus_RTU->serialReadCache[1]==5
+		||pModbus_RTU->serialReadCache[1]==6
+		){
+			if(pModbus_RTU->serialReadCount==8){
+				return TRUE;
+			}
+		}else if(	pModbus_RTU->serialReadCache[1]==15||pModbus_RTU->serialReadCache[1]==16){
+			if(pModbus_RTU->serialReadCount>=9){
+				uint8	 bytesNum=MDS_RTU_BYTES_NUM(pModbus_RTU);
+				if(bytesNum+9==pModbus_RTU->serialReadCount){
+					return TRUE;
+				}
+			}
+		}else{
+			return FALSE;
+		}
+	}
+	
+	return TRUE;
 }
 /*******************************************************
 *
@@ -287,14 +300,14 @@ void MDS_RTU_Process(PModbusS_RTU pModbus_RTU){
 	
 	res = MDS_RTU_SerialProcess(pModbus_RTU);/*Read an instruction from the queue*/
 	if(!res){
-		return ;
+		goto __exit;
 	}
 	
 	if(
-		pModbus_RTU->serialReadCache[0]!=0x00	/*Broadcast address*/
-	&&
-		pModbus_RTU->serialReadCache[0]!=pModbus_RTU->salveAddr
-	){
+		!(pModbus_RTU->serialReadCache[0]==0x00	/*Broadcast address*/
+	||
+		pModbus_RTU->serialReadCache[0]==pModbus_RTU->salveAddr
+	)){
 		/*Not belong to this slave, discard*/
 		goto __exit;
 	}
@@ -456,6 +469,7 @@ uint8 MDS_RTU_ReadDataProcess(PModbusS_RTU pModbus_RTU,uint16 reg,uint16 regNum,
 			}
 			return TRUE;
 		}
+		
 	}
 	/*Address is abnormal*/
 	MDS_RTU_SendErrorCode(pModbus_RTU,(ANLCode)(0x80+funCode),ILLEGAL_DAT_ADDR);

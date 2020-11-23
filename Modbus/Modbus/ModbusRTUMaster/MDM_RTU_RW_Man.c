@@ -39,7 +39,7 @@ static PMDM_RW_Ctrl MDM_RW_CtrlNew(void) {
  * Parameter:
  *        @cbFun	A function pointer
  * Return: Found function control block
- **********************************************************/
+ ******************************************************/
 static PMDM_RW_Ctrl MDM_RW_CtrlFindByFunAddr(MDMSendReadCallBack cbFun) {
     uint16 i;
     for (i = 0; i < MDM_RW_CTRL_LIST_SIZE; i++) {
@@ -59,7 +59,7 @@ static PMDM_RW_Ctrl MDM_RW_CtrlFindByFunAddr(MDMSendReadCallBack cbFun) {
  * Parameter:
  *         @pMDM_RW_Ctrl	Which control block's interface needs to be removed
  * Return: None
- **********************************************************/
+ ******************************************************/
 void MDM_RW_CtrlDelRW(PMDM_RW_Ctrl pMDM_RW_Ctrl) {
     if (pMDM_RW_Ctrl == NULL) {
         return;
@@ -79,7 +79,7 @@ void MDM_RW_CtrlDelRW(PMDM_RW_Ctrl pMDM_RW_Ctrl) {
  *         @arg		The parameters passed to the function
  *         @RWCtrlName		Name of the control block
  * Return: Returns a control block to the user
- **********************************************************/
+ ******************************************************/
 PMDM_RW_Ctrl MDM_RW_CtrlAddRW(MDMSendReadCallBack cbFun, void *arg, const char *RWCtrlName) {
     PMDM_RW_Ctrl pMDM_RW_Ctrl = MDM_RW_CtrlNew();
     if (pMDM_RW_Ctrl == NULL) {
@@ -99,7 +99,7 @@ PMDM_RW_Ctrl MDM_RW_CtrlAddRW(MDMSendReadCallBack cbFun, void *arg, const char *
  *        @pMDM_RW_Ctrl        A pointer to a control block object
  *				@flag									Whether read only or write once
  * Return: None
- **********************************************************/
+ ******************************************************/
 void MDM_RW_CtrlSetRWOnceFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl, BOOL flag) {
     if (pMDM_RW_Ctrl == NULL) {
         return;
@@ -118,7 +118,7 @@ void MDM_RW_CtrlSetRWOnceFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl, BOOL flag) {
  * Parameter:
  *        @pMDM_RW_Ctrl        A pointer to a control block object
  * Return: None
- **********************************************************/
+ ******************************************************/
 void MDM_RW_CtrlResetRetranFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl) {
     if (pMDM_RW_Ctrl == NULL) {
         return;
@@ -133,7 +133,7 @@ void MDM_RW_CtrlResetRetranFlag(PMDM_RW_Ctrl pMDM_RW_Ctrl) {
  * Parameter:
  *         None
  * Return: None
- **********************************************************/
+ ******************************************************/
 void MDM_RW_CtrlLoop(void) {
     uint16 i;
     MDM_RW_CtrlErr res;

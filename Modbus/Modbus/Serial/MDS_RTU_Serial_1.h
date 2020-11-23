@@ -16,7 +16,7 @@
 /*********************************FUNCTION DECLARATION************************************/
 void MDSInitSerial_1(void* obj,uint32 baud,uint8 dataBits,uint8 stopBit,uint8 parity);
 void MDSSerialRecvByte_1(uint8 byte);
-void MDSTimeHandler100US_1(void);
+void MDSTimeHandler100US_1(uint32 times);
 /*********************************END******************************************/
 
 #endif

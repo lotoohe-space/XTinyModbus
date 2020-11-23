@@ -44,11 +44,13 @@ void TIM3_IRQHandler(void)
 	{
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  		 
 		sys_tick_100us++;
-		#if MD_USD_SALVE
-		MDSTimeHandler100US();
-		MDSTimeHandler100US_1();
-		#else
-		MDMTimeHandler100US();
+		#if !MD_RTU_USED_OS
+			#if MD_USD_SALVE
+			MDSTimeHandler100US(sys_tick_100us);
+			MDSTimeHandler100US_1(sys_tick_100us);
+			#else
+			MDMTimeHandler100US(sys_tick_100us);
+			#endif
 		#endif
 	}
 }

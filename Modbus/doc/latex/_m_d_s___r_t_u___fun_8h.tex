@@ -1,0 +1,253 @@
+\hypertarget{_m_d_s___r_t_u___fun_8h}{}\section{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+R\+T\+U\+Slave/\+M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.h File Reference}
+\label{_m_d_s___r_t_u___fun_8h}\index{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+R\+T\+U\+Slave/\+M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{D\+:/\+Project/\+My\+Project1/\+X\+Tiny\+Modbus/\+S\+T\+M32f103zet6/\+Modbus/\+Modbus/\+Modbus\+R\+T\+U\+Slave/\+M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Queue.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Map\+Table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Type.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Tool.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}M\+D\+\_\+\+R\+T\+U\+\_\+\+Config.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_ab6bb2b8249198ce438c3ba9c5e5816ff}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE}}(a)~(((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}})(a))-\/$>$serial\+Read\+Cache\mbox{[}1\mbox{]})
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_aa51b438fa131966b1a598ea9b968a10f}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16}}(a)
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_aa79fc859a2fd3891c9dae2d8f6dce759}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG}}(a)
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_aa897869457f134ec1b511abbe41b889c}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM}}(a)
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_af754072f63fbba4b657f857495d7002b}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM}}(a)~((a)-\/$>$serial\+Read\+Cache\mbox{[}6\mbox{]})
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9b81adf3145f505ada51c445a7ef0da9}{M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND}}(a)~\{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} C\+R\+C16\+Temp;\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} C\+R\+C16=0x\+F\+F\+F\+F;
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a3033713d06c68888cd9e22ea81314177}{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE}}(a,  b)~C\+R\+C16=\mbox{\hyperlink{_m_d___r_t_u___c_r_c16_8h_a395c89955c1baba63b70185ba65419df}{M\+D\+\_\+\+C\+R\+C16\+Update}}(C\+R\+C16,(b));M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Byte(a,b)
+\item 
+\#define \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9c9d7c9afb4544d701403a200f9faa65}{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND}}(a)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9b7cc9da2b67c004a6604dbbbb180ae3}{M\+D\+S\+Write\+Funciton}}) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} modbus\+Addr, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} w\+Len, \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}{Addr\+Type}} addr\+Type)
+\item 
+typedef struct \mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_ab11840d82e671e309b9dede16fd67f80}{Modbus\+S\+\_\+\+R\+TU}}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8}{A\+N\+L\+Code}} \{ \newline
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a17cc3bc3f4fbedd42121ab755582eaa3}{R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL}} =0x81, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1fe0cc5f24b5f7e6cee0ea6123f1b320}{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL}} =0x82, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1f44501625096e13a5530175db9d5eee}{R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS}} =0x83, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af78c3b79543fd3d31bf52483e3a977fe}{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS}} =0\+X84, 
+\newline
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8acd73684bac19ffa8c92bfc28db169036}{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL}} =0\+X85, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af6a526f4303b79ec34f91b2471b18e03}{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG}} =0x86, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8ad61d18e4f94df11b7f197513d7c84995}{W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS}} =0\+X8F, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af14c423fb7587627099586615910f2c9}{W\+R\+I\+T\+E\+\_\+\+R\+E\+GS}} =0\+X90
+ \}
+\item 
+enum \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05f}{Error\+Code}} \{ \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fad9c08e59041628f73e7eafbd481846e8}{I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN}} =0x01, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa20c8067306d6ff5a46df1e1d28f6b6d2}{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR}} =0x2, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa92056fbd06bd0bcbd139dea8b28b13a4}{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL}} =0x3, 
+\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fac61536cac9b05a533f556e9211d6efbb}{S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE}} =0x4
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a8920fa5b114aef0d5a9cdadc5826d75c}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init}} (\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} p\+Modbus\+R\+TU, \mbox{\hyperlink{_m_d___r_t_u___tool_8h_abef481eadffaa05b26292b885515da04}{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}} md\+R\+T\+U\+Serial\+Init\+Fun, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} salve\+Addr, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}} baud, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} data\+Bits, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} stop\+Bit, \mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} parity)
+\item 
+void \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a94c8937f588b6b9a5bcd23fd99d1fbe4}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun}} (\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} p\+Modbus\+\_\+\+R\+TU, \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9b7cc9da2b67c004a6604dbbbb180ae3}{M\+D\+S\+Write\+Funciton}} w\+Fun)
+\item 
+\mbox{\hyperlink{_m_d___r_t_u___type_8h_ae4cc35dcc70810fa972cc8a5185a28fa}{B\+O\+OL}} \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_afbd0e88a321a36f4ca09de30b4797810}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item}} (\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} p\+Modbus\+R\+TU, \mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}} p\+Reg\+Coil\+Item)
+\item 
+void \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9f39ea8574be9451e181825a8f103b28}{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process}} (\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} p\+Modbus\+\_\+\+R\+TU)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_af754072f63fbba4b657f857495d7002b}\label{_m_d_s___r_t_u___fun_8h_af754072f63fbba4b657f857495d7002b}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM}{MDS\_RTU\_BYTES\_NUM}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+B\+Y\+T\+E\+S\+\_\+\+N\+UM(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~((a)-\/$>$serial\+Read\+Cache\mbox{[}6\mbox{]})}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_aa51b438fa131966b1a598ea9b968a10f}\label{_m_d_s___r_t_u___fun_8h_aa51b438fa131966b1a598ea9b968a10f}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16}{MDS\_RTU\_CRC16}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+C\+R\+C16(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[a->serialReadCount-1])<<8)|\(\backslash\)
+(((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[a->serialReadCount]))
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_ab6bb2b8249198ce438c3ba9c5e5816ff}\label{_m_d_s___r_t_u___fun_8h_ab6bb2b8249198ce438c3ba9c5e5816ff}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE}{MDS\_RTU\_FUN\_CODE}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+F\+U\+N\+\_\+\+C\+O\+DE(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~(((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}})(a))-\/$>$serial\+Read\+Cache\mbox{[}1\mbox{]})}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_aa897869457f134ec1b511abbe41b889c}\label{_m_d_s___r_t_u___fun_8h_aa897869457f134ec1b511abbe41b889c}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM}{MDS\_RTU\_REGS\_NUM}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+R\+E\+G\+S\+\_\+\+N\+UM(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[4])<<8)|\(\backslash\)
+(((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[5]))
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_aa79fc859a2fd3891c9dae2d8f6dce759}\label{_m_d_s___r_t_u___fun_8h_aa79fc859a2fd3891c9dae2d8f6dce759}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG}{MDS\_RTU\_START\_REG}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+S\+T\+A\+R\+T\+\_\+\+R\+EG(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(((((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[2])<<8)|\(\backslash\)
+(((\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{PModbusS\_RTU}})(a))->serialReadCache[3]))
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a3033713d06c68888cd9e22ea81314177}\label{_m_d_s___r_t_u___fun_8h_a3033713d06c68888cd9e22ea81314177}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE@{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE}}
+\index{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE@{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE}{MDS\_SEND\_BYTE}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+B\+Y\+TE(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~C\+R\+C16=\mbox{\hyperlink{_m_d___r_t_u___c_r_c16_8h_a395c89955c1baba63b70185ba65419df}{M\+D\+\_\+\+C\+R\+C16\+Update}}(C\+R\+C16,(b));M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Send\+Byte(a,b)}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a9c9d7c9afb4544d701403a200f9faa65}\label{_m_d_s___r_t_u___fun_8h_a9c9d7c9afb4544d701403a200f9faa65}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND@{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND}}
+\index{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND@{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND}{MDS\_SEND\_END}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+S\+E\+N\+D\+\_\+\+E\+ND(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+CRC16Temp=CRC16&0xFF;\(\backslash\)
+    (\mbox{\hyperlink{_m_d___r_t_u___tool_8h_aee384de8d16180b22424e58d23e0a736}{TO\_MDBase}}(a))->mdRTUSendBytesFunction((\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}*)(&(CRC16Temp)),1);\(\backslash\)
+    CRC16Temp=(CRC16>>8)&0xFF;\(\backslash\)
+    (\mbox{\hyperlink{_m_d___r_t_u___tool_8h_aee384de8d16180b22424e58d23e0a736}{TO\_MDBase}}(a))->mdRTUSendBytesFunction((\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}*)(&(CRC16Temp)),1);\(\backslash\)
+\}
+\end{DoxyCode}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a9b81adf3145f505ada51c445a7ef0da9}\label{_m_d_s___r_t_u___fun_8h_a9b81adf3145f505ada51c445a7ef0da9}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND@{M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND}}
+\index{M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND@{M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND}{MDS\_START\_SEND}}
+{\footnotesize\ttfamily \#define M\+D\+S\+\_\+\+S\+T\+A\+R\+T\+\_\+\+S\+E\+ND(\begin{DoxyParamCaption}\item[{}]{a }\end{DoxyParamCaption})~\{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}} C\+R\+C16\+Temp;\mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} C\+R\+C16=0x\+F\+F\+F\+F;}
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a9b7cc9da2b67c004a6604dbbbb180ae3}\label{_m_d_s___r_t_u___fun_8h_a9b7cc9da2b67c004a6604dbbbb180ae3}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+Write\+Funciton@{M\+D\+S\+Write\+Funciton}}
+\index{M\+D\+S\+Write\+Funciton@{M\+D\+S\+Write\+Funciton}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+Write\+Funciton}{MDSWriteFunciton}}
+{\footnotesize\ttfamily typedef void($\ast$ M\+D\+S\+Write\+Funciton) (void $\ast$obj, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} modbus\+Addr, \mbox{\hyperlink{_m_d___r_t_u___type_8h_a05f6b0ae8f6a6e135b0e290c25fe0e4e}{uint16}} w\+Len, \mbox{\hyperlink{_m_d___r_t_u___map_table_8h_a5a2ca199266aafd1a2d30391d6620892}{Addr\+Type}} addr\+Type)}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_ab11840d82e671e309b9dede16fd67f80}\label{_m_d_s___r_t_u___fun_8h_ab11840d82e671e309b9dede16fd67f80}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!Modbus\+S\+\_\+\+R\+TU@{Modbus\+S\+\_\+\+R\+TU}}
+\index{Modbus\+S\+\_\+\+R\+TU@{Modbus\+S\+\_\+\+R\+TU}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{Modbus\+S\+\_\+\+R\+TU}{ModbusS\_RTU}}
+{\footnotesize\ttfamily typedef  struct \mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}} \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_ab11840d82e671e309b9dede16fd67f80}{Modbus\+S\+\_\+\+R\+TU}}}
+
+
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!A\+N\+L\+Code@{A\+N\+L\+Code}}
+\index{A\+N\+L\+Code@{A\+N\+L\+Code}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{A\+N\+L\+Code}{ANLCode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8}{A\+N\+L\+Code}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL@{R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL@{R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a17cc3bc3f4fbedd42121ab755582eaa3}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a17cc3bc3f4fbedd42121ab755582eaa3}} 
+R\+E\+A\+D\+\_\+\+C\+O\+I\+L\+\_\+\+A\+NL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL@{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL@{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1fe0cc5f24b5f7e6cee0ea6123f1b320}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1fe0cc5f24b5f7e6cee0ea6123f1b320}} 
+R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+A\+NL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS@{R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS@{R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1f44501625096e13a5530175db9d5eee}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8a1f44501625096e13a5530175db9d5eee}} 
+R\+E\+A\+D\+\_\+\+H\+O\+L\+D\+\_\+\+R\+E\+GS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS@{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS@{R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af78c3b79543fd3d31bf52483e3a977fe}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af78c3b79543fd3d31bf52483e3a977fe}} 
+R\+E\+A\+D\+\_\+\+I\+N\+P\+U\+T\+\_\+\+R\+E\+GS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL@{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL@{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8acd73684bac19ffa8c92bfc28db169036}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8acd73684bac19ffa8c92bfc28db169036}} 
+W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+C\+O\+IL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG@{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG@{W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af6a526f4303b79ec34f91b2471b18e03}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af6a526f4303b79ec34f91b2471b18e03}} 
+W\+R\+I\+T\+E\+\_\+\+S\+I\+N\+\_\+\+R\+EG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS@{W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS@{W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8ad61d18e4f94df11b7f197513d7c84995}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8ad61d18e4f94df11b7f197513d7c84995}} 
+W\+R\+I\+T\+E\+\_\+\+C\+O\+I\+LS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{W\+R\+I\+T\+E\+\_\+\+R\+E\+GS@{W\+R\+I\+T\+E\+\_\+\+R\+E\+GS}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!W\+R\+I\+T\+E\+\_\+\+R\+E\+GS@{W\+R\+I\+T\+E\+\_\+\+R\+E\+GS}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af14c423fb7587627099586615910f2c9}\label{_m_d_s___r_t_u___fun_8h_a35362c06e7e15b4992570d61286cb7a8af14c423fb7587627099586615910f2c9}} 
+W\+R\+I\+T\+E\+\_\+\+R\+E\+GS&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05f}\label{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05f}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!Error\+Code@{Error\+Code}}
+\index{Error\+Code@{Error\+Code}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{Error\+Code}{ErrorCode}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05f}{Error\+Code}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN@{I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN@{I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fad9c08e59041628f73e7eafbd481846e8}\label{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fad9c08e59041628f73e7eafbd481846e8}} 
+I\+L\+L\+E\+G\+A\+L\+\_\+\+F\+UN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR@{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR@{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa20c8067306d6ff5a46df1e1d28f6b6d2}\label{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa20c8067306d6ff5a46df1e1d28f6b6d2}} 
+I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+A\+D\+DR&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL@{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL@{I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa92056fbd06bd0bcbd139dea8b28b13a4}\label{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fa92056fbd06bd0bcbd139dea8b28b13a4}} 
+I\+L\+L\+E\+G\+A\+L\+\_\+\+D\+A\+T\+\_\+\+V\+AL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE@{S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE@{S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE}}}\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fac61536cac9b05a533f556e9211d6efbb}\label{_m_d_s___r_t_u___fun_8h_a59e56af19e754a6aa26a612ebf91d05fac61536cac9b05a533f556e9211d6efbb}} 
+S\+L\+A\+V\+E\+\_\+\+D\+E\+V\+\_\+\+F\+A\+I\+L\+U\+RE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_afbd0e88a321a36f4ca09de30b4797810}\label{_m_d_s___r_t_u___fun_8h_afbd0e88a321a36f4ca09de30b4797810}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item()}{MDS\_RTU\_AddMapItem()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_m_d___r_t_u___type_8h_ae4cc35dcc70810fa972cc8a5185a28fa}{B\+O\+OL}} M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Add\+Map\+Item (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}}}]{p\+Modbus\+R\+TU,  }\item[{\mbox{\hyperlink{struct_p_map_table_item}{P\+Map\+Table\+Item}}}]{p\+Reg\+Coil\+Item }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a8920fa5b114aef0d5a9cdadc5826d75c}\label{_m_d_s___r_t_u___fun_8h_a8920fa5b114aef0d5a9cdadc5826d75c}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init()}{MDS\_RTU\_Init()}}
+{\footnotesize\ttfamily void M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}}}]{p\+Modbus\+R\+TU,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___tool_8h_abef481eadffaa05b26292b885515da04}{M\+D\+\_\+\+R\+T\+U\+\_\+\+Serial\+Init}}}]{md\+R\+T\+U\+Serial\+Init\+Fun,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}}]{salve\+Addr,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}}}]{baud,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}}]{data\+Bits,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}}]{stop\+Bit,  }\item[{\mbox{\hyperlink{_m_d___r_t_u___type_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}}]{parity }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a9f39ea8574be9451e181825a8f103b28}\label{_m_d_s___r_t_u___fun_8h_a9f39ea8574be9451e181825a8f103b28}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process()}{MDS\_RTU\_Process()}}
+{\footnotesize\ttfamily void M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}}}]{p\+Modbus\+\_\+\+R\+TU }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{_m_d_s___r_t_u___fun_8h_a94c8937f588b6b9a5bcd23fd99d1fbe4}\label{_m_d_s___r_t_u___fun_8h_a94c8937f588b6b9a5bcd23fd99d1fbe4}} 
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun}}
+\index{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun}!M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h@{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Fun.\+h}}
+\subsubsection{\texorpdfstring{M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun()}{MDS\_RTU\_SetWriteListenFun()}}
+{\footnotesize\ttfamily void M\+D\+S\+\_\+\+R\+T\+U\+\_\+\+Set\+Write\+Listen\+Fun (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_p_modbus_s___r_t_u}{P\+Modbus\+S\+\_\+\+R\+TU}}}]{p\+Modbus\+\_\+\+R\+TU,  }\item[{\mbox{\hyperlink{_m_d_s___r_t_u___fun_8h_a9b7cc9da2b67c004a6604dbbbb180ae3}{M\+D\+S\+Write\+Funciton}}}]{w\+Fun }\end{DoxyParamCaption})}
+

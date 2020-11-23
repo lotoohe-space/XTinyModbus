@@ -47,12 +47,21 @@ STATIC_T MapTableItem mapTableItem3={
 	.addrType=INPUT_TYPE			
 };
 
+static uint8 MDSRecvQueueData[MDS_RTU_QUEUE_SIZE+1]={0};
+static uint8 MDSMsgProcessQueueData[MDS_RTU_QUEUE_SIZE+1]={0};
 static ModbusS_RTU modbusS_RTU={0};
 
 BOOL MDS_RTU_APPInit(void){
 	
-	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,9600,8,1,0);
-	
+	MDS_RTU_Init(&modbusS_RTU,MDSInitSerial,SALVE_ADDR,
+	9600,8,1,0
+	);
+	MDS_RTU_QueueInit(&modbusS_RTU,
+		MDSRecvQueueData,
+		sizeof(MDSRecvQueueData),
+		MDSMsgProcessQueueData,
+		sizeof(MDSMsgProcessQueueData)
+	);
 	if(MDS_RTU_AddMapItem(&modbusS_RTU,&mapTableItem0)==FALSE){
 		return FALSE;
 	}
