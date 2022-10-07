@@ -13,6 +13,9 @@
 #include "MDM_RTU_Serial.h"
 #include "MD_RTU_Tool.h"
 #include "MD_RTU_CRC16.h"
+#include "MD_RTU_SysInterface.h"
+#include "MD_RTU_Type.h"
+#include <string.h>
 /*********************************END******************************************/
 
 /*********************************FUNCTION DECLARATION************************************/
@@ -98,7 +101,7 @@ MDError MDM_RTU_Init(
 	/*Current real-time time unit 100US*/
 	pModbusRTU->timesTick=0;
 	
-	T=(1.0/(float)baud)*100000;
+	T=(1.0/(float)baud)*10000;
 	uint16 time=0;
 	time=T*(dataBits+(parity?1:0));
 	if(stopBits==0){
@@ -159,7 +162,7 @@ void MDM_RTU_CB_Init(
 	MD_RTU_LOCK((PModbusBase)pModbusRTU,MD_RTU_LOCK_OBJ_HANDLE_ARG(pModbusRTU));
 	pModbusRTUCB->sendIntervalTime=sendIntervalTime;
 	pModbusRTUCB->pModbus_RTU=pModbusRTU;
-	pModbusRTUCB->sendTimeTick=0;
+	pModbusRTUCB->sendTimeTick=MD_RTU_GetSysTick();
 	pModbusRTUCB->sendOverTime=sendOverTime;
 	pModbusRTUCB->RTTimes=RTTimes;
 	pModbusRTUCB->sendFlag=0;
@@ -179,6 +182,7 @@ void MDM_RTU_CB_OverTimeReset(PModbus_RTU_CB 	pModbusRTUCB){
 	MD_RTU_LOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 	pModbusRTUCB->RTCount=0;
 	pModbusRTUCB->sendFlag=0;
+	pModbusRTUCB->sendTimeTick=pModbusRTUCB->pModbus_RTU->timesTick;
 	MD_RTU_UNLOCK((PModbusBase)(pModbusRTUCB->pModbus_RTU),MD_RTU_LOCK_OBJ_HANDLE_ARG((pModbusRTUCB->pModbus_RTU)));
 }
 /*******************************************************
@@ -282,10 +286,15 @@ void MDM_RTU_SysProcessTask(void *arg){
 	PModbus_RTU pModbusRTU=(PModbus_RTU)arg;
 	for(;;){
 		void *msg=NULL;
-		if(MD_RTU_MSG_GET((PModbusBase)pModbusRTU,MD_RTU_MSG_HANDLE_ARG(pModbusRTU),&msg,1)){
-			MDM_RTU_RecvByte((void*)pModbusRTU,(uint8)(msg));
+		while(1){
+			if(MD_RTU_MSG_GET((PModbusBase)pModbusRTU,MD_RTU_MSG_HANDLE_ARG(pModbusRTU),&msg,0)){
+				MDM_RTU_RecvByte((void*)pModbusRTU,(uint8)(msg));
+			}else{
+				break;
+			}
 		}
 		MDM_RTU_TimeHandler((void*)pModbusRTU,MD_RTU_GetSysTick());
+		MD_RTU_Delay(5);
 	}
 }
 #endif
@@ -620,9 +629,10 @@ static MDError MDM_RTU_NB_RW(
 	
 	if(	pModbus_RTU_CB->pModbus_RTU->parentObj!=NULL &&
 			pModbus_RTU_CB!=pModbus_RTU_CB->pModbus_RTU->parentObj){
+				//Check if you are using the current Modbus
 			return ERR_IDLE;
 	}
-	
+	pModbus_RTU_CB->pModbus_RTU->blockMode=1;/*set to non-block*/
 	if(pModbus_RTU_CB->sendFlag==0){/*Has not been sent, or has been sent successfully*/
 		/*Clear the receive queue*/
 		MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),
@@ -924,10 +934,86 @@ static MDError MDM_RTU_RW(
 				goto exit;
 			}
 		}
+		#if MD_RTU_USED_OS
+		MD_RTU_Delay(5);
+		#endif
 	}while(res!=ERR_RW_FIN);
-	pModbus_RTU_CB->pModbus_RTU->parentObj=tempObj;/*Restore settings*/
+	MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB); 
 	exit:
-	MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);/*Enable retransmission*/
+	pModbus_RTU_CB->pModbus_RTU->parentObj=tempObj;/*Restore settings*/
+	MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),MD_RTU_LOCK_OBJ1_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+	return res;
+}
+/**
+* Clear the RTU parameters.
+*/
+void ModubusRTUClear(PModbus_RTU pOldModbus){
+	pOldModbus->lastTimesTick=0xFFFFFFF;
+	pOldModbus->recvFlag=0;
+	pOldModbus->serialSendCount=0;
+	pOldModbus->mdSqQueue.rear=pOldModbus->mdSqQueue.front=0;
+	pOldModbus->mdSqQueue.valid = TRUE;
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_RW_ex
+* Description        :Blocking read and write
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @funCode   Function code, see [ModbusFunCode]
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read and write start address    
+*        @numOf       Number of read and write data  
+*        @wData       If it is a write function code, then it is the written data
+* Return          : See [MDError]
+**********************************************************/
+static MDError MDM_RTU_RW_MIX(
+	PModbus_RTU_CB pModbus_RTU_CB,
+	ModbusFunCode funCode,
+	uint8 slaveAddr,
+	uint16 startAddr,
+	uint16 numOf,
+	void *wData
+){
+	MDError res;
+	void* tempObj;
+	if(pModbus_RTU_CB==NULL){
+		return ERR_VOID;
+	}
+	MD_RTU_LOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),MD_RTU_LOCK_OBJ1_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
+	
+	tempObj=pModbus_RTU_CB->pModbus_RTU->parentObj;
+	pModbus_RTU_CB->pModbus_RTU->parentObj=NULL;/*Set to empty, so that non-blocking and blocking can be mixed calls*/
+	if (pModbus_RTU_CB->pModbus_RTU->blockMode){
+		/*
+		* Last time in non-blocking mode.
+		* If the mode was previously non-blocking, all states need to
+		* be cleared and a delay may be required,
+		* as data may have been sent previously.
+		*/
+		ModubusRTUClear(pModbus_RTU_CB->pModbus_RTU);
+		MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB); 
+		MD_RTU_Delay(MDM_MIX_CALL_DELAY);
+	}
+	pModbus_RTU_CB->pModbus_RTU->blockMode=0;/*Currently in blocking mode*/
+	do{
+		res = MDM_RTU_NB_RW(pModbus_RTU_CB,funCode,slaveAddr,startAddr,numOf,wData);
+		if(res != ERR_RW_FIN){						/*An error occurred*/
+			if(res == ERR_RW_OV_TIME_ERR){	/*Retransmission timed out*/																
+				MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB);/*Enable retransmission*/
+				goto exit;
+			}else if(res==ERR_DEV_DIS){
+				goto exit;
+			}
+		}
+		#if MD_RTU_USED_OS
+		MD_RTU_Delay(5);
+		#endif
+	}while(res!=ERR_RW_FIN);
+	MDM_RTU_CB_OverTimeReset(pModbus_RTU_CB); 
+	exit:
+	ModubusRTUClear(pModbus_RTU_CB->pModbus_RTU);
+	pModbus_RTU_CB->pModbus_RTU->parentObj=tempObj;/*Restore settings*/
 	MD_RTU_UNLOCK((PModbusBase)(pModbus_RTU_CB->pModbus_RTU),MD_RTU_LOCK_OBJ1_HANDLE_ARG((pModbus_RTU_CB->pModbus_RTU)));
 	return res;
 }
@@ -944,7 +1030,7 @@ static MDError MDM_RTU_RW(
 **********************************************************/
 MDError MDM_RTU_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_COIL,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadInput
@@ -958,7 +1044,7 @@ MDError MDM_RTU_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 st
 **********************************************************/
 MDError MDM_RTU_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_INPUT,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadHoldReg
@@ -972,7 +1058,7 @@ MDError MDM_RTU_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 s
 **********************************************************/
 MDError MDM_RTU_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_HOLD_REG,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadInputReg
@@ -986,7 +1072,7 @@ MDError MDM_RTU_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16
 **********************************************************/
 MDError MDM_RTU_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_RW(pModbus_RTU_CB,READ_INPUT_REG,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteSingleCoil
@@ -1003,7 +1089,7 @@ MDError MDM_RTU_WriteSingleCoil(
 	uint16 temp;
 	temp=boolVal?0xFF00:0x0000;
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_SIN_COIL,slaveAddr,startAddr,1,(void*)(&temp));
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteSingleReg
@@ -1018,7 +1104,8 @@ MDError MDM_RTU_WriteSingleCoil(
 MDError MDM_RTU_WriteSingleReg(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_SIN_REG,slaveAddr,startAddr,1,(void*)(&val));
-};
+}
+
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteCoils
@@ -1034,7 +1121,7 @@ MDError MDM_RTU_WriteSingleReg(
 MDError MDM_RTU_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_COILS,slaveAddr,startAddr,numOf,(void*)(val));
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteRegs
@@ -1050,7 +1137,132 @@ MDError MDM_RTU_WriteCoils(
 MDError MDM_RTU_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val){
 	return MDM_RTU_RW(pModbus_RTU_CB,WRITE_REGS,slaveAddr,startAddr,numOf,(void*)(val));
-};
+}
+
+
+/*******************************************************
+*
+* Function name :MDM_RTU_MixReadCoil
+* Description        :Read coil
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of read data  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,READ_COIL,slaveAddr,startAddr,numOf,NULL);
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixReadInput
+* Description        :Read input
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of read data  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,READ_INPUT,slaveAddr,startAddr,numOf,NULL);
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixReadHoldReg
+* Description        :Read holding register
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of read data  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,READ_HOLD_REG,slaveAddr,startAddr,numOf,NULL);
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixReadInputReg
+* Description        :Read input register
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of read data  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,READ_INPUT_REG,slaveAddr,startAddr,numOf,NULL);
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixWriteSingleCoil
+* Description        :Write a single coil
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @boolVal      TRUE , FALSE  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixWriteSingleCoil(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal){
+	uint16 temp;
+	temp=boolVal?0xFF00:0x0000;
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,WRITE_SIN_COIL,slaveAddr,startAddr,1,(void*)(&temp));
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixWriteSingleReg
+* Description        :Write a single register
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @boolVal      TRUE , FALSE  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixWriteSingleReg(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,WRITE_SIN_REG
+			,slaveAddr,startAddr,1,(void*)(&val));
+}
+
+/*******************************************************
+*
+* Function name :MDM_RTU_MixWriteCoils
+* Description        :Write coil
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of write data  
+*        @boolVal      TRUE , FALSE  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixWriteCoils(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,WRITE_COILS,slaveAddr,startAddr,numOf,(void*)(val));
+}
+/*******************************************************
+*
+* Function name :MDM_RTU_MixWriteRegs
+* Description        :Write register
+* Parameter         :
+*        @pModbus_RTU_CB    Write control block object pointer  
+*        @slaveAddr      	Slave address    
+*        @startAddr       Read start address    
+*        @numOf       Number of write data  
+*        @boolVal      TRUE , FALSE  
+* Return          : See [MDError]
+**********************************************************/
+MDError MDM_RTU_MixWriteRegs(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val){
+	return MDM_RTU_RW_MIX(pModbus_RTU_CB,WRITE_REGS,slaveAddr,startAddr,numOf,(void*)(val));
+}
+
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadCoil
@@ -1064,7 +1276,7 @@ MDError MDM_RTU_WriteRegs(
 **********************************************************/
 MDError MDM_RTU_NB_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_COIL,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadInput
@@ -1078,7 +1290,7 @@ MDError MDM_RTU_NB_ReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16
 **********************************************************/
 MDError MDM_RTU_NB_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_INPUT,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadHoldReg
@@ -1092,7 +1304,7 @@ MDError MDM_RTU_NB_ReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint1
 **********************************************************/
 MDError MDM_RTU_NB_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_HOLD_REG,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_ReadHoldReg
@@ -1106,7 +1318,7 @@ MDError MDM_RTU_NB_ReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uin
 **********************************************************/
 MDError MDM_RTU_NB_ReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,READ_INPUT_REG,slaveAddr,startAddr,numOf,NULL);
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteSingleCoil
@@ -1123,7 +1335,7 @@ MDError MDM_RTU_NB_WriteSingleCoil(
 	uint16 temp;
 	temp=boolVal?0xFF00:0x0000;
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_SIN_COIL,slaveAddr,startAddr,1,(void*)(&temp));
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteSingleReg
@@ -1138,7 +1350,7 @@ MDError MDM_RTU_NB_WriteSingleCoil(
 MDError MDM_RTU_NB_WriteSingleReg(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_SIN_REG,slaveAddr,startAddr,1,(void*)(&val));
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteCoils
@@ -1154,7 +1366,7 @@ MDError MDM_RTU_NB_WriteSingleReg(
 MDError MDM_RTU_NB_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_COILS,slaveAddr,startAddr,numOf,(void*)(val));
-};
+}
 /*******************************************************
 *
 * Function name :MDM_RTU_WriteRegs
@@ -1170,5 +1382,5 @@ MDError MDM_RTU_NB_WriteCoils(
 MDError MDM_RTU_NB_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val){
 	return MDM_RTU_NB_RW(pModbus_RTU_CB,WRITE_REGS,slaveAddr,startAddr,numOf,(void*)(val));
-};
+}
 	

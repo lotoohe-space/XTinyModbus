@@ -17,6 +17,7 @@
 #include "MD_RTU_MapTable.h"
 #include "MD_RTU_Config.h"
 #include "MD_RTU_SysInterface.h"
+
 /*********************************END******************************************/
 
 /*********************************CUSTOM DATA TYPE************************************/
@@ -68,6 +69,9 @@ typedef struct{
 	
 	/*1 means one frame of data is received*/
 	uint8					recvFlag;
+	
+	/*last mode*/
+	uint8					blockMode;
 }*PModbus_RTU,Modbus_RTU;
 
 #if MD_RTU_USED_OS
@@ -125,12 +129,16 @@ typedef struct{
 
 /*********************************MACRO DEFINITION************************************/
 #if MDM_USE_SEND_CACHE
-#define MEM_RTU_START_EN(a)	{uint16 CRCUpdate=0xFFFF;(a)->serialSendCount=0
+
+#define MEM_RTU_START_EN(a)	{uint16 CRCUpdate1=0xFFFF;(a)->serialSendCount=0
+	
 #define MEM_RTU_EN_QUEUE(a,b) (a)->serialSendCache[(a)->serialSendCount++]=(b);\
-CRCUpdate=MD_CRC16Update(CRCUpdate,(b))
-#define MEM_RTU_END_EN(a)		a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate);\
-	a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate>>8);\
+CRCUpdate1=MD_CRC16Update(CRCUpdate1,(b))
+	
+#define MEM_RTU_END_EN(a)		a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate1);\
+	a->serialSendCache[a->serialSendCount++]=(uint8)(CRCUpdate1>>8);\
 (TO_MDBase(a))->mdRTUSendBytesFunction(a->serialSendCache,a->serialSendCount);}
+
 #else
 #define MEM_RTU_START_EN()	{uint16 CRCUpdate=0xFFFF;
 #define MEM_RTU_EN_QUEUE(a,b) MDM_RTU_SendByte((a),(b));\
@@ -217,6 +225,22 @@ MDError MDM_RTU_WriteCoils(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val);
 MDError MDM_RTU_WriteRegs(
 	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val);
+
+/*The following API is used to be blocking, but can be mixed with non-blocking calls,
+you may need to set the value of the MDM_MIX_CALL_DELAY parameter.*/
+MDError MDM_RTU_MixReadCoil(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
+MDError MDM_RTU_MixReadInput(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
+MDError MDM_RTU_MixReadHoldReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
+MDError MDM_RTU_MixReadInputReg(PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf);
+MDError MDM_RTU_MixWriteSingleCoil(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,BOOL boolVal);
+MDError MDM_RTU_MixWriteSingleReg(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 val);
+MDError MDM_RTU_MixWriteCoils(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint8* val);
+MDError MDM_RTU_MixWriteRegs(
+	PModbus_RTU_CB pModbus_RTU_CB,uint8 slaveAddr,uint16 startAddr,uint16 numOf,uint16* val);
+
 /*********************************END******************************************/
 
 #endif

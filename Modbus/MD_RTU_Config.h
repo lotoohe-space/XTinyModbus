@@ -1,16 +1,13 @@
-/********************************************************************************
- * @File name: MD_RTU_Config.h
- * @Author: zspace
- * @Version: 1.0
- * @Date: 2020-4-10
- * @Description: Modbus configuration file.
- ********************************************************************************/
+ /**
+ *@breif Modbus configuration file.
+ *@file MD_RTU_Config.h
+ *@author zspace
+ */
 #ifndef _MD_RTU_CONFIG_H__
 #define _MD_RTU_CONFIG_H__
 
-/*********************************CONFIGURATION PARAMETER**************************************/
 
-#define MD_RTU_USED_OS							0					///< Whether modbus RTU USES an operating system
+#define MD_RTU_USED_OS							0 				///< Whether modbus RTU USES an operating system
 
 #define MD_RTU_CRC16_FAST_MODE 			1					///< CRC check mode configuration
 
@@ -27,6 +24,8 @@
 #define MDM_USE_SEND_CACHE					1					///< Whether to enable sending cache
 #define MDM_RTU_QUEUE_SIZE 					256				///< Buffer queue size
 
+#define MDM_MIX_CALL_DELAY					500				///< The delay time before the mix call
+
 ///< Configuration related to blocking read-write controller
 #define MDM_RW_CTRL_LIST_SIZE 			20				///< Maximum number of controllers
 
@@ -37,7 +36,7 @@
 #else 
 	#define STATIC_T
 #endif
-/*********************************END******************************************/
+
 
 
 #endif

@@ -45,10 +45,14 @@ uint32 MD_RTU_GetSysTick(void);
 #define MD_RTU_MSG_PUT(a,b,c,d) 	MD_RTU_MsgPut(a,b,c,d)
 #define MD_RTU_MSG_GET(a,b,c,d) 	MD_RTU_MsgGet(a,b,c,d)
 #else 
+#include "tim3.h"
+#include "delay.h"
 #define MD_RTU_LOCK(a,b)
 #define MD_RTU_UNLOCK(a,b)
 #define MD_RTU_MSG_PUT(a,b,c,d)
 #define MD_RTU_MSG_GET(a,b,c,d)
+#define MD_RTU_GetSysTick() (sys_tick_100us/10)
+#define MD_RTU_Delay(a) delay_ms(a)
 #endif 
 
 #endif

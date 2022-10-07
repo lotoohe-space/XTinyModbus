@@ -7,6 +7,11 @@ A small embedded Modbus protocol stack, written in C language, support master an
 0.Log
 ----
 
+2022/10/7 <br>
+Add a set of APIs to allow mixed non-blocking and blocking mode calls in host mode in bare metal state.<br>
+ Check out the functions related to xx_MixXXX in MDM_RTU_Fun.c.<br>
+Fix the bug of time frame calculation error.<br>
+
 2020/11/23 <br>
 Optimization of slave protocol parsing strategy, more stable <br>
 Optimize the loop queue to make it more adaptable <br>
