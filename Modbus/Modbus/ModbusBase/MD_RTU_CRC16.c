@@ -64,22 +64,22 @@ static const uint16 crc16_table[256]=
 * @param[in] byte    Need to participate in the calculation of a byte.
 * @return	None
 */
-uint16 MD_CRC16Update(uint16 CRC, uint8 byte)
+uint16 MD_CRC16Update(uint16 crc, uint8 byte)
 {
 #if MD_RTU_CRC16_FAST_MODE
-	 return ((CRC) >> 8) ^ crc16_table[((CRC) ^ byte) & 0xff];
+	 return ((crc) >> 8) ^ crc16_table[((crc) ^ byte) & 0xff];
 #else
   int i;
 
-  CRC ^= byte;
+  crc ^= byte;
   for (i = 0; i < 8; ++i)
   {
-    if (CRC & 1)
-      CRC = (CRC >> 1) ^ 0xA001;
+    if (crc & 1)
+      crc = (crc >> 1) ^ 0xA001;
     else
-      CRC = (CRC >> 1);
+      crc = (crc >> 1);
   }
 
-  return CRC;
+  return crc;
 #endif
 }
