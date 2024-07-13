@@ -1,0 +1,10 @@
+..\obj\mds_rtu_app.o: ..\Modbus\Example\MDS_RTU_APP.c
+..\obj\mds_rtu_app.o: ..\Modbus\Example\MDS_RTU_APP.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusBase\MD_RTU_Type.h
+..\obj\mds_rtu_app.o: ..\Modbus\MD_RTU_Config.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusBase\MD_RTU_MapTable.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusRTUSlave\MDS_RTU_Fun.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusBase\MD_RTU_Queue.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusBase\MD_RTU_Tool.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\ModbusRTUSlave\MDS_RTU_User_Fun.h
+..\obj\mds_rtu_app.o: ..\Modbus\Modbus\Serial\MDS_RTU_Serial.h
