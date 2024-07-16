@@ -59,7 +59,7 @@ typedef struct{
 	uint32 				timesTick;
 	
 	/*Frame interval time 3.5T*/
-	uint16 				frameIntervalTime;
+	float 				frameIntervalTime;
 	
 	/*CRC16 received*/
 	uint16 				CRC16Update;
