@@ -101,17 +101,16 @@ MDError MDM_RTU_Init(
 	/*Current real-time time unit 100US*/
 	pModbusRTU->timesTick=0;
 	
-	T=(1.0/(float)baud)*10000;
-	uint16 time=0;
-	time=T*(dataBits+(parity?1:0));
-	if(stopBits==0){
-		time+=T;
-	}else if(stopBits==1){
-		time+=T*1.5f;
-	}else if(stopBits==2){
-		time+=T*2;
+	if(baud > 19200)
+	{
+		pModbusRTU->frameIntervalTime=17.5;  //
 	}
-	pModbusRTU->frameIntervalTime=time;/*This parameter needs to be set according to the baud rate*/
+	else 
+	{
+		uint16 bitnum = 1 + dataBits + stopBits; //起始位+数据位+停止位
+		T=(1.0f/(float)baud)*10000*bitnum;   //发送1bit所需要的时间（百us）*一个字符的位长度  即发送一个字符的时间
+		pModbusRTU->frameIntervalTime=3.5f*T;/*This parameter needs to be set according to the baud rate*/
+	}
 	
 	pModbusRTU->recvFlag=0;/*Receive flag*/
 	if(mdRTUSerialInitFun!=NULL){
